@@ -2,6 +2,8 @@
 
 给个人自媒体创作使用的本地 Mac 工作台。一个选题串起文章、视频文案、镜头表、声音和字体、交付检查与发布记录。
 
+**下载 Mac Apple Silicon 版：**[v0.1.0 安装包](https://github.com/ChenShuo2004/cs-workbench/releases/download/v0.1.0/cs-workbench-mac-arm64-v0.1.0.zip)。当前这台 Mac 已安装在 `~/Applications/CS 工作台.app`。安装包为个人使用的临时签名版本，尚未经过 Apple 公证。
+
 ## 直接使用
 
 Mac arm64 版打包后，双击 `CS 工作台.app`。首次打开检查「设置」中的项目工作区和声音与字体库路径。默认项目工作区是 `~/Documents/CS工作台项目`；如果本机已有 `~/Documents/ChatGPT/陈硕 video/音效与配乐库`，会自动识别，也可以手动选择。
