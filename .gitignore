@@ -1,0 +1,11 @@
+node_modules/
+dist/
+out/
+release/
+.DS_Store
+*.log
+*.zip
+*.dmg
+*.app/
+.env*
+*.tsbuildinfo
