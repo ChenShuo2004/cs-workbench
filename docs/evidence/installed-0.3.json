@@ -1,0 +1,14 @@
+{
+  "version": "0.3.0",
+  "path": "/Users/chenshuo/Applications/CS 工作台 Pro.app",
+  "signature": "codesign --verify --deep --strict passed",
+  "userDataUnchanged": true,
+  "counts": {
+    "tasks": 0,
+    "notes": 2,
+    "folders": 3,
+    "conversations": 0,
+    "journal": 0
+  },
+  "nativeUI": "Observed five workflow stages and opened reference collection page in installed app."
+}

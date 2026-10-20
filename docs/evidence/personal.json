@@ -1,0 +1,18 @@
+{
+  "checks": [
+    "task create/complete and autosaved journal via UI",
+    "archived task can be restored from the UI",
+    "connected folder preview and explicit Agent attachment",
+    "real Codex / GPT reply through existing ChatGPT CLI authentication",
+    "tasks, memories, files, conversation and journal survive full restart",
+    "home fits 390px viewport"
+  ],
+  "errors": [],
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-personal-qa-qEt9gM",
+  "packaged": true,
+  "agent": {
+    "status": "complete",
+    "error": "",
+    "answer": "工作台连接成功。"
+  }
+}

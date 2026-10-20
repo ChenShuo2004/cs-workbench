@@ -1,0 +1,31 @@
+{
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-video-generation-qa-PmFhZl",
+  "checks": [
+    "API key saved through the UI, encrypted on disk and cleared from the field",
+    "Real MiniMax H3 task generated and automatically attached exactly once",
+    "Downloaded video has real dimensions/duration and full FFmpeg decode passes",
+    "Generated MP4 opens in the actual canvas preview",
+    "Reload preserves the completed task and clip without resubmitting",
+    "Video settings work at 390px without horizontal overflow",
+    "Real MiniMax H3 task generated and automatically attached exactly once",
+    "Downloaded video has real dimensions/duration and full FFmpeg decode passes",
+    "Generated MP4 opens in the actual canvas preview",
+    "Reload preserves the completed task and clip without resubmitting",
+    "Video settings work at 390px without horizontal overflow"
+  ],
+  "errors": [],
+  "version": "0.4.1",
+  "packaged": true,
+  "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-video-generation-qa-PmFhZl/projects/20261020-秘塔视频生成验收",
+  "jobId": "3ae67d6c-b1ab-4cfe-8c98-78c8515ea0aa",
+  "remoteId": "2112508884918259712",
+  "status": "completed",
+  "media": {
+    "duration": 5.166667,
+    "width": 2560,
+    "height": 1440
+  },
+  "completed": true,
+  "installedApp": "/Users/chenshuo/Applications/CS 工作台 Pro.app",
+  "previousAppBackup": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/installed-backups/CS 工作台 Pro-before-metaso-20261020-194112.app"
+}

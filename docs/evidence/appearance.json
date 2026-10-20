@@ -1,0 +1,17 @@
+{
+  "acceptance": {
+    "checks": [
+      "all four themes switch through real UI",
+      "read/edit toggle renders content without changing source",
+      "export auto-checks article/shared scope and visibly reminds missing evidence",
+      "home and appearance settings fit 390px viewport",
+      "selected theme survives full app restart"
+    ],
+    "errors": []
+  },
+  "installation": {
+    "installed": "/Users/chenshuo/Applications/CS 工作台 Pro.app",
+    "backup": "/Users/chenshuo/coding/cs-workbench/out/installed-backups/CS 工作台 Pro-before-appearance-20261018-090156.app",
+    "asar_sha256": "06e0d4e252dd95de7d839e100e051dbf1f5c511913d48c73d8453f7e30c8dc63"
+  }
+}

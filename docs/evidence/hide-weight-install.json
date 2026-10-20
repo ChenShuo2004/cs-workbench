@@ -1,0 +1,13 @@
+{
+  "version": "0.3.3",
+  "backup": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/installed-backups/CS 工作台 Pro-before-hide-weight-20261018-110100.app",
+  "asarSha256": "997c5beaa1aa3470e8e2806d182594348e9aa0a2cefe9fedddb663efdf1d57cc",
+  "healthDataUnchanged": true,
+  "checks": [
+    "TypeScript and Vite build pass",
+    "arm64 package and codesign pass",
+    "installed bundle matches built bundle",
+    "installed home no longer displays weight",
+    "installed health page has five visible metrics and steps trend; no weight"
+  ]
+}

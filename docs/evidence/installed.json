@@ -1,0 +1,39 @@
+{
+  "name": "CS 工作台 Pro",
+  "version": "0.2.0",
+  "userData": "/Users/chenshuo/Library/Application Support/CS 工作台 Pro",
+  "packaged": true,
+  "installedAt": "2026-10-17T14:29:49.377Z",
+  "notes": [
+    "视频美术规范入口",
+    "我的工作台：目标与使用方式"
+  ],
+  "folders": [
+    "/Users/chenshuo/Documents/CS工作台项目",
+    "/Users/chenshuo/Documents/ChatGPT/cs工作台 2",
+    "/Users/chenshuo/Documents/ChatGPT/陈硕 video/音效与配乐库"
+  ],
+  "taskCount": 0,
+  "configPointersMigrated": true,
+  "providers": [
+    {
+      "id": "codex",
+      "installed": true,
+      "loggedIn": true,
+      "detail": "Logged in using ChatGPT"
+    },
+    {
+      "id": "claude",
+      "installed": true,
+      "loggedIn": false,
+      "detail": "请先在终端运行 claude 登录"
+    },
+    {
+      "id": "xai",
+      "installed": true,
+      "loggedIn": false,
+      "detail": "打开 Grok 网页，或配置 xAI API Key"
+    }
+  ],
+  "oldAppPreserved": true
+}

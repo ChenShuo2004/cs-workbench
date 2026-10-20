@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "Installed 0.5.1 video node supports saved 1080P and displays 2K billing",
+    "AI generation panel also saves 1080P with accurate billing explanation"
+  ],
+  "errors": [],
+  "version": "0.5.1",
+  "completed": true
+}

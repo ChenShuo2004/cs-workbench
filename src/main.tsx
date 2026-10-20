@@ -19,10 +19,12 @@ import {
   Folder,
   FolderOpen,
   Headphones,
+  HeartPulse,
   LayoutDashboard,
   LibraryBig,
   LoaderCircle,
   Music2,
+  Menu,
   PackageCheck,
   Play,
   Plus,
@@ -33,6 +35,7 @@ import {
   SquarePen,
   Type,
   UploadCloud,
+  Users,
   WandSparkles,
   X,
 } from "lucide-react";
@@ -50,18 +53,71 @@ import type {
   Status,
 } from "./types";
 import "./styles.css";
+import { Health } from "./Health";
+import { ContentOps } from "./ContentOps";
+import { Personal } from "./Personal";
+import { Studio } from "./Studio";
+import { VideoReferences } from "./VideoReferences";
+import { Reunion } from "./Reunion";
+import { DouyinAccounts } from "./DouyinAccounts";
+import "./design-system.css";
+import {
+  AppearancePicker,
+  ExperienceSettings,
+  prefersReducedMotion,
+  useAppearance,
+} from "./Appearance";
+import { DocumentPreview } from "./DocumentPreview";
+import "./appearance.css";
+import { BrandAvatar } from "./Brand";
+import { Dialog } from "./Dialog";
+import { WorkspaceSearch, type WorkspaceTarget } from "./WorkspaceSearch";
+import "./experience.css";
+import { uiErrorMessage } from "./ui-error";
 
 const NAV: {
   id: Section;
   label: string;
   icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
 }[] = [
-  { id: "today", label: "今日", icon: LayoutDashboard },
+  { id: "health", label: "健康", icon: HeartPulse },
+  { id: "content", label: "内容总览", icon: LayoutDashboard },
+  { id: "desk", label: "我的工作台", icon: LayoutDashboard },
+  { id: "inbox", label: "资料收集", icon: Search },
+  { id: "tasks", label: "每日任务", icon: CheckCheck },
+  { id: "agents", label: "Agent 助手", icon: Sparkles },
+  { id: "memory", label: "个人记忆", icon: BookOpenText },
+  { id: "folders", label: "文件空间", icon: FolderOpen },
+  { id: "studio", label: "创作室", icon: Film },
+  { id: "reunion", label: "亲人重逢", icon: Users },
   { id: "projects", label: "项目", icon: Folder },
   { id: "article", label: "文章", icon: BookOpenText },
   { id: "video", label: "视频", icon: Film },
   { id: "library", label: "素材库", icon: LibraryBig },
+  { id: "references", label: "风格案例", icon: Film },
   { id: "publish", label: "发布", icon: UploadCloud },
+  { id: "accounts", label: "平台账号", icon: Users },
+];
+const STAGES: { label: string; items: Section[] }[] = [
+  { label: "发现信息", items: ["inbox"] },
+  { label: "处理素材", items: ["folders", "library", "references"] },
+  { label: "决定选题", items: ["projects"] },
+  { label: "创作内容", items: ["article", "video", "studio", "reunion"] },
+  { label: "分发交接", items: ["publish", "accounts"] },
+];
+const SEARCH_DESTINATIONS = [
+  ...NAV.map((item) => ({
+    id: item.id,
+    label: item.label,
+    group:
+      STAGES.find((stage) => stage.items.includes(item.id))?.label ||
+      "个人工作区",
+  })),
+  {
+    id: "settings" as Section,
+    label: "设置",
+    group: "配色 · 密度 · 动态效果 · 文件位置",
+  },
 ];
 const STATUS: Status[] = [
   "准备中",
@@ -92,7 +148,7 @@ function timeLabel(value: string) {
   }
 }
 function errorText(error: unknown) {
-  return error instanceof Error ? error.message : String(error);
+  return uiErrorMessage(error);
 }
 function statClass(status: string) {
   return ["已发布", "可导出"].includes(status)
@@ -108,14 +164,49 @@ function countWords(text: string) {
 }
 
 function App() {
+  const appearance = useAppearance();
+  const [documentView, setDocumentView] = useState<"edit" | "read">("edit");
   const [boot, setBoot] = useState<Bootstrap | null>(null);
-  const [section, setSection] = useState<Section>("today");
+  const [bootError, setBootError] = useState("");
+  const [section, setSection] = useState<Section>("desk");
+  const [navigationOpen, setNavigationOpen] = useState(false);
+  const [narrow, setNarrow] = useState(
+    () => matchMedia("(max-width: 900px)").matches,
+  );
+  useEffect(() => {
+    const media = matchMedia("(max-width: 900px)");
+    const update = () => {
+      setNarrow(media.matches);
+      setNavigationOpen(false);
+    };
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  const contentScroll = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    contentScroll.current?.scrollTo({ top: 0 });
+    if (prefersReducedMotion()) return;
+    const animation = contentScroll.current?.animate(
+      [{ opacity: 0.65 }, { opacity: 1 }],
+      { duration: 160, easing: "ease-out" },
+    );
+    return () => animation?.cancel();
+  }, [section]);
+  const contentLeave = useRef<null | (() => Promise<boolean>)>(null);
+  const [editorBusy, setEditorBusy] = useState(false);
+  const [expandedStage, setExpandedStage] = useState(-1);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [openTarget, setOpenTarget] = useState<WorkspaceTarget | null>(null);
   const [project, setProject] = useState<Project | null>(null);
   const [docKey, setDocKey] = useState<DocKey>("article");
   const [draft, setDraft] = useState("");
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [newOpen, setNewOpen] = useState(false);
+  const [newError, setNewError] = useState("");
+  useEffect(() => {
+    if (newOpen) setNewError("");
+  }, [newOpen]);
   const [newTitle, setNewTitle] = useState("");
   const [newAudience, setNewAudience] = useState("");
   const [newPlatforms, setNewPlatforms] = useState<string[]>(["小红书"]);
@@ -138,31 +229,46 @@ function App() {
   const [selectedPreset, setSelectedPreset] = useState<Preset | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const previewFontRef = useRef<FontFace | null>(null);
+  const noticeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  const creating = useRef(false);
+  useEffect(() => () => clearTimeout(noticeTimer.current), []);
 
   const notice = (message: string, error = false) => {
+    clearTimeout(noticeTimer.current);
     setToast({ message, error });
-    window.setTimeout(() => setToast(null), 4400);
+    noticeTimer.current = setTimeout(() => setToast(null), error ? 8000 : 4400);
   };
   const refresh = async () => {
     const result = await window.cs.bootstrap();
     setBoot(result);
     return result;
   };
-  useEffect(() => {
-    refresh().catch((e) => notice(errorText(e), true));
-  }, []);
+  const start = () => {
+    setBootError("");
+    void refresh().catch((e) => setBootError(errorText(e)));
+  };
+  useEffect(start, []);
   const refreshProject = async (root: string) => {
     const detail = await window.cs.readProject(root);
     setProject(detail);
     return detail;
   };
-  const selectProject = async (root: string) => {
+  const activateProject = async (root: string) => {
     if (!(await flush())) return;
     const detail = await refreshProject(root);
     setQa(null);
     setDraft(detail.docs[docKey]);
     setDirty(false);
+    return true;
+  };
+  const selectProject = async (root: string) => {
+    if (contentLeave.current && !(await contentLeave.current())) return false;
+    if (!(await activateProject(root))) return false;
     setSection("projects");
+    setNavigationOpen(false);
+    return true;
   };
   const flush = async () => {
     if (!dirty || !project?.managed) return true;
@@ -182,7 +288,13 @@ function App() {
     }
   };
   const go = async (next: Section) => {
-    if (!(await flush())) return;
+    if (
+      next !== section &&
+      contentLeave.current &&
+      !(await contentLeave.current())
+    )
+      return false;
+    if (!(await flush())) return false;
     if (
       next === "article" &&
       !["brief", "article", "publish"].includes(docKey)
@@ -197,8 +309,36 @@ function App() {
       setDirty(false);
     }
     setSection(next);
+    setNavigationOpen(false);
     setQa(null);
+    return true;
   };
+  useEffect(() => {
+    const stage = STAGES.findIndex((s) => s.items.includes(section));
+    if (stage >= 0) setExpandedStage(stage);
+  }, [section]);
+  const openFinder = () => setSearchOpen(true);
+  const openSearchTarget = async (target: WorkspaceTarget) => {
+    if (target.kind === "project") return selectProject(target.id);
+    if (!(await go(target.section))) return false;
+    if (target.kind !== "page") setOpenTarget(target);
+    return true;
+  };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (
+        (e.metaKey || e.ctrlKey) &&
+        e.key.toLowerCase() === "k" &&
+        !e.isComposing
+      ) {
+        if (document.querySelector("dialog[open]") && !searchOpen) return;
+        e.preventDefault();
+        openFinder();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [searchOpen]);
   const openDoc = async (key: DocKey, next: Section) => {
     if (!(await flush())) return;
     setDocKey(key);
@@ -208,6 +348,11 @@ function App() {
   };
   useEffect(() => {
     const keydown = (event: KeyboardEvent) => {
+      if (
+        event.defaultPrevented ||
+        (event.target as HTMLElement).closest('dialog[open], [role="dialog"]')
+      )
+        return;
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
         event.preventDefault();
         void flush().then((ok) => {
@@ -236,22 +381,34 @@ function App() {
     }
   };
   const create = async () => {
-    const result = await perform(
-      "新建项目",
-      () =>
-        window.cs.createProject({
-          title: newTitle,
-          audience: newAudience,
-          platforms: newPlatforms,
-        }),
-      "项目已建立",
-    );
-    if (!result) return;
-    setNewOpen(false);
-    setNewTitle("");
-    setNewAudience("");
-    await refresh();
-    await selectProject(result.path);
+    if (creating.current || !newTitle.trim()) return;
+    creating.current = true;
+    setNewError("");
+    try {
+      const result = await perform(
+        "新建项目",
+        () =>
+          window.cs
+            .createProject({
+              title: newTitle,
+              audience: newAudience,
+              platforms: newPlatforms,
+            })
+            .catch((e) => {
+              setNewError(errorText(e));
+              throw e;
+            }),
+        "项目已建立",
+      );
+      if (!result) return;
+      setNewOpen(false);
+      setNewTitle("");
+      setNewAudience("");
+      await refresh();
+      await selectProject(result.path);
+    } finally {
+      creating.current = false;
+    }
   };
   const importExisting = async () => {
     const result = await perform(
@@ -312,7 +469,13 @@ function App() {
       window.cs.exportProject(project.path, type),
     );
     if (result) {
-      notice(`交付包已生成：${result.zip.split("/").pop()}`);
+      setQa(result.qa);
+      setSection("publish");
+      notice(
+        result.qa.issues.length
+          ? `交付包已导出，仍有 ${result.qa.issues.length} 项待完善，请查看收尾检查。`
+          : `交付包已生成：${result.zip.split("/").pop()}`,
+      );
       await window.cs.openTarget(project.path, "outputs");
       await refreshProject(project.path);
     }
@@ -388,81 +551,185 @@ function App() {
       );
   }, [boot?.catalog, libraryTab, query]);
 
+  const renderNav = (id: Section) => {
+    const item = NAV.find((n) => n.id === id)!;
+    const Icon = item.icon;
+    return (
+      <button
+        key={id}
+        aria-label={item.label}
+        title={item.label}
+        type="button"
+        className={`nav-item ${section === id ? "active" : ""}`}
+        aria-current={section === id ? "page" : undefined}
+        onClick={() => void go(id)}
+      >
+        <Icon size={17} />
+        <span>{item.label}</span>
+        {id === "projects" && (
+          <span className="nav-count">{boot?.projects.length}</span>
+        )}
+      </button>
+    );
+  };
   if (!boot)
     return (
       <div className="splash">
-        <div className="brand-mark">CS</div>
-        <LoaderCircle className="spin" size={24} />
-        <span>正在打开工作台</span>
+        <BrandAvatar className="splash-avatar" />
+        <h1>CS 工作台</h1>
+        {bootError ? (
+          <>
+            <CircleAlert size={24} />
+            <p role="alert">工作台暂时无法打开：{bootError}</p>
+            <button className="button primary" onClick={start}>
+              重新打开工作台
+            </button>
+          </>
+        ) : (
+          <>
+            <LoaderCircle className="spin" size={24} />
+            <span role="status">正在打开工作台</span>
+          </>
+        )}
       </div>
     );
-  return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <div className="sidebar-top">
-          <div className="brand-mark">CS</div>
-          <div>
-            <div className="brand-title">CS 工作台</div>
-            <div className="brand-sub">个人内容制作空间</div>
-          </div>
-        </div>
-        <div className="sidebar-label">工作区</div>
-        <nav>
-          {NAV.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              type="button"
-              className={`nav-item ${section === id ? "active" : ""}`}
-              onClick={() => void go(id)}
-            >
-              <Icon size={18} strokeWidth={1.9} />
-              <span>{label}</span>
-              {id === "projects" && (
-                <span className="nav-count">{boot.projects.length}</span>
-              )}
-            </button>
-          ))}
-        </nav>
-        <div className="sidebar-spacer" />
-        <div className="sidebar-project">
-          <span className="sidebar-label">当前项目</span>
-          {project ? (
-            <button
-              className="current-project"
-              onClick={() => void go("projects")}
-            >
-              <span className="current-dot" />
-              <span className="truncate">{project.title}</span>
-              <ChevronRight size={15} />
-            </button>
-          ) : (
-            <div className="sidebar-hint">尚未选择项目</div>
-          )}
-        </div>
+  const sidebar = (
+    <aside className="sidebar" aria-label="工作台侧栏">
+      {narrow && (
         <button
-          className={`nav-item bottom ${section === "settings" ? "active" : ""}`}
-          onClick={() => void go("settings")}
+          className="icon-button navigation-close"
+          aria-label="关闭导航"
+          onClick={() => setNavigationOpen(false)}
         >
-          <Settings2 size={18} />
-          <span>设置</span>
+          <X size={18} />
         </button>
-      </aside>
-      <div className="main-shell">
+      )}
+      <div className="sidebar-top">
+        <div className="brand-mark">
+          <BrandAvatar />
+        </div>
+        <div>
+          <div className="brand-title">CS 工作台</div>
+          <div className="brand-sub">PLAN · CREATE · ORGANIZE</div>
+        </div>
+      </div>
+      <nav aria-label="工作台导航">
+        <div className="sidebar-label">我的安排</div>
+        {(["desk", "content", "tasks", "health"] as Section[]).map(renderNav)}
+        <div className="sidebar-label workflow-label">创作流程</div>
+        {STAGES.map((stage, i) => (
+          <div
+            className={`workflow-stage ${stage.items.includes(section) ? "current" : ""}`}
+            key={stage.label}
+          >
+            <button
+              className="nav-stage"
+              aria-label={`展开${stage.label}`}
+              title={stage.label}
+              aria-expanded={expandedStage === i}
+              onClick={() => {
+                setExpandedStage(expandedStage === i ? -1 : i);
+              }}
+            >
+              <b>{String(i + 1).padStart(2, "0")}</b>
+              <span>{stage.label}</span>
+              <ChevronDown size={13} />
+            </button>
+            {expandedStage === i && (
+              <div className="stage-items">{stage.items.map(renderNav)}</div>
+            )}
+          </div>
+        ))}
+        <div className="sidebar-label workflow-label">常驻工具</div>
+        {(["agents", "memory"] as Section[]).map(renderNav)}
+      </nav>
+      <div className="sidebar-spacer" />
+      <div className="sidebar-project">
+        <span className="sidebar-label">当前项目</span>
+        {project ? (
+          <button
+            className="current-project"
+            onClick={() => void go("projects")}
+          >
+            <span className="current-dot" />
+            <span className="truncate">{project.title}</span>
+            <ChevronRight size={15} />
+          </button>
+        ) : (
+          <div className="sidebar-hint">尚未选择项目</div>
+        )}
+      </div>
+      <button
+        aria-label="设置"
+        title="设置"
+        className={`nav-item bottom ${section === "settings" ? "active" : ""}`}
+        aria-current={section === "settings" ? "page" : undefined}
+        onClick={() => void go("settings")}
+      >
+        <Settings2 size={18} />
+        <span>设置</span>
+      </button>
+    </aside>
+  );
+  return (
+    <div className="app-shell studio-shell">
+      <a className="skip-to-content" href="#workbench-content">
+        跳到主要内容
+      </a>
+      {!narrow && sidebar}
+      {narrow && navigationOpen && (
+        <Dialog
+          label="工作台导航"
+          className="navigation-dialog"
+          onClose={() => setNavigationOpen(false)}
+        >
+          {sidebar}
+        </Dialog>
+      )}
+      <div
+        className={`main-shell ${section === "accounts" ? "accounts-shell" : ""}`}
+      >
         <header className="topbar">
+          {narrow && (
+            <button
+              className="icon-button navigation-toggle"
+              aria-label="打开导航"
+              aria-expanded={navigationOpen}
+              onClick={() => setNavigationOpen(true)}
+            >
+              <Menu size={19} />
+            </button>
+          )}
           <div className="crumb">
             <span>CS 工作台</span>
             <ChevronRight size={14} />
             <strong>
               {NAV.find((n) => n.id === section)?.label || "设置"}
             </strong>
-            {project && section !== "today" && (
-              <>
-                <ChevronRight size={14} />
-                <span className="truncate">{project.title}</span>
-              </>
-            )}
+            {project &&
+              !["today", "accounts", "settings"].includes(section) && (
+                <>
+                  <ChevronRight size={14} />
+                  <span className="truncate">{project.title}</span>
+                </>
+              )}
           </div>
+          <button
+            className="icon-button global-search"
+            aria-label="全局搜索工作区"
+            title="搜索工作区 · ⌘K"
+            onClick={() => void openFinder()}
+          >
+            <Search size={15} />
+            <span>搜索或跳转</span>
+            <kbd>⌘K</kbd>
+          </button>
           <div className="top-actions">
+            <AppearancePicker
+              compact
+              theme={appearance.theme}
+              onChange={appearance.changeTheme}
+            />
             <span className="local-badge">
               <span />
               本机工作区
@@ -476,7 +743,101 @@ function App() {
             </button>
           </div>
         </header>
-        <main className="content">
+        <main
+          className="content"
+          id="workbench-content"
+          tabIndex={-1}
+          ref={contentScroll}
+        >
+          {[
+            "inbox",
+            "projects",
+            "article",
+            "video",
+            "studio",
+            "publish",
+          ].includes(section) && (
+            <div className="workflow-context">
+              <label>
+                <span>当前创作项目</span>
+                <select
+                  aria-label="当前创作项目"
+                  disabled={section === "studio" && editorBusy}
+                  value={project?.path || ""}
+                  onChange={(e) =>
+                    void activateProject(e.target.value).catch((e) =>
+                      notice(errorText(e), true),
+                    )
+                  }
+                >
+                  <option value="" disabled>
+                    选择项目，贯穿整个创作流程
+                  </option>
+                  {boot.projects.map((p) => (
+                    <option key={p.path} value={p.path}>
+                      {p.title}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="workflow-output" aria-label="项目创作入口">
+                {(
+                  [
+                    { id: "article", label: "文章" },
+                    { id: "video", label: "口播脚本" },
+                    { id: "studio", label: "创作室" },
+                    { id: "publish", label: "交接" },
+                  ] as { id: Section; label: string }[]
+                ).map((item) => (
+                  <button
+                    key={item.id}
+                    aria-current={section === item.id ? "page" : undefined}
+                    onClick={() => void go(item.id)}
+                  >
+                    {item.label}
+                    <ArrowRight size={12} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {["desk", "tasks", "memory", "inbox", "folders", "agents"].includes(
+            section,
+          ) && (
+            <Personal
+              section={section}
+              onNavigate={go}
+              projects={boot.projects}
+              projectPath={project?.path}
+              onOpenProject={selectProject}
+              openTarget={openTarget}
+              onTargetHandled={() => setOpenTarget(null)}
+              onSearch={openFinder}
+            />
+          )}
+          {section === "health" && <Health />}
+          {section === "references" && <VideoReferences project={project} />}
+          {section === "reunion" && <Reunion />}
+          {section === "content" && (
+            <ContentOps
+              projects={boot.projects}
+              onOpen={selectProject}
+              onNavigate={go}
+              onNew={() => setNewOpen(true)}
+              onLeaveRef={contentLeave}
+            />
+          )}
+          {section === "studio" && (
+            <Studio
+              projectPath={project?.path}
+              onProjectChange={activateProject}
+              onBusyChange={setEditorBusy}
+              projects={boot.projects}
+              onRefresh={refresh}
+              onNavigate={go}
+            />
+          )}
           {section === "today" && (
             <>
               <div className="page-heading">
@@ -896,22 +1257,44 @@ function App() {
                       </div>
                       <span className="word-count">{countWords(draft)} 字</span>
                     </div>
-                    <textarea
-                      className="document-editor"
-                      value={draft}
-                      readOnly={!project.managed}
-                      spellCheck={false}
-                      onChange={(e) => {
-                        setDraft(e.target.value);
-                        setDirty(true);
-                      }}
-                      placeholder={
-                        project.managed
-                          ? "从这里开始写…"
-                          : "这个旧工程中尚无对应文件"
-                      }
-                      aria-label={DOC_NAMES[docKey]}
-                    />
+                    <div
+                      className="document-view-switch"
+                      role="group"
+                      aria-label="稿件呈现方式"
+                    >
+                      <button
+                        aria-pressed={documentView === "edit"}
+                        onClick={() => setDocumentView("edit")}
+                      >
+                        编辑原稿
+                      </button>
+                      <button
+                        aria-pressed={documentView === "read"}
+                        onClick={() => setDocumentView("read")}
+                      >
+                        阅读预览
+                      </button>
+                    </div>
+                    {documentView === "read" ? (
+                      <DocumentPreview text={draft} />
+                    ) : (
+                      <textarea
+                        className="document-editor"
+                        value={draft}
+                        readOnly={!project.managed}
+                        spellCheck={false}
+                        onChange={(e) => {
+                          setDraft(e.target.value);
+                          setDirty(true);
+                        }}
+                        placeholder={
+                          project.managed
+                            ? "从这里开始写…"
+                            : "这个旧工程中尚无对应文件"
+                        }
+                        aria-label={DOC_NAMES[docKey]}
+                      />
+                    )}
                     <div className="editor-foot">
                       <span>
                         {project.managed
@@ -1269,6 +1652,12 @@ function App() {
                         <h2>发布记录</h2>
                         <p>只在完成对应动作后更新状态。</p>
                       </div>
+                      <button
+                        className="text-button"
+                        onClick={() => void go("accounts")}
+                      >
+                        <Users size={16} /> 多平台账号后台
+                      </button>
                     </div>
                     <div className="publish-status">
                       <div>
@@ -1347,6 +1736,7 @@ function App() {
                 onAction={() => void go("projects")}
               />
             ))}
+          {section === "accounts" && <DouyinAccounts />}
           {section === "settings" && (
             <>
               <div className="page-heading compact">
@@ -1355,6 +1745,41 @@ function App() {
                   <h1>本机设置</h1>
                   <p>项目在你的 Mac 上保存；工作台不会自动上传内容。</p>
                 </div>
+              </div>
+              <div className="settings-group">
+                <h2>外观与阅读</h2>
+                <p className="muted">
+                  选择喜欢的配色，切换后自动记住。纯白提供清爽的白色背景与中性灰层次。
+                </p>
+                <AppearancePicker
+                  theme={appearance.theme}
+                  onChange={appearance.changeTheme}
+                />
+                <ExperienceSettings appearance={appearance} />
+                {appearance.error && <p role="alert">{appearance.error}</p>}
+              </div>
+              <div className="settings-group">
+                <h2>键盘操作</h2>
+                <div className="shortcut-reference">
+                  <span>
+                    搜索内容与前往页面 <kbd>⌘ / Ctrl K</kbd>
+                  </span>
+                  <span>
+                    保存当前文稿 <kbd>⌘ / Ctrl S</kbd>
+                  </span>
+                  <span>
+                    关闭弹窗 <kbd>Esc</kbd>
+                  </span>
+                  <span>
+                    选择下一项 <kbd>Tab</kbd>
+                  </span>
+                </div>
+              </div>
+              <div className="settings-group">
+                <h2>项目收尾</h2>
+                <p className="muted">
+                  每次导出交付包时自动检查当前分支与公共资料，列出缺项并写入交付说明。导出文件不等于完整交付或已发布。
+                </p>
               </div>
               <div className="settings-group">
                 <h2>文件位置</h2>
@@ -1445,18 +1870,13 @@ function App() {
         </div>
       )}
       {newOpen && (
-        <div
-          className="modal-backdrop"
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) setNewOpen(false);
-          }}
+        <Dialog
+          label="新建选题"
+          onClose={() => setNewOpen(false)}
+          dismissible={!busy}
+          error={newError}
         >
-          <div
-            className="modal"
-            role="dialog"
-            aria-modal="true"
-            aria-label="新建选题"
-          >
+          <div className="modal">
             <div className="modal-head">
               <div>
                 <span className="eyebrow">NEW PROJECT</span>
@@ -1466,6 +1886,7 @@ function App() {
                 className="icon-button"
                 onClick={() => setNewOpen(false)}
                 aria-label="关闭"
+                disabled={!!busy}
               >
                 <X size={19} />
               </button>
@@ -1480,7 +1901,8 @@ function App() {
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="例如：普通人如何用 AI 做第一条视频"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") void create();
+                  if (e.key === "Enter" && !e.nativeEvent.isComposing)
+                    void create();
                 }}
               />
             </label>
@@ -1499,6 +1921,7 @@ function App() {
                   <button
                     key={p}
                     className={newPlatforms.includes(p) ? "picked" : ""}
+                    aria-pressed={newPlatforms.includes(p)}
                     onClick={() =>
                       setNewPlatforms(
                         newPlatforms.includes(p)
@@ -1520,6 +1943,7 @@ function App() {
               <button
                 className="button subtle"
                 onClick={() => setNewOpen(false)}
+                disabled={!!busy}
               >
                 取消
               </button>
@@ -1533,16 +1957,34 @@ function App() {
               </button>
             </div>
           </div>
-        </div>
+        </Dialog>
+      )}
+      {searchOpen && (
+        <WorkspaceSearch
+          destinations={SEARCH_DESTINATIONS}
+          projects={boot.projects}
+          onOpen={openSearchTarget}
+          onClose={() => setSearchOpen(false)}
+        />
       )}
       {toast && (
-        <div className={`toast ${toast.error ? "error" : ""}`}>
+        <div
+          role={toast.error ? "alert" : "status"}
+          className={`toast ${toast.error ? "error" : ""}`}
+        >
           {toast.error ? <CircleAlert size={17} /> : <CircleCheck size={17} />}
           <span>{toast.message}</span>
+          <button
+            className="icon-button"
+            aria-label="关闭通知"
+            onClick={() => setToast(null)}
+          >
+            <X size={15} />
+          </button>
         </div>
       )}
       {busy && (
-        <div className="busy-badge">
+        <div className="busy-badge" role="status">
           <LoaderCircle className="spin" size={15} />
           {busy}
         </div>
@@ -1606,7 +2048,7 @@ function QAResults({ qa }: { qa: QA }) {
     <div className="qa-results">
       <div className="qa-title">
         <CheckCheck size={17} />
-        <strong>项目检查</strong>
+        <strong>收尾检查</strong>
         <span>{new Date(qa.checkedAt).toLocaleString("zh-CN")}</span>
       </div>
       {qa.video && (

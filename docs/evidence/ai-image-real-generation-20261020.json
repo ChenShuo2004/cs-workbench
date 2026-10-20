@@ -1,0 +1,37 @@
+{
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-generation-qa-GQEEPh",
+  "checks": [
+    "real Codex image generated and automatically merged without losing concurrent edits",
+    "generated image participates in a real MP4 export and full decode",
+    "reload preserves the generation history and does not duplicate the shot"
+  ],
+  "errors": [],
+  "realGeneration": true,
+  "packaged": false,
+  "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-generation-qa-GQEEPh/projects/20261020-AI-画布真实生图验收",
+  "jobId": "85fc9b3b-5106-4c63-8f1e-7b78a24fa57f",
+  "job": {
+    "id": "85fc9b3b-5106-4c63-8f1e-7b78a24fa57f",
+    "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-generation-qa-GQEEPh/projects/20261020-AI-画布真实生图验收",
+    "kind": "image",
+    "prompt": "A cinematic macro photograph of a tiny green seedling growing in a handmade ceramic cup on a pale wooden desk, soft morning window light, gentle shadows, quiet editorial photography, natural textures, landscape 16:9, no people, no letters or logos.",
+    "aspect": "16:9",
+    "duration": 3,
+    "referenceId": "",
+    "model": "codex_builtin",
+    "status": "completed",
+    "stage": "生成完成",
+    "createdAt": "2026-10-20T07:13:51.044Z",
+    "applied": true,
+    "remoteId": "785b6517-115b-4503-995e-ed33072c4ebb",
+    "watchingSince": "2026-10-20T07:13:51.103Z",
+    "completedAt": "2026-10-20T07:14:31.209Z",
+    "error": ""
+  },
+  "image": {
+    "path": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-generation-qa-GQEEPh/projects/20261020-AI-画布真实生图验收/assets/media/85fc9b3b-5106-4c63-8f1e-7b78a24fa57f.png",
+    "width": 1672,
+    "height": 941
+  },
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at /Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/scripts/verify-generation.cjs:78:10"
+}

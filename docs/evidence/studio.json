@@ -1,0 +1,21 @@
+{
+  "checks": [
+    "pixel scene edit and real MP4 render complete",
+    "390px viewport without horizontal overflow"
+  ],
+  "errors": [],
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-studio-qa-YJvwhT",
+  "packaged": true,
+  "pixel": {
+    "id": "f5af156b-a737-40e7-bf20-5394762538e8",
+    "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-studio-qa-YJvwhT/projects/20261017-创作室验收",
+    "title": "创作室验收",
+    "createdAt": "2026-10-17T14:22:17.401Z",
+    "status": "complete",
+    "progress": 100,
+    "output": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-studio-qa-YJvwhT/projects/20261017-创作室验收/outputs/render-f5af156b-a737-40e7-bf20-5394762538e8/final.mp4",
+    "error": "",
+    "finishedAt": "2026-10-17T14:22:18.609Z"
+  },
+  "retainedArtifact": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/acceptance-20261017/studio-render/final.mp4"
+}

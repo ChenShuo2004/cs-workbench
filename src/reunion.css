@@ -1,0 +1,47 @@
+.reunion-page { max-width: 1440px; margin: 0 auto; padding: 30px; color: var(--ink); }
+.reunion-page p { color: var(--muted); line-height: 1.65; }
+.reunion-summary { display: flex; flex-wrap: wrap; gap: 24px; margin: 24px 0; color: var(--muted); font-size: 13px; }
+.reunion-summary b { color: var(--ink); font-size: 22px; margin-right: 5px; }
+.reunion-settings { padding: 14px 18px; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 18px; }
+.reunion-settings summary { cursor: pointer; font-size: 13px; }
+.reunion-settings summary svg { vertical-align: middle; margin-right: 8px; }
+.reunion-preset-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 20px; margin-top: 20px; }
+.reunion-preset-grid p { overflow-wrap: anywhere; font-size: 12px; }
+.reunion-settings > p { font-size: 12px; }
+.reunion-upload { display: flex; align-items: center; gap: 18px; padding: 26px; border: 1px dashed var(--line); border-radius: 14px; background: var(--panel); }
+.reunion-upload.dragging { background: var(--accent-soft); border-color: var(--accent); }
+.reunion-upload > div { flex: 1; } .reunion-upload p { font-size: 12px; margin-bottom: 0; }
+.reunion-error, .reunion-notice { padding: 12px 16px; margin: 14px 0; border-radius: 9px; overflow-wrap: anywhere; font-size: 13px; }
+.reunion-error { background: var(--danger-soft); color: var(--danger); }
+.reunion-notice { background: var(--accent-soft); color: var(--ink); }
+.reunion-error-text { display: block; color: var(--danger); margin-bottom: 6px; }
+.reunion-empty { padding: 50px 20px; text-align: center; }
+.reunion-empty h2 { font-size: 20px; }
+.reunion-layout { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0,1fr); gap: 24px; margin-top: 24px; align-items: start; }
+.reunion-list { display: grid; gap: 8px; max-height: 75vh; overflow-y: auto; }
+.reunion-list button { text-align: left; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; cursor: pointer; }
+.reunion-list button.selected { background: var(--accent-soft); border-color: var(--muted); }
+.reunion-list b, .reunion-list small { display: block; }
+.reunion-list small { margin-top: 5px; color: var(--muted); overflow-wrap: anywhere; }
+.reunion-list em { display: block; margin-top: 10px; color: var(--muted); font-size: 11px; font-style: normal; }
+.reunion-list em[data-status="ready"] { color: var(--accent-text); }
+.reunion-detail { border: 1px solid var(--line); border-radius: 14px; padding: 22px; min-width: 0; }
+.reunion-detail header, .reunion-prompt-title { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.reunion-detail header h2 { margin: 0; font-size: 20px; }
+.reunion-detail header p { font-size: 12px; }
+.reunion-images { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin: 18px 0; }
+.reunion-images figure { margin: 0; text-align: center; min-width: 0; }
+.reunion-images img, .reunion-images figure > span { width: 100%; height: 170px; object-fit: contain; background: var(--elevated); border-radius: 8px; display: block; }
+.reunion-images figure > span { padding-top: 75px; font-size: 12px; color: var(--muted); }
+.reunion-images figcaption { font-size: 11px; color: var(--muted); padding-top: 8px; }
+.reunion-detail blockquote { margin: 20px 0; border-left: 2px solid var(--line); padding-left: 14px; font-size: 14px; line-height: 1.8; white-space: pre-wrap; }
+.reunion-facts { font-size: 12px; }
+.reunion-dialogue { padding: 16px; background: var(--elevated); border-radius: 10px; margin: 16px 0; }
+.reunion-dialogue p { color: var(--ink); margin: 9px 0; }
+.reunion-dialogue p small { display: inline-block; width: 38px; color: var(--muted); }
+.reunion-dialogue > small { color: var(--muted); font-size: 11px; }
+.reunion-prompt-title { margin-top: 25px; font-size: 13px; }
+.reunion-detail textarea { width: 100%; min-height: 210px; margin-top: 12px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 14px; font: inherit; font-size: 12px; line-height: 1.8; resize: vertical; }
+.reunion-detail > p { font-size: 12px; }
+@media (max-width: 1000px) { .reunion-layout { grid-template-columns: 1fr; } .reunion-list { max-height: 240px; } }
+@media (max-width: 600px) { .reunion-page { padding: 16px; } .reunion-upload { flex-wrap: wrap; padding: 18px; } .reunion-upload button { width: 100%; } .reunion-preset-grid { grid-template-columns: 1fr; } .reunion-detail { padding: 14px; } .reunion-images { gap: 6px; } .reunion-images img, .reunion-images figure > span { height: 110px; } .reunion-images figure > span { padding-top: 45px; } .reunion-detail header { flex-wrap: wrap; } }

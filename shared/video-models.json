@@ -1,0 +1,14 @@
+[
+  {
+    "id": "MiniMax-H3",
+    "label": "MiniMax H3",
+    "resolutions": ["768P", "1080P", "2K"],
+    "defaultResolution": "1080P"
+  },
+  {
+    "id": "seedance-2.0",
+    "label": "Seedance 2.0 标准版",
+    "resolutions": ["720P", "1080P"],
+    "defaultResolution": "1080P"
+  }
+]

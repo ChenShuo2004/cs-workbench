@@ -1,0 +1,17 @@
+{
+  "checks": [
+    "storyboard draft survives switching to the timeline",
+    "native macOS fullscreen enters and exits with editor actions retained"
+  ],
+  "errors": [],
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-canvas-qa-hrXjZD",
+  "packaged": true,
+  "failureUI": [],
+  "fullscreenState": [
+    {
+      "full": false,
+      "visible": true
+    }
+  ],
+  "failure": "page.waitForFunction: Timeout 20000ms exceeded.\n    at /Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/scripts/verify-canvas.cjs:140:14"
+}

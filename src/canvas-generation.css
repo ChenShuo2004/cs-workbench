@@ -1,0 +1,453 @@
+.vg-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
+.vc-topline {
+  flex-wrap: wrap;
+}
+.vg-node {
+  width: 320px;
+  height: 570px;
+  display: flex;
+  flex-direction: column;
+}
+.vg-node > header {
+  flex: 0 0 38px;
+  border-bottom: 1px solid var(--line);
+}
+.vg-node > header button,
+.vg-source header button {
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+.vg-node > header > span:last-child {
+  display: flex;
+  gap: 2px;
+}
+.vg-inputs {
+  padding: 7px 12px 6px;
+  flex-shrink: 0;
+}
+.vg-input-row {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  padding-left: 5px;
+}
+.vg-input-row small {
+  color: var(--muted);
+  margin-left: auto;
+}
+.vg-input,
+.vg-output,
+.vg-media-output {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--panel);
+  padding: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  z-index: 4;
+  cursor: crosshair;
+  box-shadow: 0 0 0 1px var(--line);
+  touch-action: none;
+}
+.vg-input {
+  left: -7px;
+  transform: translateY(-50%);
+}
+.vg-output {
+  right: -7px;
+  top: 12px;
+}
+.vg-media-output {
+  right: -7px;
+  top: 111px;
+}
+.vg-input.compatible {
+  outline: 5px solid color-mix(in srgb, var(--accent) 25%, transparent);
+}
+.vg-input:hover,
+.vg-output:hover,
+.vg-media-output:hover {
+  outline: 5px solid color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.vg-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 13px 12px;
+  cursor: default;
+  user-select: text;
+}
+.vg-body label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--muted);
+  margin: 8px 0;
+}
+.vg-body textarea,
+.vg-body select,
+.vg-modal textarea,
+.vg-modal select {
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--ink);
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 7px;
+  font: inherit;
+  font-size: 11px;
+}
+.vg-body textarea {
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 64px;
+}
+.vg-body select {
+  height: 32px;
+}
+.vg-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.vg-hint {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+.vg-references {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.vg-references > span {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  display: flex;
+  gap: 4px;
+  padding: 3px 5px;
+  font-size: 9px;
+  overflow-wrap: anywhere;
+}
+.vg-references button {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  padding: 0;
+  cursor: pointer;
+}
+.vg-result {
+  position: relative;
+  height: 92px;
+  margin: 8px 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.vg-result button {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: var(--canvas);
+  cursor: zoom-in;
+}
+.vg-result img,
+.vg-result video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.vg-result > small {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  background: #0009;
+  color: white;
+  font-size: 8px;
+  padding: 3px;
+  pointer-events: none;
+}
+.vg-status {
+  font-size: 10px;
+  line-height: 1.6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+.vg-status p,
+.vg-status small {
+  width: 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.vg-status small {
+  color: var(--muted);
+}
+.vg-status.has-error {
+  border-left: 2px solid #bc6d55;
+  padding-left: 7px;
+}
+.vg-actions {
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.vg-actions button {
+  font: inherit;
+  font-size: 11px;
+  padding: 8px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+  color: var(--ink);
+  cursor: pointer;
+}
+.vg-actions .vg-run {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--ink);
+  color: var(--canvas);
+}
+.vg-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.vc-connections .vg-edge {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-dasharray: none;
+}
+.vc-connections .vg-edge.pending {
+  stroke-dasharray: 6 4;
+  opacity: 0.7;
+}
+.vg-wire-hint {
+  position: absolute;
+  top: 12px;
+  left: 80px;
+  z-index: 8;
+  font-size: 11px;
+  padding: 9px 12px;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.vg-wire-hint button {
+  background: none;
+  color: var(--ink);
+  border: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.vg-modal {
+  max-height: 88vh;
+  overflow-y: auto;
+}
+.vg-modal > p,
+.vg-modal > small {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+  display: block;
+  margin: 12px 0;
+}
+.vg-modal > textarea {
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 12px 0;
+}
+.vg-plan-list {
+  max-height: 35vh;
+  overflow: auto;
+}
+.vg-plan-list > div {
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
+}
+.vg-plan-list span {
+  float: right;
+  font-size: 11px;
+  color: var(--muted);
+}
+.vg-plan-list p {
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 5px 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .vg-toolbar {
+    width: 100%;
+    margin: 0;
+  }
+  .vg-toolbar .s-button {
+    flex: 1;
+  }
+  .vg-wire-hint {
+    left: 60px;
+    right: 10px;
+  }
+}
+.vg-prompt-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.vg-prompt-title button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+.vc-prompt-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #0007;
+  z-index: 250;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.vc-prompt-modal {
+  width: min(1100px, 92vw);
+  max-height: 90vh;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 25px 90px #0005;
+}
+.vc-prompt-modal header,
+.vc-prompt-modal footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.vc-prompt-modal textarea {
+  width: 100%;
+  height: 320px;
+  min-height: 200px;
+  max-height: 65vh;
+  resize: vertical;
+  background: var(--canvas);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+  font: inherit;
+  line-height: 1.8;
+}
+.vc-prompt-modal button {
+  background: var(--canvas);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+.vc-prompt-modal footer span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.vc-selection-actions select {
+  min-width: 110px;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 11px;
+  padding: 5px;
+}
+.vg-prompt-input {
+  position: relative;
+  min-width: 0;
+}
+.vg-prompt-input textarea {
+  width: 100%;
+}
+.vg-mention-menu {
+  display: grid;
+  max-height: 150px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  margin-top: 4px;
+  padding: 4px;
+}
+.vg-mention-menu button {
+  display: flex;
+  gap: 8px;
+  text-align: left;
+  padding: 7px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+}
+.vg-mention-menu button[aria-selected="true"] {
+  background: var(--canvas);
+}
+.vg-mention-menu span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vg-mention-menu small {
+  padding: 8px;
+}
+.vg-frames > button {
+  padding: 3px 0;
+  font-size: 11px;
+  color: var(--s-muted);
+  background: transparent;
+  border: 0;
+}
+.vg-frames label {
+  display: grid;
+  gap: 4px;
+  margin: 5px 0;
+}
+.vg-references .vg-mention-chip {
+  width: auto;
+  max-width: 230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  padding: 2px;
+}
+.vg-prompt-modal .vg-prompt-input {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.vg-prompt-modal .vg-prompt-input textarea {
+  flex: 1;
+}

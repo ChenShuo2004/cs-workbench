@@ -123,6 +123,18 @@ test("article export creates a ZIP and records local export without claiming pub
     "# 导出测试\n\n这是一篇已经写完的文章正文，包含足够的内容用于生成一个真实的本地交付包。",
   );
   const output = wb.exportProject(config, project.path, "article");
+  assert.ok(
+    output.qa.issues.some((issue) => issue.message.includes("资料来源")),
+  );
+  assert.equal(
+    output.qa.issues.some((issue) => issue.branch === "video"),
+    false,
+  );
+  assert.ok(fs.existsSync(path.join(output.folder, "收尾检查.json")));
+  assert.match(
+    fs.readFileSync(path.join(output.folder, "交付说明.md"), "utf8"),
+    /不能标为完整交付/,
+  );
   assert.ok(fs.existsSync(output.zip));
   assert.ok(fs.existsSync(path.join(output.folder, "writing/article.md")));
   const updated = wb.readProject(config, project.path);

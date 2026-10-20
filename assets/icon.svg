@@ -1,12 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <rect width="1024" height="1024" rx="208" fill="#18242a"/>
-  <path d="M136 286h752" stroke="#657d87" stroke-width="6"/>
-  <rect x="136" y="155" width="752" height="86" rx="18" fill="#e7ede9"/>
-  <circle cx="178" cy="198" r="12" fill="#2f967f"/>
-  <circle cx="213" cy="198" r="12" fill="#d6ac59"/>
-  <circle cx="248" cy="198" r="12" fill="#7895a0"/>
-  <path d="M330 454c-27-26-63-40-105-40-94 0-159 73-159 166 0 94 65 168 159 168 43 0 80-15 108-43" transform="translate(96 0)" fill="none" stroke="#f4f4ec" stroke-width="73" stroke-linecap="round"/>
-  <path d="M708 455c-31-30-68-43-113-43-72 0-120 37-120 95 0 57 47 78 121 90 84 13 128 36 128 91 0 59-51 99-131 99-47 0-93-18-130-52" fill="none" stroke="#68c7ae" stroke-width="72" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="136" y="835" width="452" height="22" rx="11" fill="#6c838c"/>
-  <rect x="606" y="835" width="119" height="22" rx="11" fill="#d8b36a"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><title>KAI 男孩 · CS 工作台</title><image href="branding/kai-avatar.png" width="1024" height="1024"/></svg>

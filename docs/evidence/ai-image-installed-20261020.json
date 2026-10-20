@@ -1,0 +1,74 @@
+{
+  "checks": [
+    "relaunch restores the real generated image, history and both edited shots without another model call",
+    "image bridge connects through the installed public MCP tools",
+    "real generated image decodes in canvas media preview",
+    "390px page and generation panel have no horizontal overflow"
+  ],
+  "errors": [],
+  "priorRealGenerationJob": "85fc9b3b-5106-4c63-8f1e-7b78a24fa57f",
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-generation-qa-GQEEPh",
+  "packaged": true,
+  "overflow": [
+    {
+      "tag": "path",
+      "class": {},
+      "right": 434
+    },
+    {
+      "tag": "ARTICLE",
+      "class": "vc-node  ",
+      "right": 396.6000061035156
+    },
+    {
+      "tag": "HEADER",
+      "class": "",
+      "right": 395.75
+    },
+    {
+      "tag": "BUTTON",
+      "class": "vc-node-image",
+      "right": 395.75
+    },
+    {
+      "tag": "DIV",
+      "class": "",
+      "right": 395.75
+    },
+    {
+      "tag": "svg",
+      "class": {},
+      "right": 395.75
+    },
+    {
+      "tag": "rect",
+      "class": {},
+      "right": 395.75
+    },
+    {
+      "tag": "g",
+      "class": {},
+      "right": 413.7213134765625
+    },
+    {
+      "tag": "g",
+      "class": {},
+      "right": 413.7213134765625
+    },
+    {
+      "tag": "rect",
+      "class": {},
+      "right": 395.75
+    },
+    {
+      "tag": "rect",
+      "class": {},
+      "right": 395.75
+    },
+    {
+      "tag": "path",
+      "class": {},
+      "right": 395.75
+    }
+  ]
+}

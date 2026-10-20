@@ -1,0 +1,142 @@
+{
+  "checkedAt": "2026-10-17T14:18:00.635Z",
+  "tool": "rea-agents 6.5.0",
+  "scope": "static analysis, not runtime verification",
+  "references": [
+    {
+      "label": "CS Workbench baseline",
+      "evidenceId": "ev_e491f27e9d9890d7df58cbc9772518fa695f4b5edff662d6e633927e26f2d6b4",
+      "subject": {
+        "name": "baseline",
+        "digest": {
+          "sha256": "9471b9a89039b13f7eaf38b0aaeb7bb0649d1bb2bcfcd886189e95bdf03c8a54"
+        },
+        "local_path": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/reference/baseline",
+        "format": "directory",
+        "architecture": null
+      },
+      "parameters": {
+        "format": "directory",
+        "integrity_policy": "fail"
+      },
+      "confidence": "derived",
+      "statistics": {
+        "relevant_files": 15,
+        "nested_asar_containers": 0,
+        "text_bytes_read": 224798,
+        "invalid_utf8_files": 0,
+        "parsed_javascript_files": 12,
+        "visited_ast_nodes": 19493,
+        "findings": 243,
+        "modules": 0,
+        "parse_failures": 0
+      },
+      "summary": {
+        "browser_windows": 2,
+        "explicit_web_preferences": 5,
+        "preload_entrypoints": 1,
+        "context_bridge_apis": 1,
+        "exposed_api_members": 0,
+        "ipc": {
+          "operations": 49,
+          "literal_channels": 24,
+          "dynamic_channel_operations": 2,
+          "renderer_transmissions": 24,
+          "renderer_listeners": 1,
+          "main_handlers": 24,
+          "paired_renderer_transmissions": 23,
+          "ambiguous_renderer_transmissions": 0,
+          "unpaired_literal_renderer_transmissions": 0
+        },
+        "sender_validation_observations": 1,
+        "utility_processes": 0,
+        "resolved_utility_entrypoints": 0,
+        "native_addon_bindings": 0,
+        "resolved_native_addon_bindings": 0
+      },
+      "limitations": [
+        "CommonJS and ESM binding relationships were recovered from inert syntax and resolved only within the inventoried artifact container.",
+        "Dynamic IPC channel expressions remain unresolved and are never paired by textual similarity.",
+        "Electron API identity follows proven lexical module aliases and structurally verified module-namespace interop. Other reassignments, dynamic selections, and visibly overwritten namespace members are unresolved; missing findings do not establish absence. Arbitrary call side effects and runtime registration are not evaluated.",
+        "Electron relationships are derived from inert syntax; runtime registration, reachability, defaults, and enforcement remain unproven.",
+        "Graph coverage is incomplete; unavailable facts remain explicit and must not be read as absence.",
+        "JavaScript and HTML were parsed as inert text; bundle bootstrap code was never executed.",
+        "Sender, frame, URL, and origin checks are observations only; REA does not claim that they enforce a complete authorization policy.",
+        "Static imports, entrypoints, workers, endpoints, and storage relationships do not prove runtime execution.",
+        "Static paths and relationships may remain unresolved when expressions are dynamic or obfuscated.",
+        "Webpack/Rspack factories were recovered from AST literals; REA did not invoke push handlers or bundle bootstrap code."
+      ]
+    },
+    {
+      "label": "LosslessCut selected modules",
+      "evidenceId": "ev_75359890ac1a5c10383e38628dac89017242bcc01a9d37b36b945e406e689f0f",
+      "subject": {
+        "name": "lossless-cut",
+        "digest": {
+          "sha256": "664f44cec6709885cb4577d9d75fe2eb93f969ea1756c5fc7bc5a15ba6d662be"
+        },
+        "local_path": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/reference/lossless-cut",
+        "format": "directory",
+        "architecture": null
+      },
+      "parameters": {
+        "format": "directory",
+        "integrity_policy": "fail",
+        "source_paths": [
+          "src/main/ffmpeg.ts",
+          "src/renderer/src/segments.ts",
+          "src/renderer/src/hooks/useFfmpegOperations.ts"
+        ]
+      },
+      "confidence": "derived",
+      "statistics": {
+        "relevant_files": 226,
+        "nested_asar_containers": 0,
+        "text_bytes_read": 88604,
+        "invalid_utf8_files": 0,
+        "parsed_javascript_files": 3,
+        "visited_ast_nodes": 10709,
+        "findings": 174,
+        "modules": 0,
+        "parse_failures": 0
+      },
+      "summary": {
+        "browser_windows": 0,
+        "explicit_web_preferences": 0,
+        "preload_entrypoints": 0,
+        "context_bridge_apis": 0,
+        "exposed_api_members": 0,
+        "ipc": {
+          "operations": 0,
+          "literal_channels": 0,
+          "dynamic_channel_operations": 0,
+          "renderer_transmissions": 0,
+          "renderer_listeners": 0,
+          "main_handlers": 0,
+          "paired_renderer_transmissions": 0,
+          "ambiguous_renderer_transmissions": 0,
+          "unpaired_literal_renderer_transmissions": 0
+        },
+        "sender_validation_observations": 0,
+        "utility_processes": 0,
+        "resolved_utility_entrypoints": 0,
+        "native_addon_bindings": 0,
+        "resolved_native_addon_bindings": 0
+      },
+      "limitations": [
+        "Caller-selected source analysis leaves 223 inventoried files outside analysis scope. Inventory identity covers the complete artifact; relationships through unselected sources remain unknown.",
+        "CommonJS and ESM binding relationships were recovered from inert syntax and resolved only within the inventoried artifact container.",
+        "Electron API identity follows proven lexical module aliases and structurally verified module-namespace interop. Other reassignments, dynamic selections, and visibly overwritten namespace members are unresolved; missing findings do not establish absence. Arbitrary call side effects and runtime registration are not evaluated.",
+        "Graph coverage is incomplete; unavailable facts remain explicit and must not be read as absence.",
+        "JavaScript and HTML were parsed as inert text; bundle bootstrap code was never executed.",
+        "Static imports, entrypoints, workers, endpoints, and storage relationships do not prove runtime execution.",
+        "Static paths and relationships may remain unresolved when expressions are dynamic or obfuscated.",
+        "Webpack/Rspack factories were recovered from AST literals; REA did not invoke push handlers or bundle bootstrap code."
+      ]
+    }
+  ],
+  "openCut": {
+    "commit": "e668010778568641babef2cc40be4703ae6916d6",
+    "finding": "apps/web/src/routes/editor.tsx renders Coming soon; desktop timeline.rs is a placeholder. Not adopted as implementation."
+  }
+}
