@@ -44,7 +44,7 @@
   padding: 8px 16px;
   gap: 14px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
 }
 .vc-topline > span:first-child {
   display: flex;
@@ -55,7 +55,7 @@
 }
 .vc-topline b {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 10.5px;
   font-weight: 400;
   border-left: 1px solid var(--line);
   padding-left: 8px;
@@ -120,7 +120,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
 }
 .vc-node header span:first-child {
@@ -168,7 +168,7 @@
   background: #0008;
   border: 1px solid #ffffff26;
   padding: 3px 6px;
-  font-size: 9px;
+  font-size: 10.5px;
   border-radius: 4px;
 }
 .vc-node footer {
@@ -244,7 +244,7 @@
 }
 .vc-note small {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 10.5px;
 }
 .vc-tools,
 .vc-zoom {
@@ -298,7 +298,7 @@
   padding: 2px;
 }
 .vc-zoom span {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
   width: 38px;
   text-align: center;
@@ -314,7 +314,7 @@
   position: absolute;
   bottom: 12px;
   left: 16px;
-  font-size: 9px;
+  font-size: 10.5px;
   color: var(--muted);
   pointer-events: none;
 }
@@ -359,7 +359,7 @@
 }
 .vc-empty small {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 10.5px;
 }
 .vc-composer {
   position: absolute;
@@ -391,7 +391,7 @@
 }
 .vc-composer-label span {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 10.5px;
   margin-left: auto;
 }
 .vc-composer textarea {
@@ -417,7 +417,7 @@
   background: var(--elevated);
   border: 1px solid var(--line);
   border-radius: 6px;
-  font-size: 10px;
+  font-size: 11px;
   padding: 6px 8px;
   height: 30px;
 }
@@ -461,7 +461,7 @@
   display: grid;
   gap: 8px;
   margin: 14px 0;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
 }
 .vc-floating textarea,
@@ -482,7 +482,7 @@
 }
 .vc-detail-kicker {
   color: var(--accent-text);
-  font-size: 9px;
+  font-size: 10.5px;
   letter-spacing: 1.5px;
 }
 .vc-floating .vc-toggle {
@@ -499,7 +499,7 @@
 }
 .vc-help {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.9;
 }
 .vc-floating .vc-search {
@@ -538,7 +538,7 @@
   object-fit: cover;
 }
 .vc-asset strong {
-  font-size: 9px;
+  font-size: 10.5px;
   font-weight: 450;
   display: block;
   overflow: hidden;
@@ -548,7 +548,7 @@
 }
 .vc-asset .s-button {
   margin: 0 5px;
-  font-size: 8px;
+  font-size: 10px;
   gap: 3px;
   padding: 4px;
 }
@@ -562,14 +562,14 @@
   flex-direction: column;
   height: 100%;
   gap: 8px;
-  font-size: 10px;
+  font-size: 11px;
 }
 .vc-external {
   display: flex;
   gap: 8px;
   align-items: center;
   color: var(--accent-text);
-  font-size: 10px;
+  font-size: 11px;
   margin: 18px 0 4px;
   text-decoration: none;
 }
@@ -592,7 +592,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: 11px;
 }
 .vc-sequence-heading b {
   font-size: 16px;
@@ -600,7 +600,7 @@
   font-variant-numeric: tabular-nums;
 }
 .vc-sequence-heading small {
-  font-size: 8px;
+  font-size: 10px;
   color: var(--muted);
 }
 .vc-sequence-clips {
@@ -629,12 +629,12 @@
 }
 .vc-sequence-clips button span {
   color: var(--accent-text);
-  font-size: 9px;
+  font-size: 10.5px;
 }
 .vc-sequence-clips button b {
   grid-row: 2;
   grid-column: 1 / -1;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 450;
   overflow: hidden;
   white-space: nowrap;
@@ -644,12 +644,12 @@
   grid-row: 1;
   grid-column: 2;
   text-align: right;
-  font-size: 9px;
+  font-size: 10.5px;
   color: var(--muted);
 }
 .vc-sequence-clips p {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
 }
 .vc-workspace button:disabled {
   opacity: 0.4;
@@ -719,7 +719,7 @@
     width: 88%;
   }
   .vc-empty .studio-eyebrow {
-    font-size: 8px;
+    font-size: 10px;
     letter-spacing: 1px;
   }
   .vc-empty p {
@@ -901,7 +901,7 @@ button.vc-external {
   border-radius: 10px;
   background: var(--panel);
   box-shadow: 0 4px 20px #0001;
-  font-size: 10px;
+  font-size: 11px;
   white-space: nowrap;
 }
 .vc-selection-actions button {
@@ -966,7 +966,7 @@ button.vc-external {
 .vc-minimap span {
   display: block;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 10px;
   margin-top: 6px;
 }
 .vc-help-popover {
@@ -993,7 +993,7 @@ button.vc-external {
   color: var(--ink);
 }
 .vc-help-popover p {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
   line-height: 1.9;
 }
@@ -1001,7 +1001,7 @@ button.vc-external {
   padding: 2px 4px;
   border: 1px solid var(--line);
   border-radius: 3px;
-  font-size: 9px;
+  font-size: 10.5px;
   color: var(--ink);
 }
 .vc-sequence-clips button[draggable="true"] {
@@ -1031,7 +1031,7 @@ button.vc-external {
 }
 .vc-preview-overlay header span {
   color: #b0b4be;
-  font-size: 10px;
+  font-size: 11px;
 }
 .vc-preview-overlay header strong {
   font-weight: 500;
@@ -1101,7 +1101,7 @@ button.vc-external {
 }
 .vc-preview-overlay small {
   color: #b0b4be;
-  font-size: 10px;
+  font-size: 11px;
 }
 .vc-preview-error {
   text-align: center;
@@ -1212,7 +1212,7 @@ button.vc-external {
   outline: 1px solid var(--s-border);
 }
 .vc-command-list small {
-  font-size: 10px;
+  font-size: 11px;
   opacity: 0.6;
 }
 .vc-command-list > button:disabled {

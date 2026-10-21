@@ -45,7 +45,7 @@ body {
   font-weight: 600;
 }
 .studio-shell .sidebar-label {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.6px;
 }
 .studio-shell .nav-stage {
@@ -102,7 +102,7 @@ body {
 }
 kbd {
   font:
-    10px ui-monospace,
+    12px ui-monospace,
     monospace;
   border: 1px solid var(--line);
   border-radius: 4px;
@@ -401,7 +401,7 @@ kbd {
   border-color: var(--line);
 }
 .search-category {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   min-width: 32px;
 }
@@ -638,10 +638,10 @@ kbd {
   .workspace-search footer {
     gap: 8px;
     padding: 12px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .workspace-search footer kbd {
-    font-size: 9px;
+    font-size: 11px;
   }
 }
 :root[data-motion="reduced"] *,
@@ -660,5 +660,94 @@ kbd {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* 0.7.1 readability pass: home peeks side by side, single-page stages link
+   directly, brand subtitle stays on one line. */
+.desk-peeks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.desk-peeks .ops-peek {
+  margin-bottom: 0;
+  min-width: 0;
+}
+.desk-peeks .ops-peek strong {
+  font-size: 14px;
+}
+.desk-peeks .ops-peek > .button {
+  flex: none;
+}
+@media (max-width: 1100px) {
+  .desk-peeks {
+    grid-template-columns: 1fr;
+  }
+}
+.nav-stage.direct > span {
+  flex: 1;
+  min-width: 0;
+}
+.nav-stage.direct > small {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.nav-stage.direct > .nav-count {
+  margin-left: 2px;
+  flex: none;
+}
+.nav-stage.direct.active {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-weight: 650;
+}
+.nav-stage.direct.active > small {
+  color: inherit;
+}
+.studio-shell .brand-sub {
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+/* Composite inputs show focus on the whole field, not a box inside it. */
+.quick-task:focus-within {
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.quick-task input:focus-visible {
+  outline: none;
+}
+/* Short windows (e.g. 13" laptops): keep the whole sidebar visible. */
+@media (min-width: 801px) and (max-height: 940px) {
+  :root:not([data-density="compact"]) {
+    --nav-height: 35px;
+  }
+  .studio-shell .sidebar {
+    padding-top: 14px;
+  }
+  .studio-shell .sidebar-top {
+    padding-bottom: 14px;
+  }
+  .studio-shell .sidebar-label {
+    margin: 8px 0 6px;
+  }
+  .studio-shell .workflow-label {
+    margin-top: 12px;
+  }
+  .studio-shell .nav-item,
+  .studio-shell .nav-stage {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+  .studio-shell .stage-items .nav-item {
+    min-height: 31px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .studio-shell .stage-items {
+    margin: 2px 0 4px 17px;
   }
 }

@@ -92,7 +92,7 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted);
   margin: 8px 0;
 }
@@ -126,7 +126,7 @@
 .vg-hint {
   display: block;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 10.5px;
   line-height: 1.6;
   margin: 8px 0;
 }
@@ -141,7 +141,7 @@
   display: flex;
   gap: 4px;
   padding: 3px 5px;
-  font-size: 9px;
+  font-size: 10.5px;
   overflow-wrap: anywhere;
 }
 .vg-references button {
@@ -178,12 +178,12 @@
   left: 3px;
   background: #0009;
   color: white;
-  font-size: 8px;
+  font-size: 10px;
   padding: 3px;
   pointer-events: none;
 }
 .vg-status {
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.6;
   display: flex;
   flex-wrap: wrap;
@@ -439,7 +439,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 11px;
   padding: 2px;
 }
 .vg-prompt-modal .vg-prompt-input {
