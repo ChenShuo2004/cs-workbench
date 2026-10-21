@@ -86,7 +86,6 @@ async function noOverflow() {
     animations: "disabled",
     path: path.join(out, "settings-paper.png"),
   });
-  await page.getByRole("button", { name: "展开决定选题", exact: true }).click();
   await page.getByRole("button", { name: "项目", exact: true }).click();
   await page
     .getByRole("button", { name: /内容系统 · 阅读体验验收/ })

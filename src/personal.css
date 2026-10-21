@@ -52,7 +52,7 @@
   margin-left: auto;
   border: 1px solid var(--line);
   border-radius: 4px;
-  font-size: 8px;
+  font-size: 11px;
   padding: 4px 7px;
   color: var(--ink);
 }
@@ -74,7 +74,7 @@
   font-weight: 400;
 }
 .day-stats p {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   margin: 6px 0 0;
 }
@@ -105,7 +105,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
   border-top: 1px solid var(--line);
   padding-top: 16px;
@@ -142,7 +142,7 @@
   margin-bottom: 11px;
 }
 .shortcut-card .studio-eyebrow {
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
   letter-spacing: 1.6px;
 }
@@ -153,12 +153,12 @@
   letter-spacing: -0.3px;
 }
 .shortcut-card p {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   margin-bottom: 20px;
 }
 .shortcut-bottom {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
   display: flex;
   justify-content: space-between;
@@ -215,7 +215,7 @@
   align-items: center;
 }
 .desk-panel-title h2 span {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
   font-weight: 400;
 }
@@ -226,7 +226,7 @@
   border: 0;
   background: none;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .quick-task {
   margin: 0 20px 15px;
@@ -253,7 +253,7 @@
   border-left: 1px solid var(--line);
   background: none;
   color: var(--accent-text);
-  font-size: 10px;
+  font-size: 12px;
   white-space: nowrap;
   padding-left: 12px;
 }
@@ -305,7 +305,7 @@
 }
 .task-body small {
   display: block;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
   max-height: 16px;
   overflow: hidden;
@@ -314,7 +314,7 @@
   margin-top: 5px;
 }
 .priority {
-  font-size: 8px;
+  font-size: 11px;
   padding: 4px 6px;
   border-radius: 4px;
   flex: none;
@@ -332,7 +332,7 @@
   color: var(--muted);
 }
 .task-date {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
   font-family: monospace;
 }
@@ -358,7 +358,7 @@
   margin: 0 0 10px;
 }
 .desk-empty small {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
 }
 .journal-title {
@@ -366,7 +366,7 @@
   margin-top: 8px;
 }
 .journal-title > small {
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
 }
 .journal-input {
@@ -411,7 +411,7 @@
 }
 .folder-mini small {
   display: block;
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -424,12 +424,12 @@
   color: var(--muted);
 }
 .small-empty p {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.8;
   margin: 12px 0 18px;
 }
 .small-empty .s-button {
-  font-size: 10px;
+  font-size: 12px;
 }
 .activity-list {
   padding: 0 20px 20px;
@@ -450,19 +450,19 @@
   flex: none;
 }
 .activity-list b {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink);
   font-weight: 500;
 }
 .activity-list p {
-  font-size: 10px;
+  font-size: 12px;
   margin: 5px 0 6px;
   color: var(--muted);
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
 .activity-list small {
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
 }
 .personal-footer {
@@ -470,7 +470,7 @@
   justify-content: space-between;
   align-items: center;
   margin: 24px 0 10px;
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
 }
 .personal-footer > span:first-child {
@@ -515,7 +515,7 @@
   background: none;
   border: 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   padding: 7px 10px;
   border-radius: 3px;
 }
@@ -531,11 +531,11 @@
   justify-content: space-between;
   gap: 15px;
   padding: 18px 0;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
 }
 .task-summary span {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .memory-toolbar {
@@ -620,11 +620,11 @@
   display: flex;
   justify-content: space-between;
   padding: 13px 19px;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .memory-card footer small {
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
 }
 .memory-empty {
@@ -684,7 +684,7 @@
 }
 .folder-sidebar .panel-note {
   margin: 25px 20px 0;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .file-browser {
@@ -700,7 +700,7 @@
 }
 .file-breadcrumb > span {
   flex: 1;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--accent-text);
   overflow-wrap: anywhere;
   min-width: 0;
@@ -716,7 +716,7 @@
   padding: 14px 8px;
   border-bottom: 1px solid var(--line);
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .file-row {
   display: flex;
@@ -745,12 +745,12 @@
 }
 .file-row > span {
   width: 70px;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .file-row > small {
   width: 80px;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .file-preview {
@@ -826,7 +826,7 @@
 }
 .conversation-list small {
   display: block;
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
   margin-top: 6px;
 }
@@ -839,7 +839,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .provider-health > div {
@@ -849,18 +849,18 @@
   padding: 12px 4px;
 }
 .provider-health b {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--ink);
 }
 .provider-health small {
   display: block;
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
   margin-top: 4px;
 }
 .provider-health p {
-  font-size: 8px;
+  font-size: 11px;
   line-height: 1.8;
   color: var(--muted);
   margin: 12px 4px 0;
@@ -895,7 +895,7 @@
   color: var(--ink);
 }
 .readonly-badge {
-  font-size: 8px;
+  font-size: 11px;
   padding: 4px 6px;
   border: 1px solid var(--line);
   border-radius: 4px;
@@ -923,7 +923,7 @@
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 7px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .chat-message.user .message-avatar {
   background: var(--accent-soft);
@@ -935,13 +935,13 @@
 }
 .chat-message header {
   color: var(--ink);
-  font-size: 10px;
+  font-size: 12px;
   margin: 5px 0 12px;
   display: flex;
   gap: 12px;
 }
 .chat-message header small {
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
 }
 .chat-message pre {
@@ -965,7 +965,7 @@
   color: var(--muted);
   padding: 0;
   margin-top: 8px;
-  font-size: 8px;
+  font-size: 11px;
 }
 .agent-welcome {
   text-align: center;
@@ -983,7 +983,7 @@
   color: var(--ink);
 }
 .agent-welcome .studio-eyebrow {
-  font-size: 7px;
+  font-size: 10px;
 }
 .agent-welcome h2 {
   font-size: 25px;
@@ -1013,7 +1013,7 @@
   color: var(--accent-text);
   padding: 10px 13px;
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 12px;
   text-align: left;
 }
 .agent-composer {
@@ -1029,7 +1029,7 @@
 }
 .context-picks details {
   position: relative;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .context-picks summary {
@@ -1057,7 +1057,7 @@
   align-items: center;
   gap: 8px;
   padding: 7px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .context-picks input {
   accent-color: var(--accent);
@@ -1088,7 +1088,7 @@
   border: 1px solid var(--line);
   color: var(--accent-text);
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 12px;
   padding: 8px;
 }
 .composer-bottom select {
@@ -1099,7 +1099,7 @@
   margin-right: auto;
 }
 .agent-composer > p {
-  font-size: 8px;
+  font-size: 11px;
   line-height: 1.6;
   color: var(--muted);
   margin: 10px 0 0;
@@ -1111,7 +1111,7 @@
   background: var(--accent-soft);
   padding: 4px 7px;
   border-radius: 4px;
-  font-size: 8px;
+  font-size: 11px;
   color: var(--accent-text);
 }
 .attachment-chip button {
@@ -1127,7 +1127,7 @@
 }
 .personal-form > label {
   margin: 17px 0;
-  font-size: 10px;
+  font-size: 12px;
 }
 .personal-form label input,
 .personal-form textarea,
@@ -1159,7 +1159,7 @@
   flex: 1;
   min-width: 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 .personal-form select {
   color-scheme: dark;
@@ -1270,7 +1270,7 @@
     min-height: 215px;
   }
   .day-top {
-    font-size: 9px;
+    font-size: 11px;
   }
   .date-pill {
     display: none;
@@ -1358,7 +1358,7 @@
     line-height: 1.5;
   }
   .personal-heading p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .desk-overview {
     grid-template-columns: 1fr;
@@ -1392,7 +1392,7 @@
     font-size: 11px;
   }
   .desk-task .priority {
-    font-size: 7px;
+    font-size: 10px;
     padding: 3px 4px;
   }
   .task-page {
@@ -1419,7 +1419,7 @@
     gap: 8px;
   }
   .memory-toolbar .s-button {
-    font-size: 10px;
+    font-size: 12px;
   }
   .personal-footer {
     gap: 10px;
@@ -1436,7 +1436,7 @@
     padding: 9px;
   }
   .file-breadcrumb .s-button {
-    font-size: 8px;
+    font-size: 11px;
     padding: 5px;
   }
   .file-row {
@@ -1444,14 +1444,14 @@
     padding: 12px 2px;
   }
   .file-row b {
-    font-size: 10px;
+    font-size: 12px;
   }
   .file-row small {
     display: none;
   }
   .file-row > span {
     width: 50px;
-    font-size: 8px;
+    font-size: 11px;
   }
   .file-table-head {
     grid-template-columns: 1fr 50px;
@@ -1473,10 +1473,10 @@
     gap: 8px;
   }
   .provider-health b {
-    font-size: 9px;
+    font-size: 11px;
   }
   .provider-health small {
-    font-size: 7px;
+    font-size: 10px;
   }
   .provider-health > div {
     padding: 6px 0;
@@ -1488,7 +1488,7 @@
     padding: 13px 12px;
   }
   .agent-chat-header strong {
-    font-size: 10px;
+    font-size: 12px;
   }
   .agent-composer {
     padding: 12px 10px;
@@ -1498,17 +1498,17 @@
     gap: 6px;
   }
   .composer-bottom select {
-    font-size: 9px;
+    font-size: 11px;
     max-width: 145px;
   }
   .composer-bottom > input {
-    font-size: 9px;
+    font-size: 11px;
     width: 125px;
     flex: 1;
   }
   .composer-bottom .s-button {
     margin-left: auto;
-    font-size: 10px;
+    font-size: 12px;
   }
   .agent-welcome {
     padding: 25px 0 0;
@@ -1557,7 +1557,7 @@
   flex-wrap: wrap !important;
 }
 .grok-actions .s-button {
-  font-size: 8px;
+  font-size: 11px;
   padding: 5px 7px;
 }
 @media (max-width: 800px) {
@@ -1575,7 +1575,7 @@
 }
 .personal-header-actions kbd {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 .workspace-finder {
   width: min(690px, calc(100vw - 32px));
@@ -1620,7 +1620,7 @@
 }
 .finder-results > button > span {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   flex: none;
 }
 .finder-results > button > div {
@@ -1637,7 +1637,7 @@
 .finder-results small {
   color: var(--muted);
   margin-top: 5px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .finder-results > p {
   padding: 20px;
@@ -1679,7 +1679,7 @@
   color: var(--ink);
 }
 .data-counts span {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   margin-top: 5px;
 }
@@ -1699,7 +1699,7 @@
 }
 @media (max-width: 600px) {
   .personal-header-actions .s-button {
-    font-size: 10px;
+    font-size: 12px;
     padding: 8px;
   }
   .data-counts {

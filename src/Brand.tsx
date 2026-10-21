@@ -1,5 +1,5 @@
 import React from "react";
-import avatar from "../assets/branding/kai-avatar.png";
+import avatar from "../assets/branding/kai-avatar-384.webp";
 
 export function BrandAvatar({ className = "" }: { className?: string }) {
   return (
