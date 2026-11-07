@@ -1,3 +1,5 @@
+> **English:** A local macOS workspace for managing creator projects, notes, files, agents, and video-production workflows.
+
 # CS 工作台 Pro
 
 **个人任务、随手记、记忆、文件空间、Agent 和视频创作，一处完成。**
