@@ -26,7 +26,7 @@
   font-size: 14px;
 }
 .studio-shell .brand-sub {
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 0.7px;
   color: var(--muted);
 }
@@ -44,7 +44,7 @@
 }
 .studio-shell .sidebar-label {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .studio-shell .sidebar-hint {
   color: var(--muted);
@@ -67,7 +67,7 @@
   color: var(--muted);
   background: transparent;
   border: 0;
-  font-size: 10px;
+  font-size: 12px;
 }
 .studio-shell .top-actions > .button {
   background: var(--elevated);
@@ -112,7 +112,7 @@
   margin-bottom: 23px;
 }
 .studio-eyebrow {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 2.1px;
   color: var(--muted);
   font-weight: 600;
@@ -164,7 +164,7 @@
 .s-button.compact {
   padding: 5px 8px;
   min-height: 26px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .s-icon {
   width: 29px;
@@ -225,7 +225,7 @@
   display: flex;
   gap: 5px;
   align-items: center;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .projectbar-right {
@@ -315,7 +315,7 @@
 }
 .subtle {
   color: var(--muted) !important;
-  font-size: 9px;
+  font-size: 11px;
 }
 .mode-switch {
   display: flex;
@@ -350,7 +350,7 @@
   margin: 0 14px 12px;
 }
 .script-actions .s-button {
-  font-size: 10px;
+  font-size: 12px;
   min-height: 29px;
   padding: 5px 9px;
 }
@@ -380,7 +380,7 @@
   justify-content: space-between;
   gap: 5px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 11px;
   font-family: monospace;
 }
 .clip-meta label {
@@ -399,7 +399,7 @@
   border: 0;
   background: none;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 11px;
   font-family: monospace;
 }
 .script-clip textarea {
@@ -452,7 +452,7 @@
 }
 .panel-empty small {
   display: block;
-  font-size: 9px;
+  font-size: 11px;
   margin-top: 12px;
   color: var(--muted);
 }
@@ -469,7 +469,7 @@
   justify-content: space-between;
   padding: 0 18px;
   border-bottom: 1px solid var(--line);
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .viewer-toolbar > span:first-child {
@@ -608,7 +608,7 @@
   bottom: 9px;
 }
 .preview-empty .studio-eyebrow {
-  font-size: 7px;
+  font-size: 10px;
   letter-spacing: 1.4px;
 }
 .preview-empty h2 {
@@ -619,7 +619,7 @@
 }
 .preview-empty p {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   margin-bottom: 22px;
 }
 .preview-empty > div:last-child {
@@ -627,7 +627,7 @@
   gap: 9px;
 }
 .preview-empty .s-button {
-  font-size: 10px;
+  font-size: 12px;
   min-height: 31px;
   padding: 7px 10px;
 }
@@ -640,7 +640,7 @@
   border-bottom: 1px solid var(--line);
 }
 .viewer-time {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink);
   font-family: monospace;
 }
@@ -664,7 +664,7 @@
 }
 .key-hint {
   font-family: monospace;
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
   border: 1px solid var(--line);
   padding: 3px;
@@ -685,7 +685,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .timeline-toolbar .subtle {
   margin-left: 4px;
@@ -702,7 +702,7 @@
   display: flex;
   justify-content: space-between;
   margin: 0 0 11px 53px;
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
   font-family: monospace;
 }
@@ -719,7 +719,7 @@
   width: 44px;
   flex: none;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 11px;
 }
 .track-content {
   display: flex;
@@ -740,7 +740,7 @@
   color: var(--ink);
   border-radius: 5px;
   padding: 8px;
-  font-size: 8px;
+  font-size: 11px;
 }
 .timeline-clip.pixel {
   background: var(--accent-soft);
@@ -760,7 +760,7 @@
   text-align: left;
 }
 .timeline-clip small {
-  font-size: 7px;
+  font-size: 10px;
   opacity: 0.6;
 }
 .track-placeholder {
@@ -769,7 +769,7 @@
   border-radius: 4px;
   display: grid;
   place-items: center;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .caption-track {
@@ -785,14 +785,14 @@
   background: var(--elevated);
   color: var(--warning);
   border-radius: 4px;
-  font-size: 8px;
+  font-size: 11px;
   padding: 4px 8px;
   height: 25px;
 }
 .timeline-bottom {
   display: flex;
   justify-content: space-between;
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
   margin-top: 11px;
 }
@@ -815,7 +815,7 @@
   border-bottom: 1px solid var(--line);
 }
 .inspector-section h3 {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--ink);
   display: flex;
@@ -828,7 +828,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
   margin: 10px 0;
 }
@@ -839,11 +839,11 @@
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 5px;
-  font-size: 9px;
+  font-size: 11px;
   padding: 6px 4px;
 }
 .inspector-hint {
-  font-size: 8px;
+  font-size: 11px;
   line-height: 1.8;
   color: var(--muted);
   margin: 11px 0 0;
@@ -861,7 +861,7 @@
   flex: 1;
   min-width: 0;
   color: var(--muted);
-  font-size: 8px;
+  font-size: 11px;
 }
 .trim-inputs input {
   margin-top: 7px;
@@ -871,11 +871,11 @@
   color: var(--ink);
   padding: 7px 5px;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .inspector-section .full {
   margin-top: 12px;
-  font-size: 10px;
+  font-size: 12px;
   min-height: 30px;
   padding: 6px;
 }
@@ -886,14 +886,14 @@
   gap: 8px;
   align-items: flex-start;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .inspector-footer .live-dot {
   margin-top: 4px;
 }
 .inspector-footer small {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 11px;
   display: block;
   margin-top: 4px;
 }
@@ -903,7 +903,7 @@
   align-items: center;
   margin: 15px 0 0;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .studio-footer button {
   display: flex;
@@ -912,7 +912,7 @@
   border: 0;
   background: none;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 .scene-writer {
   padding: 0 14px 15px;
@@ -920,7 +920,7 @@
   margin-bottom: 13px;
 }
 .scene-writer label {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   display: block;
   margin: 1px 0 8px;
@@ -940,14 +940,14 @@
 }
 .scene-writer .s-button {
   width: 100%;
-  font-size: 10px;
+  font-size: 12px;
   min-height: 30px;
   padding: 6px;
 }
 .scene-writer small {
   display: block;
   line-height: 1.8;
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
   margin-top: 7px;
 }
@@ -962,7 +962,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .template-list {
   padding: 0 13px 13px;
@@ -995,11 +995,11 @@
   font-weight: 500;
 }
 .template-card small {
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
 }
 .panel-note {
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.8;
   color: var(--muted);
 }
@@ -1020,7 +1020,7 @@
   min-width: 0;
   width: 100%;
   color: var(--ink);
-  font-size: 10px;
+  font-size: 12px;
   outline: 0;
 }
 .media-list {
@@ -1063,11 +1063,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
 }
 .media-info small {
-  font-size: 8px;
+  font-size: 11px;
   color: var(--muted);
 }
 .media-icon {
@@ -1089,7 +1089,7 @@
   display: flex;
   gap: 7px;
   align-items: center;
-  font-size: 10px;
+  font-size: 12px;
 }
 .library-link svg:last-child {
   margin-left: auto;
@@ -1126,18 +1126,18 @@
   padding: 10px;
   border-radius: 5px;
   color: var(--ink);
-  font-size: 9px;
+  font-size: 11px;
 }
 .silence-result b {
   font-weight: 500;
 }
 .silence-result p {
-  font-size: 8px;
+  font-size: 11px;
   line-height: 1.8;
   margin: 5px 0 10px;
 }
 .silence-result .s-button {
-  font-size: 9px;
+  font-size: 11px;
   padding: 6px;
   min-height: 27px;
 }
@@ -1240,7 +1240,7 @@
   flex: 1;
 }
 .job > div > span {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
 }
 .job progress {
@@ -1251,7 +1251,7 @@
 }
 .job small {
   flex: 1;
-  font-size: 9px;
+  font-size: 11px;
   overflow-wrap: anywhere;
   line-height: 1.6;
   max-height: 100px;
@@ -1403,7 +1403,7 @@
     font-size: 20px;
   }
   .studio-heading p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .studio-heading > .s-button {
     font-size: 0;
@@ -1411,11 +1411,11 @@
     padding: 9px;
   }
   .studio-eyebrow {
-    font-size: 7px;
+    font-size: 10px;
   }
   .project-select select {
     max-width: 135px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .studio-projectbar {
     padding: 0 6px;
@@ -1431,7 +1431,7 @@
     display: none;
   }
   .projectbar-right .s-button {
-    font-size: 9px;
+    font-size: 11px;
     padding: 6px;
   }
   .editor-grid {
@@ -1482,7 +1482,7 @@
     max-height: 280px;
   }
   .preview-empty .s-button {
-    font-size: 8px;
+    font-size: 11px;
     padding: 6px;
     gap: 4px;
   }
@@ -1496,21 +1496,21 @@
     padding: 0 9px 10px;
   }
   .timeline-toolbar > span {
-    font-size: 9px;
+    font-size: 11px;
   }
   .timeline-toolbar .s-button {
-    font-size: 8px;
+    font-size: 11px;
   }
   .timeline-bottom {
-    font-size: 7px;
+    font-size: 10px;
   }
   .studio-footer {
-    font-size: 7px;
+    font-size: 10px;
     gap: 5px;
     align-items: flex-start;
   }
   .studio-footer button {
-    font-size: 7px;
+    font-size: 10px;
     text-align: right;
   }
   .studio-modal {
@@ -1680,7 +1680,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 7px;
-  font-size: 10px;
+  font-size: 12px;
 }
 .editing-details > label:not(.toggle-label) input,
 .editing-details > label:not(.toggle-label) select {

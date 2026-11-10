@@ -5,21 +5,27 @@ import {
   ArrowLeft,
   ArrowRight,
   AudioLines,
-  BookOpenText,
   Check,
   CheckCheck,
   ChevronDown,
   ChevronRight,
   CircleAlert,
   CircleCheck,
+  CircleUserRound,
+  Clapperboard,
   Clipboard,
   Command,
   FileText,
   Film,
   Folder,
+  FolderKanban,
   FolderOpen,
   Headphones,
+  HeartHandshake,
   HeartPulse,
+  House,
+  Images,
+  Inbox,
   LayoutDashboard,
   LibraryBig,
   LoaderCircle,
@@ -27,11 +33,14 @@ import {
   Menu,
   PackageCheck,
   Play,
+  PenLine,
   Plus,
+  ScrollText,
   Search,
   Settings2,
   ShieldCheck,
   Sparkles,
+  Brain,
   SquarePen,
   Type,
   UploadCloud,
@@ -82,21 +91,21 @@ const NAV: {
 }[] = [
   { id: "health", label: "健康", icon: HeartPulse },
   { id: "content", label: "内容总览", icon: LayoutDashboard },
-  { id: "desk", label: "我的工作台", icon: LayoutDashboard },
-  { id: "inbox", label: "资料收集", icon: Search },
+  { id: "desk", label: "我的工作台", icon: House },
+  { id: "inbox", label: "资料收集", icon: Inbox },
   { id: "tasks", label: "每日任务", icon: CheckCheck },
   { id: "agents", label: "Agent 助手", icon: Sparkles },
-  { id: "memory", label: "个人记忆", icon: BookOpenText },
+  { id: "memory", label: "个人记忆", icon: Brain },
   { id: "folders", label: "文件空间", icon: FolderOpen },
-  { id: "studio", label: "创作室", icon: Film },
-  { id: "reunion", label: "亲人重逢", icon: Users },
-  { id: "projects", label: "项目", icon: Folder },
-  { id: "article", label: "文章", icon: BookOpenText },
-  { id: "video", label: "视频", icon: Film },
+  { id: "studio", label: "创作室", icon: Clapperboard },
+  { id: "reunion", label: "亲人重逢", icon: HeartHandshake },
+  { id: "projects", label: "项目", icon: FolderKanban },
+  { id: "article", label: "文章", icon: PenLine },
+  { id: "video", label: "视频", icon: ScrollText },
   { id: "library", label: "素材库", icon: LibraryBig },
-  { id: "references", label: "风格案例", icon: Film },
+  { id: "references", label: "风格案例", icon: Images },
   { id: "publish", label: "发布", icon: UploadCloud },
-  { id: "accounts", label: "平台账号", icon: Users },
+  { id: "accounts", label: "平台账号", icon: CircleUserRound },
 ];
 const STAGES: { label: string; items: Section[] }[] = [
   { label: "发现信息", items: ["inbox"] },
@@ -610,36 +619,58 @@ function App() {
         </div>
         <div>
           <div className="brand-title">CS 工作台</div>
-          <div className="brand-sub">PLAN · CREATE · ORGANIZE</div>
+          <div className="brand-sub">计划 · 创作 · 整理</div>
         </div>
       </div>
       <nav aria-label="工作台导航">
         <div className="sidebar-label">我的安排</div>
         {(["desk", "content", "tasks", "health"] as Section[]).map(renderNav)}
         <div className="sidebar-label workflow-label">创作流程</div>
-        {STAGES.map((stage, i) => (
-          <div
-            className={`workflow-stage ${stage.items.includes(section) ? "current" : ""}`}
-            key={stage.label}
-          >
-            <button
-              className="nav-stage"
-              aria-label={`展开${stage.label}`}
-              title={stage.label}
-              aria-expanded={expandedStage === i}
-              onClick={() => {
-                setExpandedStage(expandedStage === i ? -1 : i);
-              }}
+        {STAGES.map((stage, i) =>
+          stage.items.length === 1 ? (
+            <div
+              className={`workflow-stage single ${stage.items.includes(section) ? "current" : ""}`}
+              key={stage.label}
             >
-              <b>{String(i + 1).padStart(2, "0")}</b>
-              <span>{stage.label}</span>
-              <ChevronDown size={13} />
-            </button>
-            {expandedStage === i && (
-              <div className="stage-items">{stage.items.map(renderNav)}</div>
-            )}
-          </div>
-        ))}
+              <button
+                className={`nav-stage direct ${section === stage.items[0] ? "active" : ""}`}
+                aria-label={NAV.find((n) => n.id === stage.items[0])?.label}
+                aria-current={section === stage.items[0] ? "page" : undefined}
+                title={`${stage.label} · ${NAV.find((n) => n.id === stage.items[0])?.label}`}
+                onClick={() => void go(stage.items[0])}
+              >
+                <b>{String(i + 1).padStart(2, "0")}</b>
+                <span>{stage.label}</span>
+                <small>{NAV.find((n) => n.id === stage.items[0])?.label}</small>
+                {stage.items[0] === "projects" && !!boot?.projects.length && (
+                  <span className="nav-count">{boot.projects.length}</span>
+                )}
+              </button>
+            </div>
+          ) : (
+            <div
+              className={`workflow-stage ${stage.items.includes(section) ? "current" : ""}`}
+              key={stage.label}
+            >
+              <button
+                className="nav-stage"
+                aria-label={`展开${stage.label}`}
+                title={stage.label}
+                aria-expanded={expandedStage === i}
+                onClick={() => {
+                  setExpandedStage(expandedStage === i ? -1 : i);
+                }}
+              >
+                <b>{String(i + 1).padStart(2, "0")}</b>
+                <span>{stage.label}</span>
+                <ChevronDown size={13} />
+              </button>
+              {expandedStage === i && (
+                <div className="stage-items">{stage.items.map(renderNav)}</div>
+              )}
+            </div>
+          ),
+        )}
         <div className="sidebar-label workflow-label">常驻工具</div>
         {(["agents", "memory"] as Section[]).map(renderNav)}
       </nav>
@@ -813,7 +844,6 @@ function App() {
               onOpenProject={selectProject}
               openTarget={openTarget}
               onTargetHandled={() => setOpenTarget(null)}
-              onSearch={openFinder}
             />
           )}
           {section === "health" && <Health />}

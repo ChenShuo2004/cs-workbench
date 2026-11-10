@@ -8,6 +8,7 @@ import {
   ArrowDownToLine,
   ArrowLeft,
   ArrowRight,
+  ArrowUpRight,
   BookOpenText,
   Bot,
   CalendarDays,
@@ -21,6 +22,7 @@ import {
   Film,
   Folder,
   FolderOpen,
+  LayoutDashboard,
   Link,
   LoaderCircle,
   Plus,
@@ -60,7 +62,6 @@ export function Personal({
   onOpenProject,
   openTarget,
   onTargetHandled,
-  onSearch,
   projectPath,
 }: {
   projectPath?: string;
@@ -70,7 +71,6 @@ export function Personal({
   onOpenProject: (root: string) => Promise<unknown>;
   openTarget: WorkspaceTarget | null;
   onTargetHandled: () => void;
-  onSearch: () => void;
 }) {
   const [data, setData] = useState<PersonalData | null>(null),
     [error, setError] = useState(""),
@@ -546,10 +546,6 @@ export function Personal({
           </div>
         </div>
         <div className="personal-header-actions">
-          <button className="s-button" onClick={onSearch}>
-            <Search size={14} />
-            搜索 <kbd>⌘K</kbd>
-          </button>
           <button className="s-button" onClick={() => setDataOpen(true)}>
             <Folder size={14} />
             数据与备份
@@ -580,14 +576,21 @@ export function Personal({
       )}
       {section === "desk" && (
         <>
-          <HealthPeek onNavigate={onNavigate} />
-          <div className="ops-home-links">
-            <button
-              className="button subtle"
-              onClick={() => onNavigate("content")}
-            >
-              内容总览 · 选题、排期与复盘 <ArrowRight size={16} />
-            </button>
+          <div className="desk-peeks">
+            <HealthPeek onNavigate={onNavigate} />
+            <section className="ops-peek" aria-label="内容概览">
+              <LayoutDashboard size={21} />
+              <div>
+                <strong>内容总览</strong>
+                <p>选题、排期与复盘，一处看清每条内容的下一步。</p>
+              </div>
+              <button
+                className="button subtle"
+                onClick={() => onNavigate("content")}
+              >
+                查看内容 <ArrowUpRight size={14} />
+              </button>
+            </section>
           </div>
           <div className="desk-overview">
             <section className="day-card">
@@ -623,7 +626,11 @@ export function Personal({
                       : `${todayTasks.length - complete} 件事，值得今天认真对待。`
                     : "先写下今天最重要的一件事。"}
                 </span>
-                <button onClick={() => onNavigate("tasks")}>
+                <button
+                  aria-label="查看全部任务"
+                  title="查看全部任务"
+                  onClick={() => onNavigate("tasks")}
+                >
                   <ArrowRight size={17} />
                 </button>
               </div>
