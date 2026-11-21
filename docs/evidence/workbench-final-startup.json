@@ -1,9 +1,0 @@
-{
-  "checks": [
-    "a blocked filesystem open leaves Electron responsive and becomes a readable retry state",
-    "retry recovers the original project and reaches the complete workspace without restarting or replacing data"
-  ],
-  "errors": [],
-  "version": "0.7.2",
-  "packaged": true
-}

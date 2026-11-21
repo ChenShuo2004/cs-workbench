@@ -119,6 +119,7 @@ export interface CSBridge {
   ): Promise<PlatformAccount>;
   checkAccountNetwork(id: string): Promise<NetworkCheckResult>;
   checkAllAccountNetworks(): Promise<Record<string, NetworkCheckResult>>;
+  detectLocalProxyPorts(): Promise<number[]>;
   openAccountBrowser(id: string, target?: BrowserTarget): Promise<void>;
   readAccountData(
     id: string,

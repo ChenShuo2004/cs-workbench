@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ShieldCheck, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ShieldCheck, Sparkles, X } from "lucide-react";
 import { Dialog } from "./Dialog";
 import platforms from "../shared/account-platforms.json";
 import type {
@@ -9,6 +9,45 @@ import type {
   ProxyProtocol,
 } from "./types";
 import { uiErrorMessage } from "./ui-error";
+
+function quickParseProxy(raw: string) {
+  const text = raw.trim();
+  if (!text) return null;
+  let protocol: ProxyProtocol = "http";
+  let host = "";
+  let port = "";
+  let username = "";
+  let password = "";
+
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(text)) {
+    const u = new URL(text);
+    const p = u.protocol.replace(/:$/, "").toLowerCase();
+    protocol = p === "socks5h" || p === "socks5" ? "socks5" : p === "https" ? "https" : "http";
+    host = u.hostname;
+    port = u.port;
+    username = u.username ? decodeURIComponent(u.username) : "";
+    password = u.password ? decodeURIComponent(u.password) : "";
+  } else {
+    const parts = text.split(":");
+    if (parts.length === 2) {
+      [host, port] = parts.map((x) => x.trim());
+    } else if (parts.length === 4) {
+      [host, port, username, password] = parts.map((x) => x.trim());
+    } else {
+      throw new Error("无法识别代理串，支持 socks5://user:pass@host:port 或 host:port:user:pass");
+    }
+  }
+  if (!host || !port) throw new Error("代理串缺少主机或端口");
+  const isLocal = ["127.0.0.1", "localhost", "::1"].includes(host) && !username && !password;
+  return {
+    mode: (isLocal ? "local_port" : "proxy") as NetworkMode,
+    protocol,
+    host: isLocal ? "127.0.0.1" : host,
+    port,
+    username,
+    password,
+  };
+}
 
 const TIMEZONE_PRESETS = [
   { value: "", label: "跟随系统时区" },
@@ -53,8 +92,43 @@ export function NetworkEditorModal({
   const [blockWebRtc, setBlockWebRtc] = useState(initial.blockWebRtc ?? true);
   const [timezone, setTimezone] = useState(initial.timezone || "");
   const [lang, setLang] = useState(initial.lang || "");
+  const [pasteInput, setPasteInput] = useState("");
+  const [livePorts, setLivePorts] = useState<number[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    let live = true;
+    void window.cs
+      .detectLocalProxyPorts()
+      .then((ports) => {
+        if (live) setLivePorts(ports);
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  function applyQuickPaste() {
+    try {
+      setError("");
+      const parsed = quickParseProxy(pasteInput);
+      if (!parsed) return;
+      setMode(parsed.mode);
+      setProtocol(parsed.protocol);
+      setHost(parsed.host);
+      setPort(parsed.port);
+      setUsername(parsed.username);
+      if (parsed.password) {
+        setPassword(parsed.password);
+        setClearPassword(false);
+      }
+      setPasteInput("");
+    } catch (err) {
+      setError(uiErrorMessage(err));
+    }
+  }
 
   async function submit(checkAfterSave: boolean) {
     setBusy(true);
@@ -112,6 +186,29 @@ export function NetworkEditorModal({
             onClick={onClose}
           >
             <X size={18} />
+          </button>
+        </div>
+
+        <div className="quick-paste-row">
+          <input
+            value={pasteInput}
+            disabled={busy}
+            placeholder="快速粘贴代理串自动填充：socks5://user:pass@1.2.3.4:10808 或 host:port:user:pass"
+            onChange={(e) => setPasteInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && pasteInput.trim()) {
+                e.preventDefault();
+                applyQuickPaste();
+              }
+            }}
+          />
+          <button
+            type="button"
+            className="button subtle"
+            disabled={busy || !pasteInput.trim()}
+            onClick={applyQuickPaste}
+          >
+            <Sparkles size={14} /> 识别填充
           </button>
         </div>
 
@@ -206,21 +303,26 @@ export function NetworkEditorModal({
 
         {mode === "local_port" && (
           <div className="port-presets">
-            <span>常用本地端口：</span>
-            {[7890, 7891, 7892, 7893, 7897, 10808].map((p) => (
-              <button
-                key={p}
-                type="button"
-                className={`chip-btn ${String(p) === port ? "active" : ""}`}
-                disabled={busy}
-                onClick={() => {
-                  setHost("127.0.0.1");
-                  setPort(String(p));
-                }}
-              >
-                :{p}
-              </button>
-            ))}
+            <span>{livePorts.length ? "本机活跃端口：" : "常用本地端口："}</span>
+            {Array.from(new Set([...livePorts, 7890, 7891, 7892, 7893, 7897, 10808])).map((p) => {
+              const isLive = livePorts.includes(p);
+              return (
+                <button
+                  key={p}
+                  type="button"
+                  className={`chip-btn ${String(p) === port ? "active" : ""} ${isLive ? "live-port" : ""}`}
+                  disabled={busy}
+                  title={isLive ? `检测到本机 127.0.0.1:${p} 正在监听` : `填充端口 ${p}`}
+                  onClick={() => {
+                    setHost("127.0.0.1");
+                    setPort(String(p));
+                  }}
+                >
+                  {isLive && <i className="live-dot" />}
+                  :{p}
+                </button>
+              );
+            })}
           </div>
         )}
 

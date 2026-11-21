@@ -525,6 +525,49 @@
   gap: 10px;
 }
 
+.quick-paste-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quick-paste-row input {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.chip-btn.live-port {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.chip-btn.active .live-dot {
+  background: var(--on-accent);
+}
+
+.account-search-input {
+  margin-left: auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  min-width: 190px;
+  background: var(--panel);
+  color: var(--ink);
+}
+
 .mode-card {
   display: flex;
   flex-direction: column;

@@ -9,6 +9,7 @@ const {
   preflightProxy,
   probeNetwork,
   analyzeNetworkConflicts,
+  detectLocalProxyPorts,
 } = require("../lib/network-isolation.cjs");
 
 function createDouyinManager(userData, getMainWindow, { secureStorage = null } = {}) {
@@ -126,6 +127,9 @@ function createDouyinManager(userData, getMainWindow, { secureStorage = null } =
       getStore().setNetworkCheck(id, result);
       notify();
       return result;
+    },
+    async detectLocalPorts() {
+      return detectLocalProxyPorts();
     },
     async checkAllNetworks() {
       const accounts = getStore().list();

@@ -102,6 +102,7 @@ function registerHandlers() {
   );
   handle("accounts:check-network", (_e, id) => accounts.checkNetwork(id));
   handle("accounts:check-all-networks", () => accounts.checkAllNetworks());
+  handle("accounts:detect-local-ports", () => accounts.detectLocalPorts());
   handle("accounts:open-browser", (_e, id, target) =>
     accounts.openBrowser(id, target || "home"),
   );

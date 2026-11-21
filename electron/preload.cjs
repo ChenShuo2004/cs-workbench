@@ -19,6 +19,7 @@ contextBridge.exposeInMainWorld(
       invoke("accounts:update-network", id, network),
     checkAccountNetwork: (id) => invoke("accounts:check-network", id),
     checkAllAccountNetworks: () => invoke("accounts:check-all-networks"),
+    detectLocalProxyPorts: () => invoke("accounts:detect-local-ports"),
     openAccountBrowser: (id, target) =>
       invoke("accounts:open-browser", id, target),
     readAccountData: (id, options) =>

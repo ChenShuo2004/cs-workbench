@@ -52,6 +52,7 @@ export function DouyinAccounts({
   onNotice: (msg: string, error?: boolean) => void;
 }) {
   const [filter, setFilter] = useState<AccountPlatform | "all">("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [busyId, setBusyId] = useState("");
   const [readingId, setReadingId] = useState("");
   const [error, setError] = useState("");
@@ -63,13 +64,23 @@ export function DouyinAccounts({
   const [networkTarget, setNetworkTarget] = useState<PlatformAccount | null>(null);
   const [expandedMetrics, setExpandedMetrics] = useState<Record<string, boolean>>({});
 
-  const visible = useMemo(
-    () =>
-      filter === "all"
-        ? accounts
-        : accounts.filter((a) => a.platform === filter),
-    [accounts, filter],
-  );
+  const visible = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return accounts.filter((a) => {
+      if (filter !== "all" && a.platform !== filter) return false;
+      if (!q) return true;
+      const haystack = [
+        a.name,
+        platforms[a.platform].name,
+        a.dataSnapshot?.profileName || "",
+        a.network?.label || "",
+        a.lastNetworkCheck?.ip || "",
+      ]
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [accounts, filter, searchQuery]);
 
   const summary = useMemo(() => {
     let followers = 0;
@@ -265,6 +276,14 @@ export function DouyinAccounts({
             </button>
           );
         })}
+        <input
+          type="search"
+          className="account-search-input"
+          value={searchQuery}
+          placeholder="搜索备注 / 昵称 / IP…"
+          aria-label="搜索账号"
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
 
       {error && (

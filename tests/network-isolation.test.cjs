@@ -14,6 +14,8 @@ const {
   preflightProxy,
   probeNetwork,
   analyzeNetworkConflicts,
+  detectLocalProxyPorts,
+  parseProxyString,
 } = require("../lib/network-isolation.cjs");
 
 test("normalizes direct, local_port, and proxy configs and rejects invalid inputs", () => {
@@ -193,4 +195,35 @@ test("probeNetwork falls back across endpoints and returns normalized exit IP me
   assert.equal(res.ip, "203.0.113.9");
   assert.equal(res.country, "Japan");
   assert.equal(calls, 2);
+});
+
+test("parseProxyString parses URL and colon formats and distinguishes local vs remote proxies", () => {
+  const s1 = parseProxyString("socks5://alice:p%40ss@198.51.100.7:10808");
+  assert.equal(s1.mode, "proxy");
+  assert.equal(s1.protocol, "socks5");
+  assert.equal(s1.host, "198.51.100.7");
+  assert.equal(s1.port, 10808);
+  assert.equal(s1.username, "alice");
+  assert.equal(s1.password, "p@ss");
+
+  const s2 = parseProxyString("198.51.100.8:8080:u2:p2");
+  assert.equal(s2.mode, "proxy");
+  assert.equal(s2.host, "198.51.100.8");
+  assert.equal(s2.port, 8080);
+  assert.equal(s2.username, "u2");
+  assert.equal(s2.password, "p2");
+
+  const local = parseProxyString("http://127.0.0.1:7891");
+  assert.equal(local.mode, "local_port");
+  assert.equal(local.port, 7891);
+});
+
+test("detectLocalProxyPorts finds active loopback listening ports", async (t) => {
+  const srv = net.createServer((s) => s.end());
+  await new Promise((resolve) => srv.listen(0, "127.0.0.1", resolve));
+  t.after(() => srv.close());
+  const { port } = srv.address();
+
+  const found = await detectLocalProxyPorts([port, 1]);
+  assert.deepEqual(found, [port]);
 });
