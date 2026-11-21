@@ -185,8 +185,8 @@ test("probeNetwork falls back across endpoints and returns normalized exit IP me
     fetchEndpoint: async (url) => {
       calls++;
       if (calls === 1) throw new Error("first failed");
-      if (url.includes("ip.sb")) {
-        return { ip: "203.0.113.9", country: "Japan", region: "Tokyo", city: "Tokyo", isp: "ExampleNet" };
+      if (url.includes("ipwho.is")) {
+        return { ip: "203.0.113.9", country: "Japan", region: "Tokyo", city: "Tokyo", connection: { isp: "ExampleNet" } };
       }
       throw new Error("unexpected");
     },
@@ -194,6 +194,7 @@ test("probeNetwork falls back across endpoints and returns normalized exit IP me
   assert.equal(res.ok, true);
   assert.equal(res.ip, "203.0.113.9");
   assert.equal(res.country, "Japan");
+  assert.equal(res.isp, "ExampleNet");
   assert.equal(calls, 2);
 });
 
