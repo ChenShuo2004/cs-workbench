@@ -1,4 +1,5 @@
 const { session, dialog } = require("electron");
+const {platformSnapshot}=require("../lib/platform-data.cjs");
 const { createAccountBrowser } = require("../lib/account-browser.cjs");
 const {
   partitionFor,
@@ -250,7 +251,7 @@ function createDouyinManager(
         notify();
         throw new Error("需扫码登录");
       }
-      const snapshot = getDataStore().put(id, snapshotFromPage(page));
+      const snapshot = getDataStore().put(id, snapshotFromPage(platformSnapshot(page,account.platform)));
       getStore().opened(id, "chrome");
       errors.delete(id);
       notify();

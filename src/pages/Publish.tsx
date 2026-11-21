@@ -123,8 +123,8 @@ export function Publish({
         </button>
       </div>
       <div className="publish-grid">
-        <section className="settings-card">
-          <h2>素材与文案</h2>
+        <section className="settings-card" onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const file=e.dataTransfer.files[0];if(file&&/\.(mp4|mov|m4v|webm)$/i.test(file.name)){try{const video=window.cs.pathForFile(file);D(x=>({...x,video}));}catch(err){onNotice(String(err),true)}}else onNotice('请拖入视频文件',true);}}>
+          <h2>素材与文案</h2><p className="muted">可将视频拖入此处</p>
           <button
             className="button subtle"
             onClick={() =>

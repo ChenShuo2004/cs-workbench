@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer, webUtils } = require("electron");
 
 const invoke = (channel, ...args) => ipcRenderer.invoke(channel, ...args);
 
@@ -8,6 +8,9 @@ contextBridge.exposeInMainWorld(
     appInfo: () => invoke("app:info"),
 
     postsImport: () => invoke("posts:import"),
+    pathForFile:file=>webUtils.getPathForFile(file),
+    settingsRead:()=>invoke("settings:read"),
+    settingsSave:value=>invoke("settings:save",value),
     postsRead: () => invoke("posts:read"),
     postsDraft: (d) => invoke("posts:draft", d),
     postsStart: (d, ids) => invoke("posts:start", d, ids),

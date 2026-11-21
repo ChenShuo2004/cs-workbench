@@ -41,6 +41,9 @@ const { _electron: electron } = require("playwright"),
     await p.getByRole("heading", { name: "Clash Verge 运行配置" }).waitFor();
     await p.locator("nav").getByRole("button", { name: "设置" }).click();
     assert.equal(await p.getByText("麦田发布服务").count(), 0);
+    const saved=await p.evaluate(()=>window.cs.settingsSave({concurrency:3,clashPath:''}));
+    assert.equal(saved.concurrency,3);
+    assert.equal(await p.evaluate(async()=>{try{await window.cs.settingsSave({concurrency:5,clashPath:''});return false}catch{return true}}),true);
     await p.setViewportSize({ width: 800, height: 900 });
     await p.getByRole("button", { name: "打开导航" }).click();
     await p

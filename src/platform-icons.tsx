@@ -1,0 +1,5 @@
+import React from 'react';
+import type {AccountPlatform} from './types';
+const colors:Record<AccountPlatform,string>={douyin:'#13151a',xiaohongshu:'#e53648',channels:'#e89121',wechat:'#29a65a',bilibili:'#dc799f',youtube:'#df2525',x:'#13151a',instagram:'#a747a0'};
+const paths:Record<AccountPlatform,string>={douyin:'M14 3v12a4 4 0 1 1-3-3.8V3h3c0 3 2 5 5 5v3c-2 0-4-1-5-2',xiaohongshu:'M4 5h6v14H4zM14 5h6v14h-6z',channels:'M4 5l7 4-7 4zM12 11l8 4-8 4z',wechat:'M10 4C0 4 0 15 7 16l-1 4 5-4C23 17 23 4 10 4z',bilibili:'M5 7h14v12H5zM8 3l3 4m5-4-3 4M8 11v4m8-4v4',youtube:'M3 6h18v12H3zM10 9l5 3-5 3z',x:'M4 3l16 18M20 3 4 21M4 3h5l11 18h-5z',instagram:'M6 3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3zM16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0M17 7h1'};
+export function PlatformIcon({platform}:{platform:AccountPlatform}){return <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style={{color:colors[platform],verticalAlign:'middle',marginRight:6}}><path d={paths[platform]} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}

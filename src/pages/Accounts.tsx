@@ -1,3 +1,4 @@
+import {PlatformIcon} from "../platform-icons";
 import React, { useState } from "react";
 import { DouyinAccounts } from "../DouyinAccounts";
 import platforms from "../../shared/account-platforms.json";
@@ -99,7 +100,7 @@ export function Accounts(props: React.ComponentProps<typeof DouyinAccounts>) {
                   return (
                     <tr key={a.id}>
                       <td>
-                        <strong>{platforms[a.platform].name}</strong>
+                        <strong><PlatformIcon platform={a.platform}/>{platforms[a.platform].name}</strong>
                         <small>{a.name}</small>
                       </td>
                       <td>

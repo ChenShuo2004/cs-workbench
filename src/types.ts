@@ -116,6 +116,9 @@ export interface CSBridge {
   appInfo(): Promise<AppInfo>;
 
   postsImport(): Promise<PostState | null>;
+  pathForFile(file:File):string;
+  settingsRead():Promise<{concurrency:number;clashPath:string}>;
+  settingsSave(value:{concurrency:number;clashPath:string}):Promise<{concurrency:number;clashPath:string}>;
   postsRead(): Promise<PostState>;
   postsDraft(d: PostDraft): Promise<PostState>;
   postsStart(d: PostDraft, ids: string[]): Promise<PostState>;

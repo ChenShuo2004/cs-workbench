@@ -20,6 +20,7 @@ import {
 import { BrandAvatar } from "./Brand";
 import { Publish } from "./pages/Publish";
 import { Environment } from "./pages/Environment";
+import { AutomationSettings } from "./pages/AutomationSettings";
 import { Accounts } from "./pages/Accounts";
 
 import type { AppInfo, PlatformAccount, Section } from "./types";
@@ -282,7 +283,7 @@ function App() {
                 </div>
               </div>
 
-              <div className="settings-stack">
+              <div className="settings-stack"><AutomationSettings onNotice={notice}/>
                 <section className="settings-card">
                   <h2>外观与阅读</h2>
                   <p className="muted">

@@ -58,3 +58,5 @@ test("all adapters have filling contracts without submission or scheduling", () 
     );
   }
 });
+
+test('platform metric aliases distinguish subscribers and avoid parsing period numbers as totals',()=>{const {platformSnapshot}=require('../lib/platform-data.cjs');assert.equal(platformSnapshot({metrics:['订阅人数 1.2万']},'youtube').kpis.followers,12000);assert.equal(platformSnapshot({metrics:['订阅人数 1.2万']},'wechat').kpis.followers,null);assert.equal(platformSnapshot({metrics:['总用户数 1234']},'wechat').kpis.followers,1234);assert.equal(platformSnapshot({metrics:['播放量 近7天 800']},'douyin').kpis.views,null);});

@@ -151,7 +151,9 @@ function registerHandlers() {
     if (publisher.busy()) throw Error("请等待填表任务结束再关闭窗口");
     return accounts.closeAll();
   });
-  handle("clash:read", () => readListeners());
+  handle("clash:read", () => readListeners(config.clashPath));
+  handle("settings:read",()=>({concurrency:config.concurrency||2,clashPath:config.clashPath||""}));
+  handle("settings:save",(_e,value)=>{if(!Number.isInteger(value.concurrency)||value.concurrency<1||value.concurrency>4)throw Error("并发需要为 1 至 4");if(value.clashPath&&(!path.isAbsolute(value.clashPath)||!fs.existsSync(value.clashPath)))throw Error("Clash 配置文件不存在");config.concurrency=value.concurrency;config.clashPath=String(value.clashPath||"");saveConfig();return {concurrency:config.concurrency,clashPath:config.clashPath};});
   handle("accounts:list", () => accounts.list());
   handle("accounts:add", (_e, name, platform, network) =>
     accounts.add(name, platform, network),
@@ -256,7 +258,7 @@ app.whenReady().then(() => {
     secureStorage: safeStorage,
   });
   posts = createPostStore(userDataDir);
-  publisher = createPublisher({ store: posts, accounts });
+  publisher = createPublisher({ store: posts, accounts, getConcurrency:()=>config.concurrency||2 });
 
   registerHandlers();
 
