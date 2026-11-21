@@ -18,16 +18,14 @@ import {
   useAppearance,
 } from "./Appearance";
 import { BrandAvatar } from "./Brand";
-import { Distribution } from "./Distribution";
-import { DouyinAccounts } from "./DouyinAccounts";
-import { NetworkIsolation } from "./NetworkIsolation";
+import { Publish } from "./pages/Publish";
+import { Environment } from "./pages/Environment";
+import { Accounts } from "./pages/Accounts";
+
 import type { AppInfo, PlatformAccount, Section } from "./types";
 import { uiErrorMessage } from "./ui-error";
-import "./styles.css";
-import "./design-system.css";
-import "./appearance.css";
-import "./experience.css";
-import "./cs-work.css";
+import "./styles/tokens.css";
+import "./styles/app.css";
 
 const NAV: {
   id: Section;
@@ -35,22 +33,44 @@ const NAV: {
   desc: string;
   icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
 }[] = [
-  { id: "publish", label: "发布中心", desc: "麦田分发与矩阵一键发布", icon: UploadCloud },
-  { id: "accounts", label: "账号与数据", desc: "8 平台矩阵与数据快照", icon: Users },
-  { id: "network", label: "网络隔离", desc: "独立代理 · Clash 端口 · 出口 IP", icon: ShieldCheck },
-  { id: "settings", label: "设置", desc: "麦田路径 · 外观 · 本机数据", icon: Settings2 },
+  {
+    id: "publish",
+    label: "发布中心",
+    desc: "一稿多发 · 自动填表 · 人工确认",
+    icon: UploadCloud,
+  },
+  {
+    id: "accounts",
+    label: "账号与数据",
+    desc: "8 平台矩阵与数据快照",
+    icon: Users,
+  },
+  {
+    id: "network",
+    label: "网络隔离",
+    desc: "独立代理 · Clash 端口 · 出口 IP",
+    icon: ShieldCheck,
+  },
+  { id: "settings", label: "设置", desc: "外观 · 本机数据", icon: Settings2 },
 ];
 
 function App() {
   const appearance = useAppearance();
-  const [section, setSection] = useState<Section>("publish");
+  const [section, setSection] = useState<Section>("accounts");
   const [accounts, setAccounts] = useState<PlatformAccount[]>([]);
   const [loadingAccounts, setLoadingAccounts] = useState(true);
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
   const [navigationOpen, setNavigationOpen] = useState(false);
-  const [narrow, setNarrow] = useState(() => matchMedia("(max-width: 900px)").matches);
-  const [toast, setToast] = useState<{ message: string; error?: boolean } | null>(null);
-  const noticeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [narrow, setNarrow] = useState(
+    () => matchMedia("(max-width: 900px)").matches,
+  );
+  const [toast, setToast] = useState<{
+    message: string;
+    error?: boolean;
+  } | null>(null);
+  const noticeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
   const contentScroll = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -112,7 +132,9 @@ function App() {
     };
   }, []);
 
-  const conflictCount = accounts.filter((a) => a.networkWarnings.length > 0).length;
+  const conflictCount = accounts.filter(
+    (a) => a.networkWarnings.length > 0,
+  ).length;
 
   const sidebar = (
     <aside className="sidebar cs-work-sidebar" aria-label="主导航">
@@ -130,7 +152,7 @@ function App() {
           <BrandAvatar />
         </div>
         <div>
-          <div className="brand-title">cs-work</div>
+          <div className="brand-title">Kaige-work</div>
           <div className="brand-sub">PUBLISH · DATA · ISOLATION</div>
         </div>
       </div>
@@ -170,7 +192,8 @@ function App() {
             <strong>本机独立会话</strong>
             <small>
               {accounts.length} 个账号 ·{" "}
-              {accounts.filter((a) => a.network.mode !== "direct").length} 个已配代理
+              {accounts.filter((a) => a.network.mode !== "direct").length}{" "}
+              个已配代理
             </small>
           </div>
         </div>
@@ -180,20 +203,18 @@ function App() {
 
   return (
     <div className="app-shell studio-shell">
-      {narrow ? (
-        navigationOpen && (
-          <div
-            className="drawer-backdrop"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) setNavigationOpen(false);
-            }}
-          >
-            {sidebar}
-          </div>
-        )
-      ) : (
-        sidebar
-      )}
+      {narrow
+        ? navigationOpen && (
+            <div
+              className="drawer-backdrop"
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setNavigationOpen(false);
+              }}
+            >
+              {sidebar}
+            </div>
+          )
+        : sidebar}
 
       <div className="workspace">
         <header className="topbar">
@@ -208,7 +229,7 @@ function App() {
             </button>
           )}
           <div className="crumb">
-            <span>cs-work</span>
+            <span>Kaige-work</span>
             <ChevronRight size={14} />
             <strong>{NAV.find((n) => n.id === section)?.label}</strong>
           </div>
@@ -223,7 +244,7 @@ function App() {
 
         <main className="content" ref={contentScroll}>
           {section === "publish" && (
-            <Distribution
+            <Publish
               accounts={accounts}
               onOpenAccounts={() => setSection("accounts")}
               onNotice={notice}
@@ -231,7 +252,7 @@ function App() {
           )}
 
           {section === "accounts" && (
-            <DouyinAccounts
+            <Accounts
               accounts={accounts}
               loading={loadingAccounts}
               onRefresh={refreshAccounts}
@@ -241,7 +262,7 @@ function App() {
           )}
 
           {section === "network" && (
-            <NetworkIsolation
+            <Environment
               accounts={accounts}
               loading={loadingAccounts}
               onRefresh={refreshAccounts}
@@ -256,7 +277,7 @@ function App() {
                   <span className="eyebrow">SETTINGS</span>
                   <h1>工作台设置</h1>
                   <p>
-                    配置麦田发布服务路径、外观主题与本机隔离数据目录。工作台配色仅影响壳层界面，不改动内嵌看板与外部平台页面颜色。
+                    配置外观主题与本机隔离数据目录。工作台配色仅影响壳层界面，不改动内嵌看板与外部平台页面颜色。
                   </p>
                 </div>
               </div>
@@ -264,7 +285,9 @@ function App() {
               <div className="settings-stack">
                 <section className="settings-card">
                   <h2>外观与阅读</h2>
-                  <p className="muted">选择适合当前光线的语义配色方案，自动持久保存。</p>
+                  <p className="muted">
+                    选择适合当前光线的语义配色方案，自动持久保存。
+                  </p>
                   <AppearancePicker
                     theme={appearance.theme}
                     onChange={appearance.changeTheme}
@@ -274,50 +297,14 @@ function App() {
                 </section>
 
                 <section className="settings-card">
-                  <h2>麦田发布服务</h2>
-                  <p className="muted">
-                    当前连接目录：<code>{appInfo?.maitianRoot || "~/maitian/mdldm-maitian"}</code>
-                  </p>
-                  <div className="settings-actions">
-                    <button
-                      className="button subtle"
-                      onClick={() =>
-                        void window.cs
-                          .maitianConnect()
-                          .then((res) => {
-                            if (res) {
-                              notice(
-                                res.connected
-                                  ? "已连接到新的麦田目录"
-                                  : `目录已更新：${res.error || "请确认服务已启动"}`,
-                                !res.connected,
-                              );
-                              void window.cs.appInfo().then(setAppInfo);
-                            }
-                          })
-                          .catch((e) => notice(uiErrorMessage(e), true))
-                      }
-                    >
-                      选择麦田目录
-                    </button>
-                    <button
-                      className="button subtle"
-                      onClick={() =>
-                        void window.cs
-                          .maitianOpen()
-                          .catch((e) => notice(uiErrorMessage(e), true))
-                      }
-                    >
-                      在系统浏览器打开麦田
-                    </button>
-                  </div>
-                </section>
-
-                <section className="settings-card">
                   <h2>本机数据与安全</h2>
                   <p className="muted">
-                    应用版本：<code>cs-work v{appInfo?.version || "1.0.0"}</code> · 系统钥匙串加密：
-                    <strong>{appInfo?.encryptionAvailable ? "已启用" : "不可用"}</strong>
+                    应用版本：
+                    <code>Kaige-work v{appInfo?.version || "1.0.0"}</code> ·
+                    系统钥匙串加密：
+                    <strong>
+                      {appInfo?.encryptionAvailable ? "已启用" : "不可用"}
+                    </strong>
                   </p>
                   <p className="muted">
                     本机数据目录（含账号列表、独立 Chrome Profile 与数据快照）：

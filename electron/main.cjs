@@ -12,19 +12,28 @@ const fs = require("node:fs");
 const path = require("node:path");
 const os = require("node:os");
 
+// Preserve the existing account profiles when the product name changes.
+app.setPath("userData", path.join(app.getPath("appData"), "cs-work"));
+
 // Allows isolated acceptance tests without touching personal data.
 if (process.env.CS_WORKBENCH_USER_DATA_DIR) {
   app.setPath("userData", path.resolve(process.env.CS_WORKBENCH_USER_DATA_DIR));
 }
 
+if (!process.env.CS_WORKBENCH_USER_DATA_DIR && !app.requestSingleInstanceLock()) app.quit();
+app.on("second-instance",()=>{if(mainWindow&&!mainWindow.isDestroyed()){mainWindow.show();mainWindow.focus();}});
+
 const { createDouyinManager } = require("./douyin.cjs");
-const { createMaitian } = require("../lib/maitian.cjs");
+const { createPostStore } = require("../lib/post-store.cjs");
+const { createPublisher } = require("../lib/publisher/engine.cjs");
+const { readListeners } = require("../lib/clash-verge.cjs");
 
 let mainWindow;
 let configFile;
 let config;
 let accounts;
-let maitian;
+let posts;
+let publisher;
 
 function readJson(file, fallback) {
   try {
@@ -36,7 +45,9 @@ function readJson(file, fallback) {
 
 function writeJson(file, value) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(`${file}.tmp`, JSON.stringify(value, null, 2), { mode: 0o600 });
+  fs.writeFileSync(`${file}.tmp`, JSON.stringify(value, null, 2), {
+    mode: 0o600,
+  });
   fs.renameSync(`${file}.tmp`, file);
 }
 
@@ -71,27 +82,76 @@ function registerHandlers() {
   handle("app:info", () => ({
     version: app.getVersion(),
     userDataPath: app.getPath("userData"),
-    maitianRoot: config.maitianRoot || path.join(os.homedir(), "maitian/mdldm-maitian"),
+
     encryptionAvailable: safeStorage.isEncryptionAvailable(),
   }));
 
-  handle("maitian:read", () => maitian.snapshot());
-  handle("maitian:connect", async () => {
-    const folder = await chooseFolder("选择麦田仓库（mdldm-maitian）");
+  handle("posts:import", async () => {
+    const folder = await chooseFolder("选择发布素材工程目录");
     if (!folder) return null;
-    const previous = config.maitianRoot;
-    config.maitianRoot = folder;
-    try {
-      maitian.installation();
-      saveConfig();
-    } catch (e) {
-      config.maitianRoot = previous;
-      throw e;
+    const files = fs.readdirSync(folder);
+    const video =
+      files.find((f) => /成片.*\.(mp4|mov)$/i.test(f)) ||
+      files.find((f) => /\.(mp4|mov)$/i.test(f));
+    const draft = {
+      ...posts.read().draft,
+      video: video ? path.join(folder, video) : "",
+      covers: {},
+    };
+    for (const sub of [folder, path.join(folder, "封面")])
+      if (fs.existsSync(sub))
+        for (const f of fs.readdirSync(sub)) {
+          const key = /16.?9/.test(f)
+            ? "16x9"
+            : /3.?4/.test(f)
+              ? "3x4"
+              : /4.?3/.test(f)
+                ? "4x3"
+                : "";
+          if (key && /\.(png|jpe?g)$/i.test(f))
+            draft.covers[key] = path.join(sub, f);
+        }
+    const copy = path.join(folder, "发布素材.md");
+    if (fs.existsSync(copy)) {
+      const text = fs.readFileSync(copy, "utf8");
+      draft.title = text.match(/^#\s+(.+)$/m)?.[1] || draft.title;
+      draft.body = text.replace(/^#\s+.+\n?/, "").trim();
     }
-    return maitian.snapshot();
+    return posts.draft(draft);
   });
-  handle("maitian:open", () => shell.openExternal(maitian.dashboardURL()));
-
+  handle("posts:read", () => posts.read());
+  handle("posts:draft", (_e, d) => posts.draft(d));
+  handle("posts:start", (_e, d, ids) => publisher.start(d, ids));
+  handle("posts:retry", (_e, id) => {
+    const r = posts.read().records.find((r) => r.id === id);
+    if (!r || r.status !== "失败") throw Error("此任务无法重试");
+    return publisher.start(r.draft, [r.accountId]);
+  });
+  handle("posts:mark", (_e, id, url) => posts.mark(id, url));
+  handle("posts:choose", async (_e, kind) => {
+    const result = await dialog.showOpenDialog(mainWindow, {
+      properties: ["openFile"],
+      filters: [
+        {
+          name: kind === "video" ? "视频" : "图片",
+          extensions:
+            kind === "video"
+              ? ["mp4", "mov", "m4v", "webm"]
+              : ["png", "jpg", "jpeg"],
+        },
+      ],
+    });
+    return result.canceled ? "" : result.filePaths[0];
+  });
+  handle("accounts:sync-all", () => {
+    if (publisher.busy()) throw Error("请等待填表任务结束再同步数据");
+    return accounts.syncAll();
+  });
+  handle("accounts:close-all", () => {
+    if (publisher.busy()) throw Error("请等待填表任务结束再关闭窗口");
+    return accounts.closeAll();
+  });
+  handle("clash:read", () => readListeners());
   handle("accounts:list", () => accounts.list());
   handle("accounts:add", (_e, name, platform, network) =>
     accounts.add(name, platform, network),
@@ -107,7 +167,9 @@ function registerHandlers() {
     accounts.openBrowser(id, target || "home"),
   );
   handle("accounts:read-data", (_e, id, options) =>
-    accounts.readData(id, options || {}),
+    publisher.busy()
+      ? Promise.reject(Error("请等待填表任务结束再读取数据"))
+      : accounts.readData(id, options || {}),
   );
   handle("accounts:remove", (_e, id) => accounts.remove(id));
 
@@ -128,7 +190,7 @@ function createWindow() {
     height: 880,
     minWidth: 960,
     minHeight: 640,
-    title: "cs-work",
+    title: "Kaige-work",
     show: !process.env.CS_WORKBENCH_USER_DATA_DIR,
     backgroundColor: "#111315",
     titleBarStyle: "hiddenInset",
@@ -141,38 +203,16 @@ function createWindow() {
     },
   });
 
-  // Inject Maitian auth cookie strictly for the configured local 127.0.0.1 origin.
-  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
-    { urls: ["http://127.0.0.1/*"] },
-    (details, callback) => {
-      const requestHeaders =
-        details.webContentsId === mainWindow?.webContents.id
-          ? maitian.frameHeaders(details.url, details.requestHeaders)
-          : details.requestHeaders;
-      callback({ requestHeaders });
-    },
-  );
-
+  mainWindow.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
   mainWindow.webContents.on("will-frame-navigate", (event) => {
-    if (!event.isMainFrame && !maitian.acceptsURL(event.url)) {
-      event.preventDefault();
-    }
+    if (!event.isMainFrame) event.preventDefault();
   });
-
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    if (
-      maitian.acceptsURL(details.referrer?.url) &&
-      /^https?:\/\//.test(details.url)
-    ) {
-      void shell.openExternal(details.url);
-    }
-    return { action: "deny" };
-  });
-
   mainWindow.webContents.on("will-navigate", (event) => event.preventDefault());
 
   mainWindow.webContents.session.setPermissionCheckHandler(() => false);
-  mainWindow.webContents.session.setPermissionRequestHandler((_c, _p, cb) => cb(false));
+  mainWindow.webContents.session.setPermissionRequestHandler((_c, _p, cb) =>
+    cb(false),
+  );
 
   mainWindow.on("closed", () => {
     mainWindow = null;
@@ -191,7 +231,11 @@ app.whenReady().then(() => {
       path.join(app.getPath("appData"), "CS 工作台 Pro"),
       path.join(app.getPath("appData"), "CS 工作台"),
     ];
-    for (const fileName of ["config.json", "douyin-accounts.json", "account-data.json"]) {
+    for (const fileName of [
+      "config.json",
+      "douyin-accounts.json",
+      "account-data.json",
+    ]) {
       const dest = path.join(userDataDir, fileName);
       if (fs.existsSync(dest)) continue;
       for (const legacyDir of legacyAppDirs) {
@@ -211,14 +255,15 @@ app.whenReady().then(() => {
   accounts = createDouyinManager(userDataDir, () => mainWindow, {
     secureStorage: safeStorage,
   });
-  maitian = createMaitian({ getConfig: () => config });
+  posts = createPostStore(userDataDir);
+  publisher = createPublisher({ store: posts, accounts });
 
   registerHandlers();
 
   Menu.setApplicationMenu(
     Menu.buildFromTemplate([
       {
-        label: "cs-work",
+        label: "Kaige-work",
         submenu: [{ role: "about" }, { type: "separator" }, { role: "quit" }],
       },
       {
@@ -238,6 +283,9 @@ app.whenReady().then(() => {
   );
 
   createWindow();
+  if (process.env.KAIGE_LOGIN_SETUP === "1") {
+    void (async()=>{const report=[];for(const a of accounts.list()){try{await accounts.openBrowser(a.id,"home");report.push({name:a.name,status:"已打开，可检查登录"});}catch(e){report.push({name:a.name,status:e.message});}}writeJson(path.join(userDataDir,"login-setup-report.json"),report);})();
+  }
 
   app.on("activate", () => {
     if (!mainWindow || mainWindow.isDestroyed()) createWindow();
@@ -252,6 +300,31 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
+let quitting = false;
+app.on("before-quit", (event) => {
+  if (quitting) return;
+  const pending =
+    publisher?.busy() ||
+    posts?.read().records.some((r) => r.status === "待你确认");
+  if (pending) {
+    event.preventDefault();
+    dialog
+      .showMessageBox({
+        type: "warning",
+        message: "还有运行中或待确认的发布任务",
+        detail: "退出可能关闭账号窗口，请先检查平台草稿。",
+        buttons: ["继续工作", "退出"],
+        cancelId: 0,
+        defaultId: 0,
+      })
+      .then((r) => {
+        if (r.response === 1) {
+          quitting = true;
+          app.quit();
+        }
+      });
+  }
+});
 app.on("will-quit", () => {
   void accounts?.shutdown();
 });

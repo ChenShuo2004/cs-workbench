@@ -4,8 +4,8 @@ const execFile = promisify(require("node:child_process").execFile);
 
 module.exports = {
   packagerConfig: {
-    name: "cs-work",
-    executableName: "cs-work",
+    name: "Kaige-work",
+    executableName: "Kaige-work",
     appBundleId: "ai.chenshuo.cswork",
     icon: "assets/icon",
     asar: { unpack: "{**/*.node,**/*.dylib}" },
@@ -24,7 +24,7 @@ module.exports = {
     postPackage: async (_config, { platform, outputPaths }) => {
       if (platform !== "darwin") return;
       for (const output of outputPaths) {
-        const bundle = path.join(output, "cs-work.app");
+        const bundle = path.join(output, "Kaige-work.app");
         // Packager changes Electron resources; renew the local ad-hoc signature.
         await execFile("/usr/bin/xattr", ["-cr", bundle]);
         await execFile("/usr/bin/codesign", [

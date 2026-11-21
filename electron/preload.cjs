@@ -7,10 +7,16 @@ contextBridge.exposeInMainWorld(
   Object.freeze({
     appInfo: () => invoke("app:info"),
 
-    maitianRead: () => invoke("maitian:read"),
-    maitianConnect: () => invoke("maitian:connect"),
-    maitianOpen: () => invoke("maitian:open"),
-
+    postsImport: () => invoke("posts:import"),
+    postsRead: () => invoke("posts:read"),
+    postsDraft: (d) => invoke("posts:draft", d),
+    postsStart: (d, ids) => invoke("posts:start", d, ids),
+    postsRetry: (id) => invoke("posts:retry", id),
+    postsMark: (id, url) => invoke("posts:mark", id, url),
+    postsChoose: (kind) => invoke("posts:choose", kind),
+    syncAll: () => invoke("accounts:sync-all"),
+    closeAll: () => invoke("accounts:close-all"),
+    clashRead: () => invoke("clash:read"),
     listAccounts: () => invoke("accounts:list"),
     addAccount: (name, platform, network) =>
       invoke("accounts:add", name, platform, network),
@@ -22,8 +28,7 @@ contextBridge.exposeInMainWorld(
     detectLocalProxyPorts: () => invoke("accounts:detect-local-ports"),
     openAccountBrowser: (id, target) =>
       invoke("accounts:open-browser", id, target),
-    readAccountData: (id, options) =>
-      invoke("accounts:read-data", id, options),
+    readAccountData: (id, options) => invoke("accounts:read-data", id, options),
     removeAccount: (id) => invoke("accounts:remove", id),
     onAccountsChanged: (callback) => {
       const listener = () => callback();

@@ -1,6 +1,6 @@
 {
   "name": "cs-work",
-  "productName": "cs-work",
+  "productName": "Kaige-work",
   "version": "1.0.0",
   "description": "多平台发布中心、矩阵账号数据看板与独立网络隔离工作台",
   "main": "electron/main.cjs",
@@ -13,7 +13,7 @@
     "package:mac": "npm run build && electron-forge package --platform=darwin --arch=arm64",
     "make:mac": "npm run build && electron-forge make --platform=darwin --arch=arm64",
     "test": "node --test tests/*.test.cjs",
-    "verify:distribution": "npm run build && node scripts/verify-maitian.cjs"
+    "verify:distribution": "node scripts/verify-publisher.cjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

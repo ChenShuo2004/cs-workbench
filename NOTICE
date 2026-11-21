@@ -1,0 +1,5 @@
+Kaige-work publisher adapters and CDP convenience functions are adapted from
+mdldm-maitian-publisher, locally supplied at ~/maitian/mdldm-maitian-publisher.
+Original license: Apache License 2.0 (lib/publisher/LICENSE).
+Changes: private pipe transport, no scheduling or link collection, guarded automation,
+local persistent queues, and manual publication confirmation.

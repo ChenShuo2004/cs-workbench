@@ -84,28 +84,51 @@ export interface PlatformAccount {
   dataError?: string;
 }
 
-export interface MaitianFrame {
-  installed: boolean;
-  connected: boolean;
-  frameUrl: string;
-  root: string;
-  error: string;
+export interface PostDraft {
+  title: string;
+  body: string;
+  topics: string;
+  video: string;
+  covers: Record<string, string>;
+  overrides: Record<string, Partial<PostDraft>>;
 }
-
+export interface PostRecord {
+  id: string;
+  accountId: string;
+  name: string;
+  platform: AccountPlatform;
+  status: string;
+  logs: string[];
+  createdAt: string;
+  url?: string;
+}
+export interface PostState {
+  draft: PostDraft;
+  records: PostRecord[];
+}
 export interface AppInfo {
   version: string;
   userDataPath: string;
-  maitianRoot: string;
   encryptionAvailable: boolean;
 }
 
 export interface CSBridge {
   appInfo(): Promise<AppInfo>;
 
-  maitianRead(): Promise<MaitianFrame>;
-  maitianConnect(): Promise<MaitianFrame | null>;
-  maitianOpen(): Promise<void>;
-
+  postsImport(): Promise<PostState | null>;
+  postsRead(): Promise<PostState>;
+  postsDraft(d: PostDraft): Promise<PostState>;
+  postsStart(d: PostDraft, ids: string[]): Promise<PostState>;
+  postsRetry(id: string): Promise<PostState>;
+  postsMark(id: string, url: string): Promise<PostState>;
+  postsChoose(kind: string): Promise<string>;
+  syncAll(): Promise<unknown>;
+  closeAll(): Promise<void>;
+  clashRead(): Promise<{
+    file: string;
+    error: string;
+    listeners: { name: string; port: number; proxy: string }[];
+  }>;
   listAccounts(): Promise<PlatformAccount[]>;
   addAccount(
     name: string,

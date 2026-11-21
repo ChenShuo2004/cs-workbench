@@ -1,7 +1,13 @@
 const { session, dialog } = require("electron");
 const { createAccountBrowser } = require("../lib/account-browser.cjs");
-const { partitionFor, createAccountStore } = require("../lib/douyin-accounts.cjs");
-const { createAccountDataStore, snapshotFromPage } = require("../lib/account-data.cjs");
+const {
+  partitionFor,
+  createAccountStore,
+} = require("../lib/douyin-accounts.cjs");
+const {
+  createAccountDataStore,
+  snapshotFromPage,
+} = require("../lib/account-data.cjs");
 const {
   defaultNetworkConfig,
   createProxySecretStore,
@@ -12,13 +18,18 @@ const {
   detectLocalProxyPorts,
 } = require("../lib/network-isolation.cjs");
 
-function createDouyinManager(userData, getMainWindow, { secureStorage = null } = {}) {
+function createDouyinManager(
+  userData,
+  getMainWindow,
+  { secureStorage = null } = {},
+) {
   let store;
   const getStore = () => (store ||= createAccountStore(userData));
   let dataStore;
   const getDataStore = () => (dataStore ||= createAccountDataStore(userData));
   let secretStore;
-  const getSecretStore = () => (secretStore ||= createProxySecretStore(userData, secureStorage));
+  const getSecretStore = () =>
+    (secretStore ||= createProxySecretStore(userData, secureStorage));
 
   const browser = createAccountBrowser(userData);
   const proxyBridge = createProxyBridgeManager();
@@ -42,17 +53,19 @@ function createDouyinManager(userData, getMainWindow, { secureStorage = null } =
   };
 
   const list = () => {
-    const raw = getStore().list().map((account) => ({
-      ...account,
-      network: {
-        ...defaultNetworkConfig(),
-        ...(account.network || {}),
-        hasPassword: getSecretStore().has(account.id),
-      },
-      error: errors.get(account.id) || "",
-      dataConnected: browser.isDataConnected(account.id),
-      ...accountDataFields(account.id),
-    }));
+    const raw = getStore()
+      .list()
+      .map((account) => ({
+        ...account,
+        network: {
+          ...defaultNetworkConfig(),
+          ...(account.network || {}),
+          hasPassword: getSecretStore().has(account.id),
+        },
+        error: errors.get(account.id) || "",
+        dataConnected: browser.isDataConnected(account.id),
+        ...accountDataFields(account.id),
+      }));
     const warnings = analyzeNetworkConflicts(raw);
     return raw.map((account) => ({
       ...account,
@@ -73,7 +86,8 @@ function createDouyinManager(userData, getMainWindow, { secureStorage = null } =
         );
       }
     }
-    const needsAuthBridge = netCfg.mode === "proxy" && Boolean(netCfg.username || password);
+    const needsAuthBridge =
+      netCfg.mode === "proxy" && Boolean(netCfg.username || password);
     if (needsAuthBridge) {
       return proxyBridge.ensureBridge(account.id, netCfg, password);
     }
@@ -83,6 +97,34 @@ function createDouyinManager(userData, getMainWindow, { secureStorage = null } =
 
   return {
     list,
+    async publisherConnection(id) {
+      return browser.connection(getStore().get(id));
+    },
+    async closeAll() {
+      for (const a of getStore().list()) await browser.close(a);
+      notify();
+    },
+    async syncAll() {
+      const queue = getStore().list();
+      const results = {};
+      await Promise.all(
+        [0, 1].map(async () => {
+          while (queue.length) {
+            const a = queue.shift();
+            try {
+              results[a.id] = await this.readData(a.id, {
+                navigateToData: true,
+              });
+            } catch (e) {
+              errors.set(a.id, e.message);
+              results[a.id] = { error: e.message };
+            }
+          }
+        }),
+      );
+      notify();
+      return results;
+    },
     add(name, platform, networkInput = null) {
       let cleanNetwork = null;
       let password;
@@ -94,7 +136,10 @@ function createDouyinManager(userData, getMainWindow, { secureStorage = null } =
       const account = getStore().add(name, platform, cleanNetwork);
       if (password && cleanNetwork?.mode === "proxy") {
         getSecretStore().set(account.id, password);
-        getStore().updateNetwork(account.id, { ...account.network, hasPassword: true });
+        getStore().updateNetwork(account.id, {
+          ...account.network,
+          hasPassword: true,
+        });
       }
       notify();
       return list().find((item) => item.id === account.id);
@@ -141,7 +186,10 @@ function createDouyinManager(userData, getMainWindow, { secureStorage = null } =
           while (queue.length) {
             const acc = queue.shift();
             if (!acc || removing.has(acc.id)) continue;
-            const netCfg = { ...defaultNetworkConfig(), ...(acc.network || {}) };
+            const netCfg = {
+              ...defaultNetworkConfig(),
+              ...(acc.network || {}),
+            };
             const password = getSecretStore().get(acc.id);
             try {
               const res = await probeNetwork(netCfg, password);
@@ -186,10 +234,21 @@ function createDouyinManager(userData, getMainWindow, { secureStorage = null } =
       const proxyUrlOverride = await prepareProxyForLaunch(account);
       let page;
       try {
-        page = await browser.readData(account, { proxyUrlOverride, navigateToData });
+        page = await browser.readData(account, {
+          proxyUrlOverride,
+          navigateToData,
+        });
       } catch (error) {
         notify();
         throw error;
+      }
+      if (
+        /login|登录|扫码/.test(page.pageTitle || page.title || "") &&
+        !(page.metrics || []).length
+      ) {
+        errors.set(id, "需扫码登录");
+        notify();
+        throw new Error("需扫码登录");
       }
       const snapshot = getDataStore().put(id, snapshotFromPage(page));
       getStore().opened(id, "chrome");

@@ -93,6 +93,11 @@ test("concurrent opens are deduplicated and shell interpolation is never used", 
       assert.equal(options.shell, false);
       assert.ok(args.includes(`--user-data-dir=${browserProfile(root, a)}`));
       const child = new EventEmitter();
+      const {PassThrough}=require('node:stream');
+      child.stdio=[null,null,null,new PassThrough(),new PassThrough()];
+      child.exitCode=null;
+      assert.ok(args.includes('--remote-debugging-pipe'));
+      assert.equal(args.some(a=>a.startsWith('--remote-debugging-port')),false);
       child.unref = () => {};
       process.nextTick(() => {
         child.emit("spawn");

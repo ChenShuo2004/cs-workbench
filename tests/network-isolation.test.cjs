@@ -228,3 +228,25 @@ test("detectLocalProxyPorts finds active loopback listening ports", async (t) =>
   const found = await detectLocalProxyPorts([port, 1]);
   assert.deepEqual(found, [port]);
 });
+
+test("analyzeNetworkConflicts flags overseas exit IP on domestic Chinese platforms but allows it on global platforms", () => {
+  const warnings = analyzeNetworkConflicts([
+    {
+      id: "cn-1",
+      platform: "xiaohongshu",
+      name: "国内小红书",
+      network: { ...defaultNetworkConfig(), mode: "local_port", protocol: "http", host: "127.0.0.1", port: 7905 },
+      lastNetworkCheck: { ok: true, ip: "67.159.48.150", country: "United States" },
+    },
+    {
+      id: "gl-1",
+      platform: "youtube",
+      name: "海外YouTube",
+      network: { ...defaultNetworkConfig(), mode: "local_port", protocol: "http", host: "127.0.0.1", port: 7912 },
+      lastNetworkCheck: { ok: true, ip: "134.195.101.180", country: "United States" },
+    },
+  ]);
+  assert.equal(warnings["cn-1"].length, 1);
+  assert.match(warnings["cn-1"][0], /海外 IP/);
+  assert.equal(warnings["gl-1"].length, 0);
+});

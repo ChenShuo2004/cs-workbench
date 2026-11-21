@@ -18,6 +18,7 @@ import {
 import { Dialog } from "./Dialog";
 import { NetworkEditorModal } from "./NetworkEditorModal";
 import { formatLocation, formatNetworkSummary } from "./NetworkIsolation";
+import { checkAndRecordPublishStagger } from "./publish-guard";
 import platforms from "../shared/account-platforms.json";
 import type {
   AccountPlatform,
@@ -137,11 +138,16 @@ export function DouyinAccounts({
     setBusyId(account.id);
     setError("");
     try {
+      const staggerWarning =
+        target === "publish" ? checkAndRecordPublishStagger(account) : "";
       await window.cs.openAccountBrowser(account.id, target);
       await onRefresh();
       const label =
         target === "publish" ? "发布页" : target === "data" ? "数据中心" : "创作者后台";
-      onNotice(`已通过独立隔离 Chrome 打开「${account.name}」的${label}`);
+      onNotice(
+        staggerWarning || `已通过独立隔离 Chrome 打开「${account.name}」的${label}`,
+        Boolean(staggerWarning),
+      );
     } catch (e) {
       const msg = uiErrorMessage(e);
       setError(msg);
@@ -197,7 +203,8 @@ export function DouyinAccounts({
 
   return (
     <div className="accounts-page">
-      <div className="page-heading compact">
+      <button className="button subtle" onClick={()=>void window.cs.syncAll().then(()=>{onNotice('同步完成，需登录的账号请查看提示');void onRefresh();}).catch(e=>onNotice(String(e),true))}>同步全部账号数据</button>
+        <div className="page-heading compact">
         <div>
           <span className="eyebrow">MATRIX ACCOUNTS & ANALYTICS</span>
           <h1>账号与数据</h1>

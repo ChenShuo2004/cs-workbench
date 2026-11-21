@@ -8,6 +8,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import platforms from "../shared/account-platforms.json";
+import { checkAndRecordPublishStagger } from "./publish-guard";
 import { uiErrorMessage } from "./ui-error";
 import type { AccountPlatform, MaitianFrame, PlatformAccount } from "./types";
 import "./distribution.css";
@@ -65,9 +66,12 @@ export function Distribution({
   async function launchPublish(account: PlatformAccount) {
     setLaunchingId(account.id);
     try {
+      const staggerWarning = checkAndRecordPublishStagger(account);
       await window.cs.openAccountBrowser(account.id, "publish");
       onNotice(
-        `已在独立隔离 Chrome 中打开发布页：${platforms[account.platform].name} · ${account.name}`,
+        staggerWarning ||
+          `已在独立隔离 Chrome 中打开发布页：${platforms[account.platform].name} · ${account.name}`,
+        Boolean(staggerWarning),
       );
     } catch (e) {
       onNotice(uiErrorMessage(e), true);

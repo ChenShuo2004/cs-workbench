@@ -22,7 +22,12 @@ function quickParseProxy(raw: string) {
   if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(text)) {
     const u = new URL(text);
     const p = u.protocol.replace(/:$/, "").toLowerCase();
-    protocol = p === "socks5h" || p === "socks5" ? "socks5" : p === "https" ? "https" : "http";
+    protocol =
+      p === "socks5h" || p === "socks5"
+        ? "socks5"
+        : p === "https"
+          ? "https"
+          : "http";
     host = u.hostname;
     port = u.port;
     username = u.username ? decodeURIComponent(u.username) : "";
@@ -34,11 +39,14 @@ function quickParseProxy(raw: string) {
     } else if (parts.length === 4) {
       [host, port, username, password] = parts.map((x) => x.trim());
     } else {
-      throw new Error("无法识别代理串，支持 socks5://user:pass@host:port 或 host:port:user:pass");
+      throw new Error(
+        "无法识别代理串，支持 socks5://user:pass@host:port 或 host:port:user:pass",
+      );
     }
   }
   if (!host || !port) throw new Error("代理串缺少主机或端口");
-  const isLocal = ["127.0.0.1", "localhost", "::1"].includes(host) && !username && !password;
+  const isLocal =
+    ["127.0.0.1", "localhost", "::1"].includes(host) && !username && !password;
   return {
     mode: (isLocal ? "local_port" : "proxy") as NetworkMode,
     protocol,
@@ -79,9 +87,13 @@ export function NetworkEditorModal({
 }) {
   const initial = account.network;
   const [mode, setMode] = useState<NetworkMode>(initial.mode);
-  const [protocol, setProtocol] = useState<ProxyProtocol>(initial.protocol || "http");
+  const [protocol, setProtocol] = useState<ProxyProtocol>(
+    initial.protocol || "http",
+  );
   const [host, setHost] = useState(
-    initial.mode === "local_port" ? initial.host || "127.0.0.1" : initial.host || "",
+    initial.mode === "local_port"
+      ? initial.host || "127.0.0.1"
+      : initial.host || "",
   );
   const [port, setPort] = useState(initial.port ? String(initial.port) : "");
   const [username, setUsername] = useState(initial.username || "");
@@ -93,6 +105,15 @@ export function NetworkEditorModal({
   const [timezone, setTimezone] = useState(initial.timezone || "");
   const [lang, setLang] = useState(initial.lang || "");
   const [pasteInput, setPasteInput] = useState("");
+  const [nodes, N] = useState<{ name: string; port: number; proxy: string }[]>(
+    [],
+  );
+  useEffect(() => {
+    void window.cs
+      .clashRead()
+      .then((s) => N(s.listeners))
+      .catch(() => {});
+  }, []);
   const [livePorts, setLivePorts] = useState<number[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -189,6 +210,33 @@ export function NetworkEditorModal({
           </button>
         </div>
 
+        {nodes.length > 0 && (
+          <label>
+            Clash 监听节点
+            <select
+              disabled={busy}
+              defaultValue=""
+              onChange={(e) => {
+                const n = nodes.find((n) => n.port === Number(e.target.value));
+                if (n) {
+                  setMode("local_port");
+                  setProtocol("http");
+                  setHost("127.0.0.1");
+                  setPort(String(n.port));
+                  setLabel(n.proxy || n.name);
+                }
+              }}
+            >
+              <option value="">选择节点与端口</option>
+              {nodes.map((n) => (
+                <option key={n.port} value={n.port}>
+                  {n.port} · {n.proxy || n.name}
+                  {n.port === initial.port ? "（当前账号）" : ""}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <div className="quick-paste-row">
           <input
             value={pasteInput}
@@ -212,7 +260,11 @@ export function NetworkEditorModal({
           </button>
         </div>
 
-        <div className="network-mode-tabs" role="radiogroup" aria-label="网络模式">
+        <div
+          className="network-mode-tabs"
+          role="radiogroup"
+          aria-label="网络模式"
+        >
           {(
             [
               {
@@ -266,12 +318,16 @@ export function NetworkEditorModal({
               </select>
             </label>
             <label>
-              <span>{mode === "local_port" ? "本机监听地址" : "代理主机 / IP"}</span>
+              <span>
+                {mode === "local_port" ? "本机监听地址" : "代理主机 / IP"}
+              </span>
               <input
                 value={host}
                 disabled={busy}
                 required
-                placeholder={mode === "local_port" ? "127.0.0.1" : "例如 45.12.34.56"}
+                placeholder={
+                  mode === "local_port" ? "127.0.0.1" : "例如 45.12.34.56"
+                }
                 onChange={(e) => setHost(e.target.value)}
               />
             </label>
@@ -303,8 +359,12 @@ export function NetworkEditorModal({
 
         {mode === "local_port" && (
           <div className="port-presets">
-            <span>{livePorts.length ? "本机活跃端口：" : "常用本地端口："}</span>
-            {Array.from(new Set([...livePorts, 7890, 7891, 7892, 7893, 7897, 10808])).map((p) => {
+            <span>
+              {livePorts.length ? "本机活跃端口：" : "常用本地端口："}
+            </span>
+            {Array.from(
+              new Set([...livePorts, 7890, 7891, 7892, 7893, 7897, 10808]),
+            ).map((p) => {
               const isLive = livePorts.includes(p);
               return (
                 <button
@@ -312,14 +372,17 @@ export function NetworkEditorModal({
                   type="button"
                   className={`chip-btn ${String(p) === port ? "active" : ""} ${isLive ? "live-port" : ""}`}
                   disabled={busy}
-                  title={isLive ? `检测到本机 127.0.0.1:${p} 正在监听` : `填充端口 ${p}`}
+                  title={
+                    isLive
+                      ? `检测到本机 127.0.0.1:${p} 正在监听`
+                      : `填充端口 ${p}`
+                  }
                   onClick={() => {
                     setHost("127.0.0.1");
                     setPort(String(p));
                   }}
                 >
-                  {isLive && <i className="live-dot" />}
-                  :{p}
+                  {isLive && <i className="live-dot" />}:{p}
                 </button>
               );
             })}
@@ -381,7 +444,9 @@ export function NetworkEditorModal({
             />
             <span>
               <strong>代理不通禁止启动（Fail-Closed）</strong>
-              <small>启动前先探测代理，失败则阻断打开 Chrome，防止漏出本机真实 IP</small>
+              <small>
+                启动前先探测代理，失败则阻断打开 Chrome，防止漏出本机真实 IP
+              </small>
             </span>
           </label>
           <label className="checkbox-inline">
@@ -393,7 +458,9 @@ export function NetworkEditorModal({
             />
             <span>
               <strong>防 WebRTC IP 泄露</strong>
-              <small>禁用非代理 UDP，防止网页通过 WebRTC 探测本机内网/公网 IP</small>
+              <small>
+                禁用非代理 UDP，防止网页通过 WebRTC 探测本机内网/公网 IP
+              </small>
             </span>
           </label>
         </div>
@@ -432,7 +499,9 @@ export function NetworkEditorModal({
         <div className="network-security-note">
           <ShieldCheck size={16} />
           <span>
-            密码使用 macOS 钥匙串加密保存在本机；修改网络后再次打开该账号会自动重启其独立 Chrome 使新代理立即生效。
+            密码使用 macOS
+            钥匙串加密保存在本机；修改网络后再次打开该账号会自动重启其独立
+            Chrome 使新代理立即生效。
           </span>
         </div>
 
