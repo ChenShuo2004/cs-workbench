@@ -1,0 +1,33 @@
+{
+  "checks": [
+    "storyboard draft survives switching to the timeline",
+    "native macOS fullscreen enters and exits with editor actions retained",
+    "F toggles repeatedly and immediate Escape exits without an intervening edit",
+    "create, storyboard, prompt, note, node drag and zoom saved to project",
+    "reload retains canvas positions, notes and viewport",
+    "shot ordering, duplication, removal, undo and redo work",
+    "native import copied PNG and MP4; both added as renderable shots",
+    "image zoom and video metadata load in dismissible media preview",
+    "sequence drag reorder and undo retain all clips",
+    "Shift multi-select, group drag and alignment persist correctly",
+    "blank-area rectangle selection selects visible shots",
+    "Escape exits fullscreen without losing the canvas",
+    "mixed scene / image / video preview playback completes",
+    "mixed MP4 exported, duration verified and full decode passed",
+    "390px view has no page overflow"
+  ],
+  "errors": [],
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-canvas-qa-Mp0MvA",
+  "packaged": true,
+  "export": {
+    "id": "ce3171d2-3912-466e-bbb7-d6aba64791c2",
+    "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-canvas-qa-Mp0MvA/projects/20261020-视频创作画布验收",
+    "title": "视频创作画布验收",
+    "createdAt": "2026-10-20T07:19:57.333Z",
+    "status": "complete",
+    "progress": 100,
+    "output": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-canvas-qa-Mp0MvA/projects/20261020-视频创作画布验收/outputs/render-ce3171d2-3912-466e-bbb7-d6aba64791c2/final.mp4",
+    "error": "",
+    "finishedAt": "2026-10-20T07:19:58.699Z"
+  }
+}

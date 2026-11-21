@@ -1,0 +1,11 @@
+{
+  "source": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/video-generation-qa/metaso-generated.mp4",
+  "output": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/1080p-qa/generated-1080p.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 5.166667,
+  "hasAudio": true,
+  "newPaidRequests": 0,
+  "transport": "simulated; reused prior real 2K result",
+  "fullDecode": true
+}

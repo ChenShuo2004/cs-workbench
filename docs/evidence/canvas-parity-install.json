@@ -1,0 +1,17 @@
+{
+  "version": "0.6.0",
+  "installed": "/Users/chenshuo/Applications/CS 工作台 Pro.app",
+  "backup": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/installed-backups/CS 工作台 Pro-before-canvas-parity-20261020-211224.app",
+  "package": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/CS 工作台 Pro-darwin-arm64/CS 工作台 Pro.app",
+  "installedAt": "2026-10-20T21:18:49.279439",
+  "codesignVerified": true,
+  "userDataPreserved": true,
+  "paidGenerationsThisRun": 0,
+  "hotkeyFixIncluded": true,
+  "installedUiVerified": true,
+  "unitTests": 66,
+  "canvasUiChecks": 12,
+  "generationFlowChecks": 6,
+  "canvasAndExportChecks": 15,
+  "verifiedAt": "2026-10-20T21:19:22.916219"
+}

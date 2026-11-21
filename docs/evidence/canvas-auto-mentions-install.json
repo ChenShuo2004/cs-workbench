@@ -1,0 +1,15 @@
+{
+  "version": "0.6.2",
+  "installed": "/Users/chenshuo/Applications/CS 工作台 Pro.app",
+  "backup": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/installed-backups/CS 工作台 Pro-before-auto-mentions-20261020-225406.app",
+  "source": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台",
+  "installedAt": "2026-10-20T22:54:07.003710",
+  "codesignVerified": true,
+  "paidGenerationsThisRun": 0,
+  "userDataPreserved": true,
+  "installedUiVerified": true,
+  "unitTests": 70,
+  "installedUiChecks": 13,
+  "generationFlowChecks": 6,
+  "verifiedAt": "2026-10-20T22:54:44.376046"
+}

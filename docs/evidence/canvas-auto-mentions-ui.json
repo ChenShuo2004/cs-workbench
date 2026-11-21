@@ -1,0 +1,23 @@
+{
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-parity-qa-Jx8IcU",
+  "checks": [
+    "Double-click blank canvas opens searchable creation menu and places editable text at exact world position",
+    "Dragging text output into blank space creates native-1080P video node with persisted prompt connection",
+    "Expanded prompt editor and double-click node rename save without starting generation",
+    "Copy/paste duplicates mixed node selection with remapped internal edges and preserves existing graph",
+    "Multi-selection groups persist, move members together, and undo as one edit",
+    "Node context deletion removes only selected nodes and links; undo restores; text editing shortcuts never delete canvas nodes",
+    "Context import and system clipboard image become reference nodes at insertion point without adding timeline clips",
+    "Actual desktop File drop and Cmd+V image paste create persistent media nodes through Electron preload",
+    "Alignment and batch prompt connections use selected nodes and undo independently",
+    "Selected connections delete independently and undo restores them",
+    "Search focuses matching nodes; fullscreen and reload preserve groups, prompt links, sources and generated-node settings",
+    "Canvas-wide @ selection connects an unconnected image atomically; undo/redo restores prompt and edge together; provider mapping and disconnect validation pass",
+    "390px menu remains within viewport and supports keyboard dismissal"
+  ],
+  "errors": [],
+  "version": "0.6.2",
+  "packaged": true,
+  "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-parity-qa-Jx8IcU/projects/20261020-画布交互对照验收",
+  "completed": true
+}

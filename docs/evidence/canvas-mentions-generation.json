@@ -1,0 +1,15 @@
+{
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-nodes-qa-Z2oPxh",
+  "provider": "synthetic transport; real application UI, queue and project persistence",
+  "checks": [
+    "Single input accepts pointer and keyboard links, deduplicates sources; frame selection and @ mention picker work",
+    "Generate on downstream node runs missing upstream first, uses its real local result, attaches each output once and excludes intermediate image from export",
+    "Direct mixed-media links retain stable @ aliases; provider receives matching Image/Video/Audio labels and reuses existing image",
+    "Batch parser creates 5s and 8s nodes, review reports 13s, reverse completion still attaches in storyboard order",
+    "Reload restores graph, all three reference roles and completed outputs without paid resubmission",
+    "Fullscreen node workspace and 390px layout have reachable controls and no page overflow"
+  ],
+  "errors": [],
+  "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-nodes-qa-Z2oPxh/projects/20261020-节点工作流验收",
+  "completed": true
+}

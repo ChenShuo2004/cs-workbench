@@ -1,0 +1,18 @@
+{
+  "version": "0.3.5",
+  "installed": "/Users/chenshuo/Applications/CS 工作台 Pro.app",
+  "backup": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/installed-backups/CS 工作台 Pro-before-auto-health-20261018-172700.app",
+  "asarSha256": "243c69989b2372bdb664782545bb9d670bb1ad7e95ad1149b4e67fb02a2792b9",
+  "checks": [
+    "TypeScript and Vite build pass",
+    "arm64 package and codesign pass",
+    "installed matches built bundle",
+    "existing heartbeat updated to ACTIVE every 15 minutes",
+    "live webpage refreshed and supported observations imported successfully",
+    "installed health UI verified: four automatic metrics, no manual form or weight, new sync label and success time"
+  ],
+  "limitations": [
+    "not real time collection",
+    "future scheduled execution unverified"
+  ]
+}

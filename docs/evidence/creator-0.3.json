@@ -1,0 +1,187 @@
+{
+  "at": "2026-10-18T00:35:55.562Z",
+  "checks": [
+    "workspace search opens editable task",
+    "UI backup and restore, retaining prior data",
+    "reference capture, URL, shared project association, processed state, separate memory collection",
+    "two projects stay synchronized across article, global selector, and editing room",
+    "all 14 routes use one shell and color system, populated project editors inspected",
+    "real Codex proposal, validated apply, undo restores original clip",
+    "portrait crop, styled subtitles, voice override, loop/fade/duck music real export and complete decode",
+    "14 routes fit 390px viewport"
+  ],
+  "errors": [],
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-creator-qa-CdtrJR",
+  "packaged": true,
+  "routes": [
+    {
+      "route": "我的工作台",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "每日任务",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "Agent 助手",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "个人记忆",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "资料收集",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "文件空间",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "创作室",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "项目",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "文章",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "视频",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "素材库",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "发布",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "抖音账号",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    },
+    {
+      "route": "设置",
+      "background": "rgb(17, 19, 21)",
+      "header": "rgb(21, 23, 25)"
+    }
+  ],
+  "preview": {
+    "videoMuted": true,
+    "voice": 1.198031,
+    "music": 1.193678
+  },
+  "job": {
+    "id": "7ff43f50-d7af-4480-91af-e2d52a19e98c",
+    "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-creator-qa-CdtrJR/projects/20261018-个人创作验收",
+    "title": "个人创作验收",
+    "createdAt": "2026-10-18T00:36:17.919Z",
+    "status": "complete",
+    "progress": 100,
+    "output": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-creator-qa-CdtrJR/projects/20261018-个人创作验收/outputs/render-7ff43f50-d7af-4480-91af-e2d52a19e98c/final.mp4",
+    "error": "",
+    "finishedAt": "2026-10-18T00:36:18.977Z"
+  },
+  "settings": {
+    "version": 1,
+    "mode": "talk",
+    "aspect": "9:16",
+    "resolution": 720,
+    "theme": "mint",
+    "sceneStyle": "pixel",
+    "captions": true,
+    "normalize": true,
+    "media": [
+      {
+        "id": "946b349e-4882-4345-bbbd-c62994a776d2",
+        "name": "source.mp4",
+        "path": "assets/media/946b349e-4882-4345-bbbd-c62994a776d2.mp4",
+        "duration": 10.675011,
+        "width": 960,
+        "height": 540,
+        "hasAudio": true,
+        "kind": "video"
+      },
+      {
+        "id": "f887ce3a-4c19-48e0-aa81-470238340206",
+        "name": "beat-120.wav",
+        "path": "assets/media/f887ce3a-4c19-48e0-aa81-470238340206.wav",
+        "duration": 12,
+        "width": 0,
+        "height": 0,
+        "hasAudio": true,
+        "kind": "audio"
+      }
+    ],
+    "clips": [
+      {
+        "id": "review-0",
+        "mediaId": "946b349e-4882-4345-bbbd-c62994a776d2",
+        "start": 0,
+        "end": 2,
+        "text": "今天讲一个方法。",
+        "enabled": true,
+        "voiceId": "946b349e-4882-4345-bbbd-c62994a776d2",
+        "voiceStart": 0
+      },
+      {
+        "id": "review-1",
+        "mediaId": "946b349e-4882-4345-bbbd-c62994a776d2",
+        "start": 2,
+        "end": 4,
+        "text": "今天讲一个方法。",
+        "enabled": true
+      },
+      {
+        "id": "review-2",
+        "mediaId": "946b349e-4882-4345-bbbd-c62994a776d2",
+        "start": 4,
+        "end": 6,
+        "text": "先整理素材，再开始剪辑。",
+        "enabled": true
+      },
+      {
+        "id": "review-3",
+        "mediaId": "946b349e-4882-4345-bbbd-c62994a776d2",
+        "start": 6,
+        "end": 8,
+        "text": "记住这三个步骤。",
+        "enabled": true
+      }
+    ],
+    "revision": 13,
+    "captionStyle": {
+      "preset": "card",
+      "color": "#f6e2b1",
+      "position": 0.76
+    },
+    "framing": "fill",
+    "audio": {
+      "musicId": "f887ce3a-4c19-48e0-aa81-470238340206",
+      "musicOffset": 0
+    },
+    "rhythm": {
+      "bpm": 120,
+      "offset": 0
+    }
+  }
+}

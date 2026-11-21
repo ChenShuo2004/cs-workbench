@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "failed journal save blocks navigation, retains text and retries to real local storage",
+    "content loading cannot overwrite input; edits made while saving are saved in a second ordered write",
+    "save shortcut writes the active content module before reporting success",
+    "project switch saves current content; failed search navigation reveals save error and preserves the active plan",
+    "document save never marks newer input as saved before that input reaches disk",
+    "active document tab retains just-saved content; late project reads cannot replace the latest selection",
+    "unsaved close offers continue editing; cancel retains window, input and working services",
+    "skip-to-content focuses main without changing document URL or fullscreen permission identity",
+    "failed canvas writes retain nodes and block navigation; dismissing error keeps retry accessible; retry persists and allows leaving"
+  ],
+  "errors": []
+}

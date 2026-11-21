@@ -1,0 +1,10 @@
+{
+  "installed_app": "/Users/chenshuo/Applications/CS 工作台 Pro.app",
+  "backup": "/Users/chenshuo/coding/cs-workbench/out/app-backups/before-reunion-20261020-230720/CS 工作台 Pro.app",
+  "asar_sha256": "4b85530bcd94d1e2b6c1b84198e85cb0d7f38b4d35eb9a4c524b1581e6f0fc82",
+  "previous_asar_sha256": "8dcf236594495cc794f8cb6ba7bfe87ad1683fb9b268256e5f1d9e98bbf2072b",
+  "seeded_real_example": true,
+  "example_output": "/Users/chenshuo/Documents/CS工作台项目/亲人重逢批量/2026-10-20-014654f8",
+  "running_application_restarted": false,
+  "verification": "Packaged native UI checked; installed asar matches verified package; signature verified"
+}

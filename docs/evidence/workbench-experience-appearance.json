@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "all four themes switch through real UI",
+    "read/edit toggle renders content without changing source",
+    "export auto-checks article/shared scope and visibly reminds missing evidence",
+    "home and appearance settings fit 390px viewport",
+    "selected theme survives full app restart"
+  ],
+  "errors": []
+}

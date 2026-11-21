@@ -1,0 +1,325 @@
+/* Application appearance is independent from the video's scene palette. */
+:root {
+  --on-accent: #202b16;
+  --accent-text: #c1ee86;
+  --accent-soft: #293325;
+  --danger-soft: #3a2625;
+  --warning-soft: #3b3326;
+}
+:root[data-theme="paper"] {
+  color-scheme: light;
+  --canvas: #ffffff;
+  --panel: #ffffff;
+  --elevated: #f5f6f7;
+  --line: #e5e7eb;
+  --ink: #20242a;
+  --muted: #626873;
+  --accent: #303640;
+  --accent-text: #303640;
+  --accent-soft: #f1f3f5;
+  --on-accent: #ffffff;
+  --danger: #b33832;
+  --warning: #855b16;
+  --danger-soft: #f8e3df;
+  --warning-soft: #f5ebcf;
+}
+:root[data-theme="ocean"] {
+  --canvas: #101820;
+  --panel: #16232e;
+  --elevated: #233442;
+  --line: #3b5263;
+  --ink: #e5edf4;
+  --muted: #a0b6c6;
+  --accent: #85c9f4;
+  --accent-text: #a6dafa;
+  --accent-soft: #213e50;
+  --on-accent: #102b3c;
+}
+:root[data-theme="violet"] {
+  --canvas: #19151e;
+  --panel: #231e2a;
+  --elevated: #332c3d;
+  --line: #51465f;
+  --ink: #eee7f5;
+  --muted: #b6a8c6;
+  --accent: #c5b2f5;
+  --accent-text: #d4c4fb;
+  --accent-soft: #392e4c;
+  --on-accent: #2b1e43;
+}
+.studio-shell .brand-mark,
+.button.primary,
+.s-button.primary,
+.button.primary:hover:not(:disabled),
+.s-button.primary:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.studio-shell .nav-item.active,
+.doc-tabs button.active {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.text-button,
+.quick-link {
+  color: var(--accent-text);
+}
+.day-card {
+  background:
+    radial-gradient(
+      ellipse at 90% 10%,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      transparent 65%
+    ),
+    var(--accent-soft);
+}
+.agent-shortcut {
+  background:
+    radial-gradient(
+      ellipse at 100% 0,
+      color-mix(in srgb, var(--accent) 8%, transparent),
+      transparent 70%
+    ),
+    var(--panel);
+}
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+.appearance-quick {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 0 8px;
+  background: var(--panel);
+}
+.appearance-quick > span,
+.appearance-options button > span {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+}
+.appearance-quick select {
+  font-size: 12px;
+  border: 0;
+  background: transparent;
+  max-width: 76px;
+  padding: 5px 0;
+}
+.appearance-options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px 0 24px;
+}
+.appearance-options button {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--ink);
+  text-align: left;
+}
+.appearance-options button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.appearance-options small {
+  flex-basis: 100%;
+  color: var(--muted);
+}
+.document-view-switch {
+  display: flex;
+  gap: 5px;
+  margin: 0 0 14px;
+}
+.document-view-switch button {
+  background: var(--panel);
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+.document-view-switch button[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.document-reading {
+  min-height: 430px;
+  max-width: 780px;
+  padding: clamp(20px, 4vw, 48px);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.document-reading h1 {
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 30px;
+  font-weight: 500;
+}
+.document-reading h2 {
+  font-size: 23px;
+  margin-top: 28px;
+}
+.document-reading h3 {
+  font-size: 18px;
+}
+.document-reading p {
+  white-space: pre-wrap;
+}
+.document-reading pre {
+  white-space: pre-wrap;
+  padding: 16px;
+  background: var(--elevated);
+  border-radius: 6px;
+}
+.document-reading blockquote {
+  margin: 16px 0;
+  padding-left: 18px;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+}
+.chat-messages {
+  padding: 28px clamp(16px, 4vw, 64px);
+}
+.chat-message {
+  max-width: 760px;
+  margin: 0 auto 28px;
+}
+.chat-message pre {
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.9;
+}
+.chat-message.user > div {
+  padding: 14px 18px;
+  background: var(--elevated);
+  border-radius: 12px;
+}
+.agent-composer {
+  margin: 12px 22px 22px;
+  border-radius: 14px;
+}
+.qa-results {
+  scroll-margin-top: 80px;
+}
+@media (max-width: 800px) {
+  .appearance-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .top-actions .local-badge {
+    display: none;
+  }
+  .topbar .crumb {
+    min-width: 0;
+    overflow: hidden;
+  }
+  .topbar .crumb > span:first-child {
+    display: none;
+  }
+  .top-actions {
+    display: flex;
+    flex-shrink: 0;
+  }
+  .top-actions > .button {
+    display: none;
+  }
+  .personal-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .personal-heading .heading-actions {
+    flex-wrap: wrap;
+  }
+  .agent-composer {
+    margin: 8px;
+  }
+}
+
+/* White stays neutral: no cream tint, colored wash, or decorative gradient. */
+:root[data-theme="paper"] .day-card,
+:root[data-theme="paper"] .agent-shortcut {
+  background: var(--panel);
+}
+:root[data-theme="paper"] .sidebar,
+:root[data-theme="paper"] .topbar {
+  background: #fafbfc;
+}
+:root[data-theme="paper"] .ops-peek {
+  background: var(--panel);
+}
+
+/* One approved KAI avatar for native icon, navigation, opening and home cover. */
+.kai-avatar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+}
+.studio-shell .brand-mark {
+  width: 42px;
+  height: 42px;
+  flex: none;
+  padding: 0;
+  border-radius: 11px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+.home-brand-heading {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+}
+.home-brand-heading .home-avatar {
+  width: 112px;
+  height: 112px;
+  flex: none;
+  border-radius: 24px;
+}
+.home-brand-heading > div {
+  min-width: 0;
+}
+.splash .splash-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 36px;
+}
+.splash h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 550;
+}
+@media (max-width: 800px) {
+  .home-brand-heading {
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .home-brand-heading .home-avatar {
+    width: 68px;
+    height: 68px;
+    border-radius: 16px;
+  }
+  .home-brand-heading h1 {
+    font-size: 22px;
+  }
+  .studio-shell .brand-mark {
+    width: 36px;
+    height: 36px;
+  }
+}

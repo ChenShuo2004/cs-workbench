@@ -1,0 +1,19 @@
+{
+  "version": "0.3.2",
+  "installed": "/Users/chenshuo/Applications/CS 工作台 Pro.app",
+  "backup": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/installed-backups/CS 工作台 Pro-before-health-sync-20261018-105318.app",
+  "sha256": "084a54dc695b08165b69bc37f6affe5067470b56938b5cbe25a10f63716df5f7",
+  "checkedAt": "2026-10-18T10:53:19.235627+08:00",
+  "checks": [
+    "32 tests pass",
+    "TypeScript and Vite build pass",
+    "arm64 package and codesign pass",
+    "source/installed asar SHA256 match",
+    "live Health page observed; CLI imported 3 records and sync status reread",
+    "heartbeat health-cs ACTIVE; daily 09:00,21:00 Asia/Shanghai",
+    "installed real-profile home and health page verified by native AX and screenshot"
+  ],
+  "notYetVerified": [
+    "future scheduled run"
+  ]
+}

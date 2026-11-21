@@ -1,0 +1,31 @@
+{
+  "checks": [
+    "local Whisper ASR produces timed editable segments",
+    "media protocol playback, silence cut, 720×1280 MP4 with captions, audio and full decode",
+    "scene voice source plays during pixel preview"
+  ],
+  "errors": [],
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-talk-qa-APm4ah",
+  "packaged": true,
+  "transcript": "今天,我们把一个想法,变成真实的作品,先记录任务,再整理素材,最后完成剪辑。",
+  "preview": {
+    "currentTime": 0.221895,
+    "readyState": 4
+  },
+  "job": {
+    "id": "8e6ae05c-216d-4131-9250-ab374fa94e1b",
+    "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-talk-qa-APm4ah/projects/20261018-口播验收",
+    "title": "口播验收",
+    "createdAt": "2026-10-18T00:37:04.687Z",
+    "status": "complete",
+    "progress": 100,
+    "output": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-talk-qa-APm4ah/projects/20261018-口播验收/outputs/render-8e6ae05c-216d-4131-9250-ab374fa94e1b/final.mp4",
+    "error": "",
+    "finishedAt": "2026-10-18T00:37:05.945Z"
+  },
+  "pixelAudioPreview": {
+    "currentTime": 0.884531,
+    "paused": false,
+    "readyState": 4
+  }
+}

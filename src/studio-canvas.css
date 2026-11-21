@@ -1,0 +1,1284 @@
+.studio.canvas-mode .studio-heading {
+  margin-bottom: 16px;
+}
+.studio.canvas-mode .studio-heading h1 {
+  font-size: 25px;
+  margin: 7px 0;
+}
+.studio-view-switch {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  gap: 3px;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+  border-radius: 9px;
+  margin-right: 10px;
+}
+.studio-view-switch button {
+  border: 0;
+  color: var(--muted);
+  background: transparent;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+.studio-view-switch button.active {
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: 0 1px 4px #0000000c;
+}
+.vc-workspace {
+  border: 1px solid var(--line);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+}
+.vc-topline {
+  min-height: 43px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  gap: 14px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.vc-topline > span:first-child {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--ink);
+  font-size: 11px;
+}
+.vc-topline b {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 400;
+  border-left: 1px solid var(--line);
+  padding-left: 8px;
+}
+.vc-viewport {
+  height: clamp(520px, 65vh, 900px);
+  position: relative;
+  overflow: hidden;
+  background-color: var(--canvas);
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--ink) 18%, transparent) 0.8px,
+    transparent 1px
+  );
+  touch-action: none;
+  isolation: isolate;
+  cursor: grab;
+}
+.vc-viewport:active,
+.vc-viewport.is-hand {
+  cursor: grabbing;
+}
+.vc-world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+.vc-connections {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+  pointer-events: none;
+}
+.vc-connections path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--accent) 55%, var(--line));
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+.vc-node {
+  position: absolute;
+  width: 296px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 5px 16px #00000008;
+  cursor: grab;
+  user-select: none;
+}
+.vc-node.selected {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.vc-node.excluded {
+  opacity: 0.5;
+}
+.vc-node header {
+  height: 38px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+}
+.vc-node header span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink);
+}
+.vc-node header i {
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.vc-node-image {
+  position: relative;
+  width: 100%;
+  height: 165px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: #14181c;
+  padding: 0;
+  color: #b3bcc7;
+  overflow: hidden;
+  cursor: pointer;
+}
+.vc-node-image > div:not(.vc-audio),
+.vc-node-image svg:not(.lucide),
+.vc-node-image video,
+.vc-node-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+.vc-node-tag {
+  position: absolute;
+  top: 9px;
+  left: 10px;
+  color: #fff;
+  background: #0008;
+  border: 1px solid #ffffff26;
+  padding: 3px 6px;
+  font-size: 9px;
+  border-radius: 4px;
+}
+.vc-node footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  height: 45px;
+}
+.vc-node footer strong {
+  font-size: 11px;
+  font-weight: 450;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.vc-node footer button,
+.vc-note header button,
+.vc-floating header button {
+  background: transparent;
+  color: var(--muted);
+  border: 0;
+  display: grid;
+  place-items: center;
+  padding: 3px;
+}
+.vc-port {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--accent);
+  background: var(--panel);
+  top: 115px;
+  border-radius: 50%;
+}
+.vc-port.left {
+  left: -4px;
+}
+.vc-port.right {
+  right: -4px;
+}
+.vc-note {
+  position: absolute;
+  width: 265px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+  border-radius: 10px;
+  padding: 16px;
+  background: var(--accent-soft);
+  cursor: grab;
+}
+.vc-note.selected {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.vc-note header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--accent-text);
+}
+.vc-note header button {
+  margin-left: auto;
+}
+.vc-note p {
+  font-size: 12px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 220px;
+  overflow: auto;
+}
+.vc-note small {
+  color: var(--muted);
+  font-size: 9px;
+}
+.vc-tools,
+.vc-zoom {
+  position: absolute;
+  z-index: 3;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  box-shadow: 0 4px 15px #00000008;
+  cursor: default;
+}
+.vc-tools {
+  left: 16px;
+  top: 20px;
+  flex-direction: column;
+  gap: 5px;
+}
+.vc-tools button,
+.vc-zoom button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  padding: 0;
+}
+.vc-tools button:hover,
+.vc-zoom button:hover {
+  background: var(--elevated);
+  color: var(--ink);
+}
+.vc-tools button[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.vc-tools hr {
+  width: 20px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 3px;
+}
+.vc-zoom {
+  right: 16px;
+  top: 20px;
+  padding: 2px;
+}
+.vc-zoom span {
+  font-size: 10px;
+  color: var(--muted);
+  width: 38px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.vc-zoom i {
+  height: 16px;
+  width: 1px;
+  background: var(--line);
+  margin: 0 5px;
+}
+.vc-gesture {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  font-size: 9px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.vc-empty {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(520px, 75%);
+  text-align: center;
+  cursor: default;
+}
+.vc-empty-mark {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel);
+  color: var(--accent-text);
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 25px #00000005;
+  transform: rotate(-5deg);
+}
+.vc-empty h2 {
+  font-size: clamp(20px, 2vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.8px;
+  margin: 12px 0;
+}
+.vc-empty p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+.vc-empty > div:last-of-type {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0 14px;
+}
+.vc-empty small {
+  color: var(--muted);
+  font-size: 9px;
+}
+.vc-composer {
+  position: absolute;
+  z-index: 2;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(600px, calc(100% - 170px));
+  padding: 14px 16px 10px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 15px;
+  box-shadow: 0 10px 38px #0000000a;
+  cursor: default;
+}
+.vc-composer:focus-within {
+  border-color: var(--accent);
+}
+.vc-composer-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-text);
+  font-size: 11px;
+}
+.vc-composer-label b {
+  font-weight: 550;
+  color: var(--ink);
+}
+.vc-composer-label span {
+  color: var(--muted);
+  font-size: 9px;
+  margin-left: auto;
+}
+.vc-composer textarea {
+  width: 100%;
+  resize: none;
+  background: transparent;
+  color: var(--ink);
+  border: 0;
+  outline: none !important;
+  min-height: 58px;
+  padding: 12px 0 8px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.vc-composer-bottom {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.vc-composer-bottom button,
+.vc-composer select {
+  color: var(--muted);
+  background: var(--elevated);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 10px;
+  padding: 6px 8px;
+  height: 30px;
+}
+.vc-composer-bottom button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vc-composer-bottom .vc-submit {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+  margin-left: auto;
+  font-weight: 600;
+  padding: 6px 12px;
+}
+.vc-floating {
+  position: absolute;
+  z-index: 4;
+  right: 16px;
+  top: 68px;
+  bottom: 20px;
+  width: 280px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  overflow: auto;
+  background: var(--panel);
+  box-shadow: 0 8px 32px #00000012;
+  cursor: default;
+  touch-action: auto;
+}
+.vc-floating > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  font-size: 12px;
+}
+.vc-floating > label {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+  font-size: 10px;
+  color: var(--muted);
+}
+.vc-floating textarea,
+.vc-floating input:not([type="checkbox"]),
+.vc-floating select {
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 9px;
+  width: 100%;
+  color: var(--ink);
+  font-size: 11px;
+}
+.vc-floating textarea {
+  min-height: 80px;
+  resize: vertical;
+  line-height: 1.7;
+}
+.vc-detail-kicker {
+  color: var(--accent-text);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+.vc-floating .vc-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vc-toggle input {
+  accent-color: var(--accent);
+}
+.vc-detail-actions {
+  display: flex;
+  gap: 6px;
+}
+.vc-help {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.9;
+}
+.vc-floating .vc-search {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.vc-search svg {
+  position: absolute;
+  left: 8px;
+}
+.vc-search input {
+  padding-left: 28px !important;
+}
+.vc-asset-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.vc-asset {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  overflow: hidden;
+  padding-bottom: 6px;
+}
+.vc-asset-thumb {
+  height: 70px;
+  background: #14181c;
+  color: #abb8c5;
+}
+.vc-asset-thumb img,
+.vc-asset-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.vc-asset strong {
+  font-size: 9px;
+  font-weight: 450;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 8px 6px;
+}
+.vc-asset .s-button {
+  margin: 0 5px;
+  font-size: 8px;
+  gap: 3px;
+  padding: 4px;
+}
+.vc-asset-list .vc-help {
+  grid-column: 1 / -1;
+}
+.vc-audio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+  gap: 8px;
+  font-size: 10px;
+}
+.vc-external {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--accent-text);
+  font-size: 10px;
+  margin: 18px 0 4px;
+  text-decoration: none;
+}
+.vc-sequence {
+  min-height: 93px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--panel);
+  padding: 14px 16px;
+  border-top: 1px solid var(--line);
+}
+.vc-sequence-heading {
+  flex-shrink: 0;
+  width: 100px;
+  display: grid;
+  gap: 6px;
+}
+.vc-sequence-heading > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+}
+.vc-sequence-heading b {
+  font-size: 16px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.vc-sequence-heading small {
+  font-size: 8px;
+  color: var(--muted);
+}
+.vc-sequence-clips {
+  display: flex;
+  flex: 1;
+  overflow-x: auto;
+  min-width: 0;
+  gap: 7px;
+  padding: 3px;
+}
+.vc-sequence-clips button {
+  flex: 0 0 135px;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: var(--ink);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: left;
+  gap: 6px;
+}
+.vc-sequence-clips button.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.vc-sequence-clips button span {
+  color: var(--accent-text);
+  font-size: 9px;
+}
+.vc-sequence-clips button b {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  font-size: 10px;
+  font-weight: 450;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.vc-sequence-clips button small {
+  grid-row: 1;
+  grid-column: 2;
+  text-align: right;
+  font-size: 9px;
+  color: var(--muted);
+}
+.vc-sequence-clips p {
+  color: var(--muted);
+  font-size: 10px;
+}
+.vc-workspace button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+@media (max-width: 900px) {
+  .vc-topline > span:nth-child(2),
+  .vc-gesture {
+    display: none;
+  }
+  .vc-composer {
+    width: calc(100% - 40px);
+    bottom: 16px;
+  }
+  .vc-floating {
+    width: 255px;
+  }
+  .studio-view-switch {
+    margin-right: 0;
+  }
+}
+@media (max-width: 600px) {
+  .studio-heading {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .studio-projectbar {
+    height: auto;
+    min-height: 52px;
+    flex-wrap: wrap;
+    padding: 9px;
+  }
+  .project-select select {
+    max-width: 175px;
+  }
+  .studio-projectbar .save-status {
+    display: none;
+  }
+  .projectbar-right {
+    margin-left: auto;
+  }
+  .vc-topline {
+    padding: 9px;
+    gap: 6px;
+  }
+  .vc-topline b {
+    display: none;
+  }
+  .vc-viewport {
+    height: 610px;
+  }
+  .vc-tools {
+    left: 10px;
+    top: 10px;
+    flex-direction: row;
+    gap: 2px;
+  }
+  .vc-tools hr {
+    display: none;
+  }
+  .vc-zoom {
+    top: 59px;
+    right: 10px;
+  }
+  .vc-empty {
+    top: 42%;
+    width: 88%;
+  }
+  .vc-empty .studio-eyebrow {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+  .vc-empty p {
+    font-size: 11px;
+  }
+  .vc-floating {
+    top: 108px;
+    right: 10px;
+    bottom: 12px;
+    width: calc(100% - 20px);
+  }
+  .vc-composer {
+    width: calc(100% - 20px);
+    padding: 12px;
+  }
+  .vc-composer-bottom {
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .vc-sequence {
+    gap: 8px;
+    padding: 12px 8px;
+  }
+  .vc-sequence-heading {
+    width: 68px;
+  }
+  .vc-sequence-heading small {
+    display: none;
+  }
+  .vc-sequence > button {
+    padding: 6px;
+  }
+  .studio-view-switch button {
+    padding: 6px 10px;
+  }
+}
+
+button.vc-external {
+  border: 0;
+  background: none;
+  padding: 0;
+}
+@media (min-width: 901px) {
+  .studio-shell .content:has(.canvas-mode) {
+    padding: 18px 24px;
+  }
+  .content:has(.canvas-mode) > .workflow-context {
+    display: none;
+  }
+  .studio.canvas-mode {
+    height: calc(100vh - 96px);
+    min-height: 590px;
+    display: flex;
+    flex-direction: column;
+  }
+  .studio.canvas-mode > .studio-heading,
+  .studio.canvas-mode > .studio-projectbar,
+  .studio.canvas-mode > .studio-banner,
+  .studio.canvas-mode > .studio-busy {
+    flex-shrink: 0;
+  }
+  .studio.canvas-mode .studio-heading {
+    min-height: 70px;
+    margin-bottom: 14px;
+  }
+  .studio.canvas-mode > .vc-workspace {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  .studio.canvas-mode .vc-topline,
+  .studio.canvas-mode .vc-sequence {
+    flex-shrink: 0;
+  }
+  .studio.canvas-mode .vc-viewport {
+    flex: 1;
+    height: auto;
+    min-height: 330px;
+  }
+  .studio.canvas-mode > .studio-footer {
+    display: none;
+  }
+  .vc-empty {
+    top: 35%;
+  }
+}
+.vc-topline > span:nth-child(2) {
+  margin-left: auto;
+}
+/* Fullscreen remains a complete editor: project, history, export and dialogs. */
+.studio:fullscreen,
+.studio.studio-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  min-height: 0;
+  margin: 0;
+  padding: 16px 22px;
+  background: var(--canvas);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  box-sizing: border-box;
+}
+.studio-fullscreen .studio-heading {
+  min-height: 40px !important;
+  margin: 0 0 12px !important;
+  flex-shrink: 0;
+}
+.studio-fullscreen .studio-heading h1 {
+  font-size: 18px !important;
+  margin: 0 !important;
+}
+.studio-fullscreen .studio-heading .studio-eyebrow,
+.studio-fullscreen .studio-heading p,
+.studio-fullscreen > .studio-footer {
+  display: none;
+}
+.studio-fullscreen > .studio-projectbar,
+.studio-fullscreen > .studio-banner,
+.studio-fullscreen > .studio-busy {
+  flex-shrink: 0;
+}
+.studio-fullscreen.canvas-mode > .vc-workspace {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.studio-fullscreen .vc-viewport {
+  flex: 1;
+  min-height: 180px;
+  height: auto;
+}
+.studio-fullscreen .vc-topline,
+.studio-fullscreen .vc-sequence {
+  flex-shrink: 0;
+}
+.studio-fullscreen > .editor-grid {
+  flex: 1;
+  min-height: 0;
+}
+.studio-fullscreen .studio-left,
+.studio-fullscreen .studio-inspector {
+  max-height: calc(100vh - 140px);
+}
+.vc-viewport.is-select {
+  cursor: crosshair;
+}
+.vc-viewport.is-hand {
+  cursor: grab;
+}
+.vc-viewport.is-hand:active {
+  cursor: grabbing;
+}
+.vc-selection-box {
+  position: absolute;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1.5px solid var(--accent);
+  pointer-events: none;
+  z-index: 5;
+}
+.vc-selection-actions {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 15px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  box-shadow: 0 4px 20px #0001;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.vc-selection-actions button {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  background: transparent;
+  color: var(--ink);
+  border: 0;
+  padding: 5px;
+}
+.vc-node header .vc-node-header-actions {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+.vc-node-header-actions button {
+  display: grid;
+  place-items: center;
+  padding: 3px;
+  background: transparent;
+  color: var(--muted);
+  border: 0;
+  border-radius: 4px;
+}
+.vc-node-header-actions button:hover {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.vc-minimap {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 155px;
+  height: 100px;
+  padding: 8px;
+  z-index: 2;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  box-shadow: 0 4px 18px #00000008;
+  overflow: hidden;
+  cursor: crosshair;
+}
+.vc-minimap svg {
+  width: 100%;
+  height: 69px;
+  display: block;
+}
+.vc-minimap rect {
+  fill: var(--line);
+}
+.vc-minimap rect.active {
+  fill: var(--accent);
+}
+.vc-minimap .vc-map-viewport {
+  fill: color-mix(in srgb, var(--accent) 8%, transparent);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.vc-minimap span {
+  display: block;
+  color: var(--muted);
+  font-size: 8px;
+  margin-top: 6px;
+}
+.vc-help-popover {
+  position: absolute;
+  z-index: 6;
+  top: 20px;
+  left: 70px;
+  width: min(365px, calc(100% - 90px));
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  box-shadow: 0 8px 28px #0001;
+  cursor: default;
+}
+.vc-help-popover header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.vc-help-popover button {
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+}
+.vc-help-popover p {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.9;
+}
+.vc-help-popover kbd {
+  padding: 2px 4px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 9px;
+  color: var(--ink);
+}
+.vc-sequence-clips button[draggable="true"] {
+  cursor: grab;
+}
+.vc-preview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #101114f5;
+  color: #e9edf1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+.vc-preview-overlay > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-shrink: 0;
+}
+.vc-preview-overlay header div {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.vc-preview-overlay header span {
+  color: #b0b4be;
+  font-size: 10px;
+}
+.vc-preview-overlay header strong {
+  font-weight: 500;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vc-preview-overlay button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #e9edf1;
+  background: #25282e;
+  border: 1px solid #42464e;
+  border-radius: 7px;
+  padding: 8px;
+  min-width: 34px;
+}
+.vc-preview-overlay button:disabled {
+  opacity: 0.4;
+}
+.vc-preview-overlay button:focus-visible,
+.vc-preview-overlay video:focus-visible {
+  outline: 2px solid #a5cced;
+  outline-offset: 3px;
+}
+.vc-preview-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  margin: 20px 0;
+  touch-action: none;
+}
+.vc-preview-stage img,
+.vc-preview-still {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transform-origin: center;
+  cursor: grab;
+  user-select: none;
+}
+.vc-preview-still {
+  width: min(1100px, 85vw);
+  aspect-ratio: 16 / 9;
+}
+.vc-preview-still svg {
+  width: 100%;
+  height: 100%;
+}
+.vc-preview-stage video {
+  max-width: 100%;
+  max-height: 100%;
+}
+.vc-preview-overlay > footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-shrink: 0;
+  font-size: 11px;
+}
+.vc-preview-overlay small {
+  color: #b0b4be;
+  font-size: 10px;
+}
+.vc-preview-error {
+  text-align: center;
+  color: #e4b7ab;
+}
+@media (max-width: 600px) {
+  .vc-topline {
+    flex-wrap: wrap;
+  }
+  .vc-selection-actions {
+    top: 104px;
+    max-width: calc(100% - 20px);
+    gap: 5px;
+  }
+  .vc-minimap {
+    width: 110px;
+    height: 78px;
+    right: 10px;
+  }
+  .vc-minimap svg {
+    height: 48px;
+  }
+  .vc-help-popover {
+    top: 100px;
+    left: 10px;
+    width: calc(100% - 20px);
+  }
+  .studio:fullscreen {
+    padding: 10px;
+  }
+  .studio-fullscreen .studio-heading {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .studio-fullscreen .studio-heading > div:last-child {
+    flex-wrap: wrap;
+  }
+  .vc-preview-overlay {
+    padding: 14px;
+  }
+  .vc-preview-overlay footer {
+    flex-wrap: wrap;
+  }
+}
+
+.vc-command-menu {
+  position: fixed;
+  z-index: 180;
+  width: 264px;
+  max-height: min(460px, calc(100vh - 24px));
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border: 1px solid var(--s-border);
+  border-radius: 14px;
+  background: var(--s-panel);
+  color: var(--ink);
+  box-shadow: 0 16px 50px #0003;
+}
+.vc-command-menu header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 5px 10px;
+  font-size: 13px;
+}
+.vc-command-menu button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.vc-command-search {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px;
+  border: 1px solid var(--s-border);
+  border-radius: 8px;
+}
+.vc-command-search input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+}
+.vc-command-list {
+  overflow-y: auto;
+  padding-top: 7px;
+}
+.vc-command-list > button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 7px;
+  text-align: left;
+  font-size: 12px;
+}
+.vc-command-list > button:hover,
+.vc-command-list > button:focus-visible {
+  background: var(--canvas);
+  outline: 1px solid var(--s-border);
+}
+.vc-command-list small {
+  font-size: 10px;
+  opacity: 0.6;
+}
+.vc-command-list > button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.vc-note textarea {
+  display: block;
+  margin: 8px 0;
+  width: 100%;
+  height: 130px;
+  resize: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1.6;
+  outline-offset: 3px;
+}
+.vc-note .vg-output {
+  right: -7px;
+  top: 12px;
+}
+.vc-connections .vg-edge {
+  pointer-events: stroke;
+  cursor: pointer;
+  stroke-width: 4;
+}
+.vc-connections .vg-edge.is-selected {
+  stroke: var(--s-accent);
+  stroke-width: 6;
+}
+.vg-title-input {
+  width: 180px;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.vc-group {
+  position: absolute;
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+  pointer-events: none;
+}
+.vc-group > header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  padding: 4px 12px;
+  pointer-events: auto;
+  cursor: grab;
+  font-size: 11px;
+  color: var(--muted);
+}
+.vc-group input {
+  flex: 1;
+  min-width: 30px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+}
+.vc-group small {
+  white-space: nowrap;
+}

@@ -1,0 +1,25 @@
+{
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-nodes-live-qa-hTt0P6",
+  "checks": [
+    "Installed-format 0.5.0 uses existing encrypted key without plaintext configuration",
+    "Actual node with both first and last frame inputs creates exactly one real MiniMax H3 4s task",
+    "Returned video downloads, fully decodes and attaches to node and timeline once",
+    "Actual generated result plays in preview and survives reload without another request"
+  ],
+  "errors": [],
+  "realGeneration": true,
+  "version": "0.5.0",
+  "packaged": true,
+  "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-nodes-live-qa-hTt0P6/projects/20261020-首尾帧节点真实验收",
+  "nodeId": "c1ea8640-b62c-4fe7-9575-263907340f5b",
+  "submitting": true,
+  "jobId": "7b756230-9f87-4e3c-b889-8b8a0530ccee",
+  "remoteId": "2112516195754758144",
+  "status": "completed",
+  "media": {
+    "duration": 4.458333,
+    "width": 1344,
+    "height": 768
+  },
+  "completed": true
+}

@@ -1,0 +1,13 @@
+node_modules/
+dist/
+out/
+release/
+extras/
+workspace-projects/
+.DS_Store
+*.log
+*.zip
+*.dmg
+*.app/
+.env*
+*.tsbuildinfo

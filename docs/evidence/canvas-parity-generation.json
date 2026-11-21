@@ -1,0 +1,15 @@
+{
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-nodes-qa-L1Zw9z",
+  "provider": "synthetic transport; real application UI, queue and project persistence",
+  "checks": [
+    "Pointer drag and keyboard connect image generation to first and last frames; frame ratio is automatic",
+    "Generate on downstream node runs missing upstream first, uses its real local result, attaches each output once and excludes intermediate image from export",
+    "Mode switch clears incompatible edges; omni forwards image/video/audio references and reuses generated image without another image request",
+    "Batch parser creates 5s and 8s nodes, review reports 13s, reverse completion still attaches in storyboard order",
+    "Reload restores graph, all three reference roles and completed outputs without paid resubmission",
+    "Fullscreen node workspace and 390px layout have reachable controls and no page overflow"
+  ],
+  "errors": [],
+  "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-nodes-qa-L1Zw9z/projects/20261020-节点工作流验收",
+  "completed": true
+}

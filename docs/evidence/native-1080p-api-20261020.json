@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-20",
+  "source": "https://metaso.cn/minimax-h3",
+  "sourceMethod": "Direct live HTML and publicly served API-dialog JavaScript; search cache was outdated",
+  "api": {
+    "submit": "/api/minimax/v2/video_generation",
+    "poll": "/api/minimax/v2/query/video_generation/{task_id}",
+    "upload": "/api/minimax/v1/files/upload"
+  },
+  "livePageModels": [
+    "MiniMax-H3",
+    "seedance-2.0-mini",
+    "seedance-2.0"
+  ],
+  "integratedModels": [
+    {
+      "id": "MiniMax-H3",
+      "label": "MiniMax H3",
+      "resolutions": [
+        "768P",
+        "1080P",
+        "2K"
+      ],
+      "defaultResolution": "1080P"
+    },
+    {
+      "id": "seedance-2.0",
+      "label": "Seedance 2.0 标准版",
+      "resolutions": [
+        "720P",
+        "1080P"
+      ],
+      "defaultResolution": "1080P"
+    }
+  ],
+  "nativeWireResolution": "1080p",
+  "legacyCompatibility": "Only persisted 0.5.1 jobs retain their 2K conversion contract; all newly enqueued 1080P jobs set nativeResolution:true",
+  "sourceFiles": [
+    {
+      "file": "lib/metaso-video.cjs",
+      "sha256": "aed4dba4ca999f7fef7c5d584880d1d7ec1063180fe4a9d76a476dcadef4683c"
+    },
+    {
+      "file": "lib/studio-generation.cjs",
+      "sha256": "44eb325de38130f1239ac2256f58f9aa9e2914f2edfb0eda9e899aa574c376f8"
+    },
+    {
+      "file": "lib/generation-graph.cjs",
+      "sha256": "2eb2acbc4ae42b46e4900363a879cedbc28ab4a8a4ed741b230f16ab82f9e9f4"
+    },
+    {
+      "file": "shared/video-models.json",
+      "sha256": "2f5a1426b662e128a03ec4b31f7154978357a7fe1649f0d4117ef56af028e96a"
+    }
+  ]
+}

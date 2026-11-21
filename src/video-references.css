@@ -1,0 +1,46 @@
+.video-references { max-width: 1460px; margin: 0 auto; min-width: 0; }
+.reference-actions, .reference-toolbar, .reference-prompt-heading, .reference-caption, .reference-detail-heading, .reference-footer { display: flex; align-items: center; gap: 12px; justify-content: space-between; }
+.reference-actions { flex-wrap: wrap; }
+.reference-toolbar { margin-bottom: 20px; flex-wrap: wrap; }
+.reference-toolbar > span { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.reference-search { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 180px; border: 1px solid var(--line); background: var(--panel); padding: 0 12px; border-radius: 7px; color: var(--muted); }
+.reference-search input { width: 100%; background: transparent; border: 0; min-width: 0; padding: 11px 0; font-size: 13px; }
+.reference-toolbar select { border: 1px solid var(--line); padding: 10px; border-radius: 7px; font-size: 13px; }
+.reference-layout { display: grid; grid-template-columns: 265px minmax(0, 1fr); align-items: start; gap: 24px; }
+.reference-list { display: grid; gap: 8px; max-height: calc(100vh - 260px); overflow-y: auto; padding: 2px 8px 4px 2px; position: sticky; top: 0; }
+.reference-item { width: 100%; display: flex; gap: 11px; padding: 10px; text-align: left; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); color: var(--ink); cursor: pointer; }
+.reference-item.selected { border-color: var(--accent); background: var(--accent-soft); }
+.reference-item > img, .reference-thumb-empty { width: 78px; height: 58px; object-fit: cover; border-radius: 5px; flex-shrink: 0; }
+.reference-thumb-empty { display: grid; place-items: center; background: var(--elevated); color: var(--muted); }
+.reference-item > span:not(.reference-thumb-empty) { display: flex; flex-direction: column; min-width: 0; gap: 4px; }
+.reference-item small { color: var(--muted); font-size: 10px; }
+.reference-item b { font-size: 13px; font-weight: 600; }
+.reference-item em { font-size: 10px; font-style: normal; color: var(--muted); line-height: 1.5; }
+.reference-detail { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); padding: 24px; min-width: 0; }
+.reference-detail-heading { align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; }
+.reference-detail h2 { font-size: 23px; margin: 7px 0; font-weight: 600; }
+.reference-detail-heading p { color: var(--muted); font-size: 13px; margin: 0; }
+.reference-detail video { display: block; width: 100%; aspect-ratio: 16/9; max-height: 460px; background: #101214; border-radius: 8px; object-fit: contain; }
+.reference-media-empty { min-height: 160px; display: grid; place-items: center; padding: 24px; background: var(--elevated); color: var(--muted); text-align: center; border-radius: 8px; }
+.reference-caption { font-size: 11px; color: var(--muted); padding-top: 9px; flex-wrap: wrap; }
+.reference-caption button { font-size: 11px; }
+.reference-evidence { margin: 18px 0; }.reference-evidence img { width: 100%; border-radius: 6px; }.reference-evidence figcaption { font-size: 11px; color: var(--muted); }
+.reference-visual { font-size: 13px; line-height: 1.8; margin: 20px 0 14px; }
+.reference-facts { background: var(--canvas); padding: 10px 14px; border-radius: 7px; font-size: 12px; line-height: 1.7; }
+.reference-facts p { margin: 5px 0; }.reference-facts b { margin-right: 12px; color: var(--muted); font-weight: 500; }
+.reference-prompt-heading { margin-top: 24px; flex-wrap: wrap; }
+.reference-segments { display: flex; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+.reference-segments button { background: var(--canvas); color: var(--muted); border: 0; padding: 9px 12px; cursor: pointer; font: inherit; font-size: 12px; }
+.reference-segments button[aria-pressed=true] { background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+.reference-note { color: var(--muted); font-size: 11px; line-height: 1.7; }
+.reference-prompt { width: 100%; min-height: 245px; resize: vertical; border: 1px solid var(--line); border-radius: 7px; padding: 14px; font: inherit; font-size: 13px; line-height: 1.9; }
+.reference-call { margin-top: 20px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; }
+.reference-call label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 9px; }
+.reference-call input { width: 100%; min-width: 0; padding: 11px; border: 1px solid var(--line); border-radius: 6px; font: inherit; font-size: 13px; }
+.reference-call > div { margin-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }.reference-call > div > span { font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+.reference-production { font-size: 12px; color: var(--muted); line-height: 1.8; margin-top: 20px; }.reference-production summary { cursor: pointer; color: var(--ink); }.reference-production p { margin: 8px 0; }
+.reference-footer { padding: 20px 0; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+.reference-notice { padding: 12px 16px; border: 1px solid var(--line); background: var(--accent-soft); border-radius: 7px; margin-bottom: 16px; font-size: 13px; }.reference-notice.error, .reference-error { color: var(--danger); }.reference-error { padding: 16px; border: 1px solid var(--danger); border-radius: 8px; margin-bottom: 16px; }
+.reference-empty { padding: 60px 24px; text-align: center; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }.reference-empty h2 { font-size: 20px; }.reference-empty p { color: var(--muted); font-size: 13px; line-height: 1.7; }
+@media(max-width:1100px) { .reference-layout { grid-template-columns: 220px minmax(0, 1fr); gap: 16px; }.reference-item > img, .reference-thumb-empty { width: 58px; height: 48px; }.reference-detail { padding: 18px; } }
+@media(max-width:760px) { .video-references .page-heading { align-items: flex-start; flex-direction: column; gap: 14px; }.reference-layout { grid-template-columns: 1fr; }.reference-list { position: static; grid-template-columns: repeat(2,minmax(0,1fr)); max-height: 235px; padding-right: 3px; }.reference-item { gap: 7px; padding: 8px; }.reference-item > img, .reference-thumb-empty { width: 44px; height: 42px; }.reference-detail { padding: 14px; }.reference-caption { align-items: flex-start; }.reference-toolbar select { max-width: 100%; }.reference-call { padding: 12px; }.reference-call .button { width: 100%; justify-content: center; }.reference-detail-heading .button { min-height: 38px; } }

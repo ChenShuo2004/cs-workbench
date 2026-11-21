@@ -1,0 +1,32 @@
+{
+  "checks": [
+    "local Whisper ASR produces timed editable segments",
+    "media protocol playback, silence cut, 720×1280 MP4 with captions, audio and full decode",
+    "scene voice source plays during pixel preview"
+  ],
+  "errors": [],
+  "temp": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-talk-qa-dABXqQ",
+  "packaged": true,
+  "transcript": "今天,我们把一个想法,变成真实的作品,先记录任务,再整理素材,最后完成剪辑。",
+  "preview": {
+    "currentTime": 1.183233,
+    "readyState": 4
+  },
+  "job": {
+    "id": "ac39509a-e490-4f41-ba8c-16f9f1c0faca",
+    "root": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-talk-qa-dABXqQ/projects/20261017-口播验收",
+    "title": "口播验收",
+    "createdAt": "2026-10-17T14:26:03.452Z",
+    "status": "complete",
+    "progress": 100,
+    "output": "/var/folders/y9/9t8y2p0n6_b2bd57w3ygd_9h0000gn/T/cs-talk-qa-dABXqQ/projects/20261017-口播验收/outputs/render-ac39509a-e490-4f41-ba8c-16f9f1c0faca/final.mp4",
+    "error": "",
+    "finishedAt": "2026-10-17T14:26:04.327Z"
+  },
+  "pixelAudioPreview": {
+    "currentTime": 1.033821,
+    "paused": false,
+    "readyState": 4
+  },
+  "retainedArtifact": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/CS工作台/out/acceptance-20261017/talk-render/final.mp4"
+}

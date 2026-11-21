@@ -1,0 +1,15 @@
+{
+  "identity": "kai-duo-v3-2d-3d-approved / kai_boy",
+  "reference": "/Users/chenshuo/Documents/ChatGPT/陈硕 video/角色设定/references/kai_3d_ref.png",
+  "generatedSource": "/Users/chenshuo/.codex/generated_images/01a14c80-4086-7f93-aa9a-6004d6101b7f/exec-10817e8c-2ee1-4086-ab75-109f28af9388.png",
+  "avatarSha256": "c0d50e6272ebae16c767f2e61fd7d2aba6086d807ad1eacf3f2cd7b8290ee313",
+  "date": "2026-10-18",
+  "outputs": [
+    "assets/icon.icns",
+    "assets/branding/icon-1024.png",
+    "assets/branding/CS工作台-KAI封面.png"
+  ],
+  "coverSource": "assets/branding/cover.html",
+  "rebuild": "node scripts/build-branding.cjs",
+  "note": "KAI boy selected explicitly by user. Avatar generated from approved 3D master; icon sizes preserve artwork; cover is an editable HTML layout using that same avatar."
+}
