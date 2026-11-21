@@ -1,8 +1,8 @@
 {
   "name": "cs-work",
   "productName": "cs-work",
-  "version": "0.8.0",
-  "description": "本地内容工作台：选题、创作、多平台分发与复盘",
+  "version": "1.0.0",
+  "description": "多平台发布中心、矩阵账号数据看板与独立网络隔离工作台",
   "main": "electron/main.cjs",
   "author": "Chen Shuo",
   "license": "UNLICENSED",
@@ -13,19 +13,12 @@
     "package:mac": "npm run build && electron-forge package --platform=darwin --arch=arm64",
     "make:mac": "npm run build && electron-forge make --platform=darwin --arch=arm64",
     "test": "node --test tests/*.test.cjs",
-    "verify:studio": "npm run build && node scripts/verify-studio.cjs",
-    "verify:personal": "npm run build && node scripts/verify-personal.cjs",
-    "verify:talk": "npm run build && node scripts/verify-talk.cjs",
-    "verify:creator": "npm run build && node scripts/verify-creator.cjs",
-    "verify:appearance": "npm run build && node scripts/verify-appearance.cjs",
-    "verify:experience": "npm run build && node scripts/verify-experience.cjs",
     "verify:distribution": "npm run build && node scripts/verify-maitian.cjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "sharp": "^0.35.5"
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@electron-forge/cli": "^8.0.1",

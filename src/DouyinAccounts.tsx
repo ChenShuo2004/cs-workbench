@@ -1,237 +1,519 @@
-import { Dialog } from "./Dialog";
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
+  AlertTriangle,
+  BarChart3,
   CircleAlert,
   ExternalLink,
+  Globe,
   LoaderCircle,
   Pencil,
   Plus,
   RefreshCw,
+  Send,
   ShieldCheck,
   Trash2,
   Users,
   X,
 } from "lucide-react";
+import { Dialog } from "./Dialog";
+import { NetworkEditorModal } from "./NetworkEditorModal";
+import { formatLocation, formatNetworkSummary } from "./NetworkIsolation";
 import platforms from "../shared/account-platforms.json";
-import type { AccountPlatform, DouyinAccount } from "./types";
+import type {
+  AccountPlatform,
+  BrowserTarget,
+  PlatformAccount,
+} from "./types";
+import { uiErrorMessage } from "./ui-error";
+
+function formatNumber(n: number | null | undefined) {
+  if (typeof n !== "number" || !Number.isFinite(n)) return "--";
+  if (Math.abs(n) >= 100000000) return `${(n / 100000000).toFixed(2)}亿`;
+  if (Math.abs(n) >= 10000) return `${(n / 10000).toFixed(1)}万`;
+  return n.toLocaleString("zh-CN");
+}
+
+function formatDelta(n: number | null | undefined) {
+  if (typeof n !== "number" || !Number.isFinite(n) || n === 0) return "";
+  return n > 0 ? `+${formatNumber(n)}` : formatNumber(n);
+}
 
 export function DouyinAccounts({
-  onDistribution,
+  accounts,
+  loading,
+  onRefresh,
+  onOpenNetwork,
+  onNotice,
 }: {
-  onDistribution: () => unknown;
+  accounts: PlatformAccount[];
+  loading: boolean;
+  onRefresh: () => Promise<void>;
+  onOpenNetwork: () => void;
+  onNotice: (msg: string, error?: boolean) => void;
 }) {
-  const [accounts, setAccounts] = useState<DouyinAccount[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<AccountPlatform | "all">("all");
+  const [busyId, setBusyId] = useState("");
+  const [readingId, setReadingId] = useState("");
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
   const [editor, setEditor] = useState<{
     id?: string;
     name: string;
     platform: AccountPlatform;
   } | null>(null);
-  const lock = useRef(false);
-  const alive = useRef(true);
-  const refresh = async () => {
-    const result = await window.cs.listDouyinAccounts();
-    if (alive.current) setAccounts(result);
-  };
-  useEffect(() => {
-    alive.current = true;
-    const update = () => {
-      void refresh().catch((e) => {
-        if (alive.current) setError(String(e.message || e));
-      });
-    };
-    const unsubscribe = window.cs.onDouyinAccountsChanged(update);
-    void refresh()
-      .catch((e) => setError(String(e.message || e)))
-      .finally(() => setLoading(false));
-    return () => {
-      alive.current = false;
-      unsubscribe();
-    };
-  }, []);
-  const run = async (action: () => Promise<unknown>) => {
-    if (lock.current) return;
-    lock.current = true;
-    setBusy(true);
+  const [networkTarget, setNetworkTarget] = useState<PlatformAccount | null>(null);
+  const [expandedMetrics, setExpandedMetrics] = useState<Record<string, boolean>>({});
+
+  const visible = useMemo(
+    () =>
+      filter === "all"
+        ? accounts
+        : accounts.filter((a) => a.platform === filter),
+    [accounts, filter],
+  );
+
+  const summary = useMemo(() => {
+    let followers = 0;
+    let views = 0;
+    let engagements = 0;
+    let withData = 0;
+    let isolated = 0;
+    let conflicts = 0;
+    for (const a of visible) {
+      if (a.network.mode !== "direct") isolated++;
+      if (a.networkWarnings.length > 0) conflicts++;
+      const k = a.dataSnapshot?.kpis;
+      if (k) {
+        if (
+          k.followers !== null ||
+          k.views !== null ||
+          k.likes !== null ||
+          (a.dataSnapshot?.metrics?.length || 0) > 0
+        ) {
+          withData++;
+        }
+        if (typeof k.followers === "number") followers += k.followers;
+        if (typeof k.views === "number") views += k.views;
+        if (typeof k.likes === "number") engagements += k.likes;
+        if (typeof k.comments === "number") engagements += k.comments;
+        if (typeof k.saves === "number") engagements += k.saves;
+      }
+    }
+    return { followers, views, engagements, withData, isolated, conflicts };
+  }, [visible]);
+
+  async function saveAccount() {
+    if (!editor) return;
+    setBusyId(editor.id || "new");
     setError("");
     try {
-      await action();
-      await refresh();
-    } catch (e) {
-      if (alive.current) setError(e instanceof Error ? e.message : String(e));
-    } finally {
-      lock.current = false;
-      if (alive.current) setBusy(false);
-    }
-  };
-  const save = () =>
-    run(async () => {
-      if (!editor) return;
-      if (editor.id)
-        await window.cs.renameDouyinAccount(editor.id, editor.name);
-      else await window.cs.addDouyinAccount(editor.name, editor.platform);
+      if (editor.id) {
+        await window.cs.renameAccount(editor.id, editor.name);
+        onNotice(`已更新账号备注：${editor.name}`);
+      } else {
+        const created = await window.cs.addAccount(editor.name, editor.platform);
+        onNotice(`已添加 ${platforms[editor.platform].name} 账号「${created.name}」`);
+      }
       setEditor(null);
-    });
+      await onRefresh();
+    } catch (e) {
+      setError(uiErrorMessage(e));
+    } finally {
+      setBusyId("");
+    }
+  }
+
+  async function openBrowser(account: PlatformAccount, target: BrowserTarget) {
+    setBusyId(account.id);
+    setError("");
+    try {
+      await window.cs.openAccountBrowser(account.id, target);
+      await onRefresh();
+      const label =
+        target === "publish" ? "发布页" : target === "data" ? "数据中心" : "创作者后台";
+      onNotice(`已通过独立隔离 Chrome 打开「${account.name}」的${label}`);
+    } catch (e) {
+      const msg = uiErrorMessage(e);
+      setError(msg);
+      onNotice(msg, true);
+    } finally {
+      setBusyId("");
+    }
+  }
+
+  async function readData(account: PlatformAccount) {
+    setReadingId(account.id);
+    setError("");
+    try {
+      const snapshot = await window.cs.readAccountData(account.id, {
+        navigateToData: !account.dataConnected,
+      });
+      await onRefresh();
+      const count = snapshot.metrics?.length || 0;
+      if (count > 0 || snapshot.profileName) {
+        onNotice(
+          `已刷新「${account.name}」数据（识别到 ${count} 项指标）`,
+        );
+      } else {
+        onNotice(
+          `已连接「${account.name}」窗口，但暂未识别到指标：请在该账号 Chrome 中确认已登录并打开数据页后再点刷新`,
+          true,
+        );
+      }
+    } catch (e) {
+      const msg = uiErrorMessage(e);
+      setError(msg);
+      onNotice(msg, true);
+    } finally {
+      setReadingId("");
+    }
+  }
+
+  async function removeAccount(account: PlatformAccount) {
+    setBusyId(account.id);
+    setError("");
+    try {
+      const removed = await window.cs.removeAccount(account.id);
+      if (removed) {
+        await onRefresh();
+        onNotice(`已移除账号「${account.name}」及其本机隔离数据`);
+      }
+    } catch (e) {
+      setError(uiErrorMessage(e));
+    } finally {
+      setBusyId("");
+    }
+  }
+
   return (
     <div className="accounts-page">
       <div className="page-heading compact">
         <div>
-          <span className="eyebrow">CREATOR ACCOUNTS</span>
-          <h1>平台账号</h1>
+          <span className="eyebrow">MATRIX ACCOUNTS & ANALYTICS</span>
+          <h1>账号与数据</h1>
           <p>
-            每个平台账号独立登录。跨平台数据统一在「发布与复盘」查看。这里保留需要独立会话的多账号登录。
+            管理全部 8 个平台的矩阵账号，每个账号拥有独立 Chrome 会话与网络代理；可一键拉起隔离浏览器发布，或直接读取各账号实时数据快照。
           </p>
         </div>
-        <button
-          className="button primary"
-          disabled={busy || loading}
-          onClick={() => setEditor({ name: "", platform: "douyin" })}
+        <div className="heading-actions">
+          <button
+            className="button subtle"
+            disabled={loading}
+            onClick={() => void onRefresh()}
+          >
+            <RefreshCw size={15} /> 刷新列表
+          </button>
+          <button
+            className="button primary"
+            disabled={loading}
+            onClick={() => setEditor({ name: "", platform: filter === "all" ? "douyin" : filter })}
+          >
+            <Plus size={16} /> 添加平台账号
+          </button>
+        </div>
+      </div>
+
+      <div className="kpi-strip">
+        <div className="kpi-box">
+          <span>当前筛选账号</span>
+          <strong>
+            {visible.length} <small>个</small>
+          </strong>
+          <em>已隔离代理 {summary.isolated} 个 · 有数据 {summary.withData} 个</em>
+        </div>
+        <div className="kpi-box">
+          <span>已采集粉丝汇总</span>
+          <strong>{formatNumber(summary.followers)}</strong>
+          <em>来自已刷新账号的数据快照</em>
+        </div>
+        <div className="kpi-box">
+          <span>已采集播放 / 阅读</span>
+          <strong>{formatNumber(summary.views)}</strong>
+          <em>各平台数据页可见指标合计</em>
+        </div>
+        <div
+          className={`kpi-box ${summary.conflicts > 0 ? "warn" : "good"} clickable`}
+          onClick={onOpenNetwork}
         >
-          <Plus size={17} /> 添加平台账号
+          <span>网络隔离状态</span>
+          <strong>
+            {summary.conflicts > 0 ? `${summary.conflicts} 个风险` : "隔离正常"}
+          </strong>
+          <em>点击进入网络隔离中心查看详情</em>
+        </div>
+      </div>
+
+      <div className="platform-filter-bar" role="tablist" aria-label="按平台筛选">
+        <button
+          role="tab"
+          aria-selected={filter === "all"}
+          className={`chip-btn ${filter === "all" ? "active" : ""}`}
+          onClick={() => setFilter("all")}
+        >
+          全部 ({accounts.length})
         </button>
+        {(Object.keys(platforms) as AccountPlatform[]).map((pid) => {
+          const count = accounts.filter((a) => a.platform === pid).length;
+          return (
+            <button
+              key={pid}
+              role="tab"
+              aria-selected={filter === pid}
+              className={`chip-btn ${filter === pid ? "active" : ""}`}
+              onClick={() => setFilter(pid)}
+            >
+              {platforms[pid].name} {count > 0 ? `(${count})` : ""}
+            </button>
+          );
+        })}
       </div>
-      <div className="accounts-summary">
-        <span>七个平台的数据、发布与登录检查已统一管理</span>
-        <button className="text-button" onClick={onDistribution}>
-          前往发布与复盘 <ExternalLink size={14} />
-        </button>
-      </div>
-      <div className="accounts-info">
-        <ShieldCheck size={19} />
-        <p>
-          通过独立 Chrome 窗口登录。每个账号使用专属浏览器空间，Cookie 由 Chrome
-          保存在本机。这些会话与麦田的专用发布浏览器分别保存；登录过期时按平台提示重新登录。
-        </p>
-      </div>
+
       {error && (
         <div className="accounts-error" role="alert">
           <CircleAlert size={17} />
           <span>{error}</span>
-          <button
-            className="text-button"
-            disabled={busy}
-            onClick={() => void run(refresh)}
-          >
-            <RefreshCw size={15} /> 重试
+          <button className="text-button" onClick={() => setError("")}>
+            关闭
           </button>
         </div>
       )}
-      <div className="accounts-summary">
-        <strong>{accounts.length} 个账号</strong>
-        <span>独立 Chrome · 每个账号单独保存会话</span>
-        <button
-          className="text-button"
-          disabled={busy}
-          onClick={() => void run(refresh)}
-        >
-          <RefreshCw size={14} /> 刷新
-        </button>
-      </div>
+
       {loading ? (
         <div className="accounts-empty" role="status">
           <LoaderCircle size={24} className="spin" />
-          <p>正在读取账号</p>
+          <p>正在读取账号与数据…</p>
         </div>
-      ) : accounts.length ? (
-        <div className="accounts-grid">
-          {accounts.map((account, index) => (
-            <article className="account-card" key={account.id}>
-              <div className="account-heading">
-                <div className="account-avatar">
-                  {account.dataSnapshot?.avatarDataUrl ? (
-                    <img
-                      src={account.dataSnapshot.avatarDataUrl}
-                      alt={`${account.dataSnapshot.profileName || account.name}的平台头像`}
-                    />
-                  ) : (
-                    String(index + 1).padStart(2, "0")
+      ) : visible.length ? (
+        <div className="accounts-grid matrix-grid">
+          {visible.map((account, index) => {
+            const snap = account.dataSnapshot;
+            const kpis = snap?.kpis;
+            const deltas = snap?.deltas;
+            const isBusy = busyId === account.id || readingId === account.id;
+            const isIsolated = account.network.mode !== "direct";
+            const hasWarning = account.networkWarnings.length > 0;
+            const expanded = Boolean(expandedMetrics[account.id]);
+
+            return (
+              <article
+                className={`account-card matrix-card ${hasWarning ? "has-warning" : ""}`}
+                key={account.id}
+              >
+                <div className="account-heading">
+                  <div className="account-avatar">
+                    {snap?.avatarDataUrl ? (
+                      <img
+                        src={snap.avatarDataUrl}
+                        alt={`${snap.profileName || account.name}的平台头像`}
+                      />
+                    ) : (
+                      String(index + 1).padStart(2, "0")
+                    )}
+                  </div>
+                  <div className="account-identity">
+                    <div className="account-title-row">
+                      <h2 title={account.name}>{account.name}</h2>
+                      <span className="pill neutral">
+                        {platforms[account.platform].name}
+                      </span>
+                    </div>
+                    <span className="account-sub">
+                      {snap?.profileName
+                        ? `${snap.profileName}${snap.accountId ? ` · ${snap.accountId}` : ""}`
+                        : platforms[account.platform].title}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="account-network-bar">
+                  <button
+                    type="button"
+                    className={`network-pill-btn ${hasWarning ? "warn" : isIsolated ? "good" : "neutral"}`}
+                    onClick={() => setNetworkTarget(account)}
+                    title="点击配置此账号的网络与代理隔离"
+                  >
+                    {hasWarning ? (
+                      <AlertTriangle size={13} />
+                    ) : isIsolated ? (
+                      <ShieldCheck size={13} />
+                    ) : (
+                      <Globe size={13} />
+                    )}
+                    <span>{formatNetworkSummary(account)}</span>
+                    {account.lastNetworkCheck?.ok && (
+                      <em>
+                        · {account.lastNetworkCheck.ip}
+                        {formatLocation(account) ? ` (${formatLocation(account)})` : ""}
+                      </em>
+                    )}
+                  </button>
+                  {hasWarning && (
+                    <p className="inline-warning">{account.networkWarnings[0]}</p>
                   )}
                 </div>
-                <div>
-                  <h2 title={account.name}>{account.name}</h2>
-                  <span>{platforms[account.platform].title}</span>
+
+                <div className="account-metrics-panel">
+                  <div className="account-kpi-grid">
+                    <div className="mini-kpi">
+                      <span>粉丝</span>
+                      <strong>{formatNumber(kpis?.followers)}</strong>
+                      {formatDelta(deltas?.followers) && (
+                        <em className={(deltas?.followers || 0) > 0 ? "up" : "down"}>
+                          {formatDelta(deltas?.followers)}
+                        </em>
+                      )}
+                    </div>
+                    <div className="mini-kpi">
+                      <span>播放 / 阅读</span>
+                      <strong>{formatNumber(kpis?.views)}</strong>
+                      {formatDelta(deltas?.views) && (
+                        <em className={(deltas?.views || 0) > 0 ? "up" : "down"}>
+                          {formatDelta(deltas?.views)}
+                        </em>
+                      )}
+                    </div>
+                    <div className="mini-kpi">
+                      <span>获赞</span>
+                      <strong>{formatNumber(kpis?.likes)}</strong>
+                      {formatDelta(deltas?.likes) && (
+                        <em className={(deltas?.likes || 0) > 0 ? "up" : "down"}>
+                          {formatDelta(deltas?.likes)}
+                        </em>
+                      )}
+                    </div>
+                    <div className="mini-kpi">
+                      <span>评论 / 收藏</span>
+                      <strong>
+                        {kpis?.comments !== null || kpis?.saves !== null
+                          ? `${formatNumber(kpis?.comments)} / ${formatNumber(kpis?.saves)}`
+                          : "--"}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {snap ? (
+                    <div className="snapshot-footer">
+                      <span>
+                        更新于 {new Date(snap.capturedAt).toLocaleString("zh-CN")}
+                      </span>
+                      {snap.metrics?.length > 0 && (
+                        <button
+                          type="button"
+                          className="text-button"
+                          onClick={() =>
+                            setExpandedMetrics((prev) => ({
+                              ...prev,
+                              [account.id]: !prev[account.id],
+                            }))
+                          }
+                        >
+                          {expanded
+                            ? "收起原始指标"
+                            : `查看全部 ${snap.metrics.length} 条指标`}
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="snapshot-empty">
+                      暂无数据快照 · 点「读数据」从该账号独立 Chrome 数据页抓取
+                    </p>
+                  )}
+
+                  {expanded && snap?.metrics?.length ? (
+                    <ul className="raw-metrics-list">
+                      {snap.metrics.map((line, i) => (
+                        <li key={i}>{line}</li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
-                <span className="pill neutral">独立 Chrome</span>
-              </div>
-              <p className="account-time">
-                {account.lastBrowserOpenedAt
-                  ? `上次启动 Chrome：${new Date(account.lastBrowserOpenedAt).toLocaleString("zh-CN")}`
-                  : "尚未打开 · 首次需登录"}
-              </p>
-              <div className="account-actions">
-                <button
-                  className="button dark"
-                  disabled={busy}
-                  onClick={() =>
-                    void run(() => window.cs.openAccountBrowser(account.id))
-                  }
-                >
-                  <ExternalLink size={15} /> 打开 Chrome / 登录
-                </button>
-                <button
-                  className="icon-button"
-                  disabled={busy}
-                  title={`修改${account.name}备注`}
-                  aria-label={`修改${account.name}备注`}
-                  onClick={() =>
-                    setEditor({
-                      id: account.id,
-                      name: account.name,
-                      platform: account.platform,
-                    })
-                  }
-                >
-                  <Pencil size={16} />
-                </button>
-                <button
-                  className="icon-button account-remove"
-                  disabled={busy}
-                  title={`移除${account.name}`}
-                  aria-label={`移除${account.name}`}
-                  onClick={() =>
-                    void run(() => window.cs.removeDouyinAccount(account.id))
-                  }
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </article>
-          ))}
+
+                <div className="account-actions matrix-actions">
+                  <button
+                    className="button primary"
+                    disabled={isBusy}
+                    onClick={() => void openBrowser(account, "publish")}
+                  >
+                    <Send size={14} /> 去发布
+                  </button>
+                  <button
+                    className="button dark"
+                    disabled={isBusy}
+                    onClick={() => void openBrowser(account, "home")}
+                  >
+                    <ExternalLink size={14} /> 后台
+                  </button>
+                  <button
+                    className="button subtle"
+                    disabled={isBusy}
+                    onClick={() => void readData(account)}
+                  >
+                    {readingId === account.id ? (
+                      <LoaderCircle size={14} className="spin" />
+                    ) : (
+                      <BarChart3 size={14} />
+                    )}
+                    {readingId === account.id ? "读取中…" : "读数据"}
+                  </button>
+                  <button
+                    className="icon-button"
+                    disabled={isBusy}
+                    title={`修改「${account.name}」备注`}
+                    aria-label={`修改${account.name}备注`}
+                    onClick={() =>
+                      setEditor({
+                        id: account.id,
+                        name: account.name,
+                        platform: account.platform,
+                      })
+                    }
+                  >
+                    <Pencil size={15} />
+                  </button>
+                  <button
+                    className="icon-button account-remove"
+                    disabled={isBusy}
+                    title={`移除「${account.name}」`}
+                    aria-label={`移除${account.name}`}
+                    onClick={() => void removeAccount(account)}
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+              </article>
+            );
+          })}
         </div>
       ) : (
         <div className="accounts-empty">
           <Users size={34} />
-          <h2>添加第一个平台账号</h2>
-          <p>使用「主号」「知识分享号」等备注，区分每个独立后台。</p>
+          <h2>{filter === "all" ? "添加第一个平台账号" : `还没有${platforms[filter].name}账号`}</h2>
+          <p>每个账号独立 Chrome Profile 与网络代理，互不串号。</p>
           <button
             className="button primary"
-            disabled={busy}
-            onClick={() => setEditor({ name: "", platform: "douyin" })}
+            onClick={() =>
+              setEditor({
+                name: "",
+                platform: filter === "all" ? "douyin" : filter,
+              })
+            }
           >
             <Plus size={16} /> 添加平台账号
           </button>
         </div>
       )}
-      <p className="accounts-footnote">
-        本地备注只用于区分账号。发布前请核对官方后台中的头像与昵称。
-      </p>
+
       {editor && (
         <Dialog
           label={editor.id ? "修改账号备注" : "添加平台账号"}
           onClose={() => setEditor(null)}
-          dismissible={!busy}
+          dismissible={!busyId}
         >
           <form
             className="modal account-modal"
             aria-labelledby="account-editor-title"
             onSubmit={(event) => {
               event.preventDefault();
-              void save();
-            }}
-            onKeyDown={(event) => {
-              if (event.key === "Escape" && !busy) setEditor(null);
+              void saveAccount();
             }}
           >
             <div className="account-modal-title">
@@ -242,17 +524,17 @@ export function DouyinAccounts({
                 type="button"
                 className="icon-button"
                 aria-label="关闭"
-                disabled={busy}
+                disabled={Boolean(busyId)}
                 onClick={() => setEditor(null)}
               >
                 <X size={18} />
               </button>
             </div>
-            <label htmlFor="account-platform">平台</label>
+            <label htmlFor="account-platform">平台（支持全部 8 大平台）</label>
             <select
               id="account-platform"
               value={editor.platform}
-              disabled={busy || Boolean(editor.id)}
+              disabled={Boolean(busyId) || Boolean(editor.id)}
               onChange={(event) =>
                 setEditor({
                   ...editor,
@@ -262,7 +544,7 @@ export function DouyinAccounts({
             >
               {Object.entries(platforms).map(([id, platform]) => (
                 <option key={id} value={id}>
-                  {platform.name}
+                  {platform.name} · {platform.title}
                 </option>
               ))}
             </select>
@@ -273,25 +555,20 @@ export function DouyinAccounts({
               required
               maxLength={40}
               value={editor.name}
-              placeholder="例如：主号 / AI 知识分享号"
-              disabled={busy}
+              placeholder="例如：主号 / AI 知识号 / 海外号 01"
+              disabled={Boolean(busyId)}
               onChange={(event) =>
                 setEditor({ ...editor, name: event.target.value })
               }
             />
             <p className="muted">
-              备注只用于本机识别。保存后打开独立 Chrome，完成对应平台登录。
+              创建后可在卡片上配置专属代理或本机 Clash 端口，再打开独立 Chrome 登录与发布。
             </p>
-            {error && (
-              <p className="account-load-error" role="alert">
-                {error}
-              </p>
-            )}
             <div className="modal-actions">
               <button
                 className="button subtle"
                 type="button"
-                disabled={busy}
+                disabled={Boolean(busyId)}
                 onClick={() => setEditor(null)}
               >
                 取消
@@ -299,13 +576,37 @@ export function DouyinAccounts({
               <button
                 className="button primary"
                 type="submit"
-                disabled={busy || !editor.name.trim()}
+                disabled={Boolean(busyId) || !editor.name.trim()}
               >
-                {busy ? "正在保存…" : "保存备注"}
+                {busyId ? "正在保存…" : "保存"}
               </button>
             </div>
           </form>
         </Dialog>
+      )}
+
+      {networkTarget && (
+        <NetworkEditorModal
+          account={networkTarget}
+          onClose={() => setNetworkTarget(null)}
+          onSaved={async (checkAfterSave) => {
+            await onRefresh();
+            onNotice(`已保存「${networkTarget.name}」的网络隔离配置`);
+            if (checkAfterSave) {
+              try {
+                const res = await window.cs.checkAccountNetwork(networkTarget.id);
+                await onRefresh();
+                if (res.ok) {
+                  onNotice(`出口 IP：${res.ip} · ${res.latencyMs}ms`);
+                } else {
+                  onNotice(res.error || "出口 IP 检测失败", true);
+                }
+              } catch (err) {
+                onNotice(uiErrorMessage(err), true);
+              }
+            }
+          }}
+        />
       )}
     </div>
   );

@@ -1,184 +1,197 @@
-const { BrowserWindow, session, dialog } = require("electron");
+const { session, dialog } = require("electron");
 const { createAccountBrowser } = require("../lib/account-browser.cjs");
-const {
-  platformFor,
-  partitionFor,
-  isPlatformURL,
-  createAccountStore,
-} = require("../lib/douyin-accounts.cjs");
+const { partitionFor, createAccountStore } = require("../lib/douyin-accounts.cjs");
 const { createAccountDataStore, snapshotFromPage } = require("../lib/account-data.cjs");
+const {
+  defaultNetworkConfig,
+  createProxySecretStore,
+  createProxyBridgeManager,
+  preflightProxy,
+  probeNetwork,
+  analyzeNetworkConflicts,
+} = require("../lib/network-isolation.cjs");
 
-function createDouyinManager(userData, getMainWindow) {
+function createDouyinManager(userData, getMainWindow, { secureStorage = null } = {}) {
   let store;
   const getStore = () => (store ||= createAccountStore(userData));
   let dataStore;
   const getDataStore = () => (dataStore ||= createAccountDataStore(userData));
-  const windows = new Map();
+  let secretStore;
+  const getSecretStore = () => (secretStore ||= createProxySecretStore(userData, secureStorage));
+
   const browser = createAccountBrowser(userData);
+  const proxyBridge = createProxyBridgeManager();
   const removing = new Set();
   const errors = new Map();
+
   const notify = () => {
     const main = getMainWindow();
-    if (main && !main.isDestroyed()) main.webContents.send("douyin:changed");
+    if (main && !main.isDestroyed()) main.webContents.send("accounts:changed");
   };
+
   const accountDataFields = (id) => {
-    try { return { dataSnapshot: getDataStore().get(id), dataError: "" }; }
-    catch (error) { return { dataSnapshot: null, dataError: error.message || "账号数据缓存读取失败" }; }
+    try {
+      return { dataSnapshot: getDataStore().get(id), dataError: "" };
+    } catch (error) {
+      return {
+        dataSnapshot: null,
+        dataError: error.message || "账号数据缓存读取失败",
+      };
+    }
   };
-  const list = () =>
-    getStore()
-      .list()
-      .map((account) => ({
-        ...account,
-        isOpen: Boolean(windows.get(account.id)?.size),
-        error: errors.get(account.id) || "",
-        dataConnected: browser.isDataConnected(account.id),
-        ...accountDataFields(account.id),
-      }));
-  const preferences = (id) => ({
-    partition: partitionFor(id, getStore().get(id).platform),
-    contextIsolation: true,
-    sandbox: true,
-    nodeIntegration: false,
-    webSecurity: true,
-    webviewTag: false,
-    navigateOnDragDrop: false,
-  });
-  function guard(win, id) {
-    if (!windows.has(id)) windows.set(id, new Set());
-    windows.get(id).add(win);
-    const title = () => `${getStore().get(id).name} · ${platformFor(getStore().get(id).platform).title}`;
-    win.setTitle(title());
-    win.webContents.on("page-title-updated", (event) => {
-      event.preventDefault();
-      win.setTitle(title());
-    });
-    const navigate = (event, legacyURL) => {
-      const url = event.url || legacyURL;
-      if (!isPlatformURL(url, getStore().get(id).platform)) {
-        event.preventDefault();
-        let host = "未知地址";
-        try { host = new URL(url).hostname; } catch {}
-        errors.set(id, `内置窗口阻止了跳转到 ${host}，请使用「打开 Chrome / 登录」。`);
-        notify();
-      }
-    };
-    win.webContents.on("will-navigate", navigate);
-    win.webContents.on("will-redirect", navigate);
-    win.webContents.on("will-attach-webview", (event) =>
-      event.preventDefault(),
-    );
-    win.webContents.setWindowOpenHandler(({ url }) =>
-      isPlatformURL(url, getStore().get(id).platform)
-        ? {
-            action: "allow",
-            overrideBrowserWindowOptions: {
-              width: 1100,
-              height: 800,
-              autoHideMenuBar: true,
-              webPreferences: preferences(id),
-            },
-          }
-        : { action: "deny" },
-    );
-    win.webContents.on("did-create-window", (child) => {
-      guard(child, id);
-      notify();
-    });
-    win.webContents.on(
-      "did-fail-load",
-      (_event, code, _description, _url, isMainFrame) => {
-        if (isMainFrame && code !== -3) {
-          errors.set(id, `后台加载失败（${code}），请检查网络后重新打开`);
-          notify();
-        }
+
+  const list = () => {
+    const raw = getStore().list().map((account) => ({
+      ...account,
+      network: {
+        ...defaultNetworkConfig(),
+        ...(account.network || {}),
+        hasPassword: getSecretStore().has(account.id),
       },
-    );
-    win.webContents.on("did-finish-load", () => {
-      errors.delete(id);
-      notify();
-    });
-    win.webContents.on("render-process-gone", () => {
-      errors.set(id, "后台页面已停止响应，请关闭后重新打开");
-      notify();
-    });
-    win.on("closed", () => {
-      windows.get(id)?.delete(win);
-      notify();
-    });
-    return win;
+      error: errors.get(account.id) || "",
+      dataConnected: browser.isDataConnected(account.id),
+      ...accountDataFields(account.id),
+    }));
+    const warnings = analyzeNetworkConflicts(raw);
+    return raw.map((account) => ({
+      ...account,
+      networkWarnings: warnings[account.id] || [],
+    }));
+  };
+
+  async function prepareProxyForLaunch(account) {
+    const netCfg = { ...defaultNetworkConfig(), ...(account.network || {}) };
+    if (netCfg.mode === "direct") return "";
+    const password = getSecretStore().get(account.id);
+    if (netCfg.failClosed !== false) {
+      try {
+        await preflightProxy(netCfg, password, 3500);
+      } catch (err) {
+        throw new Error(
+          `代理不可用，已阻止启动 Chrome 以防止泄露本机 IP（${netCfg.protocol}://${netCfg.host}:${netCfg.port}：${err.message}）`,
+        );
+      }
+    }
+    const needsAuthBridge = netCfg.mode === "proxy" && Boolean(netCfg.username || password);
+    if (needsAuthBridge) {
+      return proxyBridge.ensureBridge(account.id, netCfg, password);
+    }
+    await proxyBridge.closeBridge(account.id);
+    return "";
   }
+
   return {
     list,
-    add(name, platform) {
-      const account = getStore().add(name, platform);
+    add(name, platform, networkInput = null) {
+      let cleanNetwork = null;
+      let password;
+      if (networkInput && typeof networkInput === "object") {
+        password = networkInput.password;
+        const { password: _ignored, ...rest } = networkInput;
+        cleanNetwork = rest;
+      }
+      const account = getStore().add(name, platform, cleanNetwork);
+      if (password && cleanNetwork?.mode === "proxy") {
+        getSecretStore().set(account.id, password);
+        getStore().updateNetwork(account.id, { ...account.network, hasPassword: true });
+      }
       notify();
-      return account;
+      return list().find((item) => item.id === account.id);
     },
     rename(id, name) {
       const account = getStore().rename(id, name);
-      for (const win of windows.get(id) || [])
-        win.setTitle(`${account.name} · ${platformFor(account.platform).title}`);
       notify();
       return account;
     },
-    async openBrowser(id) {
+    async updateNetwork(id, networkInput) {
+      if (removing.has(id)) throw new Error("正在移除账号，请稍后再试");
+      const { password, clearPassword, ...rest } = networkInput || {};
+      const updated = getStore().updateNetwork(id, rest);
+      if (updated.network.mode !== "proxy" || clearPassword) {
+        getSecretStore().remove(id);
+      } else if (typeof password === "string" && password.length > 0) {
+        getSecretStore().set(id, password);
+      }
+      await proxyBridge.closeBridge(id);
+      errors.delete(id);
+      notify();
+      return list().find((item) => item.id === id);
+    },
+    async checkNetwork(id) {
       if (removing.has(id)) throw new Error("正在移除账号，请稍后再试");
       const account = getStore().get(id);
-      await browser.open(account);
+      const netCfg = { ...defaultNetworkConfig(), ...(account.network || {}) };
+      const password = getSecretStore().get(id);
+      const result = await probeNetwork(netCfg, password);
+      getStore().setNetworkCheck(id, result);
+      notify();
+      return result;
+    },
+    async checkAllNetworks() {
+      const accounts = getStore().list();
+      const results = {};
+      const queue = [...accounts];
+      const concurrency = Math.min(4, queue.length || 1);
+      await Promise.all(
+        Array.from({ length: concurrency }, async () => {
+          while (queue.length) {
+            const acc = queue.shift();
+            if (!acc || removing.has(acc.id)) continue;
+            const netCfg = { ...defaultNetworkConfig(), ...(acc.network || {}) };
+            const password = getSecretStore().get(acc.id);
+            try {
+              const res = await probeNetwork(netCfg, password);
+              getStore().setNetworkCheck(acc.id, res);
+              results[acc.id] = res;
+            } catch (err) {
+              const failed = {
+                ok: false,
+                ip: "",
+                country: "",
+                region: "",
+                city: "",
+                isp: "",
+                latencyMs: 0,
+                checkedAt: new Date().toISOString(),
+                error: err.message || "检测失败",
+              };
+              getStore().setNetworkCheck(acc.id, failed);
+              results[acc.id] = failed;
+            }
+          }
+        }),
+      );
+      notify();
+      return results;
+    },
+    async openBrowser(id, target = "home") {
+      if (removing.has(id)) throw new Error("正在移除账号，请稍后再试");
+      if (!["home", "publish", "data"].includes(target)) {
+        throw new Error("不支持的打开目标");
+      }
+      const account = getStore().get(id);
+      const proxyUrlOverride = await prepareProxyForLaunch(account);
+      await browser.open(account, { target, proxyUrlOverride });
       getStore().opened(id, "chrome");
+      errors.delete(id);
       notify();
     },
-    async readData(id) {
+    async readData(id, { navigateToData = false } = {}) {
       if (removing.has(id)) throw new Error("正在移除账号，请稍后再试");
       const account = getStore().get(id);
+      const proxyUrlOverride = await prepareProxyForLaunch(account);
       let page;
-      try { page = await browser.readData(account); }
-      catch (error) { notify(); throw error; }
+      try {
+        page = await browser.readData(account, { proxyUrlOverride, navigateToData });
+      } catch (error) {
+        notify();
+        throw error;
+      }
       const snapshot = getDataStore().put(id, snapshotFromPage(page));
       getStore().opened(id, "chrome");
       errors.delete(id);
       notify();
       return snapshot;
-    },
-    open(id) {
-      const account = getStore().get(id);
-      if (removing.has(id)) throw new Error("正在移除账号，请稍后再试");
-      const existing = [...(windows.get(id) || [])].find(
-        (win) => !win.isDestroyed(),
-      );
-      if (existing) {
-        if (existing.isMinimized()) existing.restore();
-        existing.show();
-        existing.focus();
-        if (errors.has(id)) {
-          errors.delete(id);
-          existing.loadURL(platformFor(account.platform).url).catch(() => {});
-        }
-        notify();
-        return;
-      }
-      const ses = session.fromPartition(partitionFor(id, getStore().get(id).platform));
-      ses.setPermissionRequestHandler((_contents, _permission, callback) =>
-        callback(false),
-      );
-      ses.setPermissionCheckHandler(() => false);
-      const win = guard(
-        new BrowserWindow({
-          width: 1280,
-          height: 860,
-          minWidth: 800,
-          minHeight: 600,
-          title: `${account.name} · ${platformFor(account.platform).title}`,
-          autoHideMenuBar: true,
-          webPreferences: preferences(id),
-        }),
-        id,
-      );
-      getStore().opened(id);
-      errors.delete(id);
-      notify();
-      win.loadURL(platformFor(account.platform).url).catch(() => {});
     },
     async remove(id) {
       const account = getStore().get(id);
@@ -190,8 +203,8 @@ function createDouyinManager(userData, getMainWindow) {
           title: "移除平台账号",
           message: `移除「${account.name}」？`,
           detail:
-            "将关闭此账号的独立 Chrome 和内置后台窗口，并清除此账号在本机工作台中的登录数据。平台账号和线上作品不会被删除。",
-          buttons: ["取消", "移除并清除登录数据"],
+            "将关闭此账号的独立 Chrome 窗口，并清除此账号在本机 cs-work 中的登录会话、代理密码与数据快照。线上平台账号和作品不会被删除。",
+          buttons: ["取消", "移除并清除本地数据"],
           defaultId: 0,
           cancelId: 0,
         };
@@ -202,15 +215,18 @@ function createDouyinManager(userData, getMainWindow) {
             : await dialog.showMessageBox(options);
         if (result.response !== 1) return false;
         await browser.remove(account);
-        for (const win of windows.get(id) || []) win.destroy();
-        const ses = session.fromPartition(partitionFor(id, getStore().get(id).platform));
-        await ses.closeAllConnections();
-        await ses.clearStorageData();
-        await ses.clearCache();
-        await ses.clearAuthCache();
+        await proxyBridge.closeBridge(id);
+        // Clean legacy Electron partition if it existed from earlier versions.
+        try {
+          const ses = session.fromPartition(partitionFor(id, account.platform));
+          await ses.closeAllConnections();
+          await ses.clearStorageData();
+          await ses.clearCache();
+          await ses.clearAuthCache();
+        } catch {}
         getStore().remove(id);
         getDataStore().remove(id);
-        windows.delete(id);
+        getSecretStore().remove(id);
         errors.delete(id);
         notify();
         return true;
@@ -218,6 +234,10 @@ function createDouyinManager(userData, getMainWindow) {
         removing.delete(id);
       }
     },
+    async shutdown() {
+      await proxyBridge.closeAll();
+    },
   };
 }
+
 module.exports = { createDouyinManager };

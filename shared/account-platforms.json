@@ -3,41 +3,104 @@
     "name": "抖音",
     "title": "抖音创作者中心",
     "url": "https://creator.douyin.com/",
+    "publishUrl": "https://creator.douyin.com/creator-micro/content/upload",
+    "dataUrl": "https://creator.douyin.com/creator-micro/data/stats/overview",
     "hosts": [
       "douyin.com"
     ],
-    "subdomains": true
+    "subdomains": true,
+    "region": "cn"
   },
   "xiaohongshu": {
     "name": "小红书",
     "title": "小红书创作服务平台",
     "url": "https://creator.xiaohongshu.com/",
+    "publishUrl": "https://creator.xiaohongshu.com/publish/publish",
+    "dataUrl": "https://creator.xiaohongshu.com/statistics/data-analysis",
     "hosts": [
       "xiaohongshu.com"
     ],
-    "subdomains": true
+    "subdomains": true,
+    "region": "cn"
   },
   "channels": {
     "name": "视频号",
     "title": "微信视频号助手",
     "url": "https://channels.weixin.qq.com/",
+    "publishUrl": "https://channels.weixin.qq.com/platform/post/create",
+    "dataUrl": "https://channels.weixin.qq.com/platform/statistic/post",
     "hosts": [
       "channels.weixin.qq.com",
       "mp.weixin.qq.com",
       "open.weixin.qq.com",
       "wx.qq.com"
     ],
-    "subdomains": false
+    "subdomains": false,
+    "region": "cn"
   },
   "wechat": {
     "name": "公众号",
     "title": "微信公众平台",
     "url": "https://mp.weixin.qq.com/",
+    "publishUrl": "https://mp.weixin.qq.com/",
+    "dataUrl": "https://mp.weixin.qq.com/",
     "hosts": [
       "mp.weixin.qq.com",
       "open.weixin.qq.com",
       "wx.qq.com"
     ],
-    "subdomains": false
+    "subdomains": false,
+    "region": "cn"
+  },
+  "bilibili": {
+    "name": "B站",
+    "title": "哔哩哔哩创作中心",
+    "url": "https://member.bilibili.com/platform/home",
+    "publishUrl": "https://member.bilibili.com/platform/upload/video/frame",
+    "dataUrl": "https://member.bilibili.com/platform/data-up/index",
+    "hosts": [
+      "bilibili.com"
+    ],
+    "subdomains": true,
+    "region": "cn"
+  },
+  "youtube": {
+    "name": "YouTube",
+    "title": "YouTube Studio",
+    "url": "https://studio.youtube.com/",
+    "publishUrl": "https://studio.youtube.com/",
+    "dataUrl": "https://studio.youtube.com/",
+    "hosts": [
+      "youtube.com",
+      "accounts.google.com"
+    ],
+    "subdomains": true,
+    "region": "global"
+  },
+  "x": {
+    "name": "X",
+    "title": "X / Twitter",
+    "url": "https://x.com/home",
+    "publishUrl": "https://x.com/compose/post",
+    "dataUrl": "https://x.com/i/account_analytics",
+    "hosts": [
+      "x.com",
+      "twitter.com"
+    ],
+    "subdomains": true,
+    "region": "global"
+  },
+  "instagram": {
+    "name": "Instagram",
+    "title": "Instagram",
+    "url": "https://www.instagram.com/",
+    "publishUrl": "https://www.instagram.com/",
+    "dataUrl": "https://www.instagram.com/",
+    "hosts": [
+      "instagram.com",
+      "facebook.com"
+    ],
+    "subdomains": true,
+    "region": "global"
   }
 }
