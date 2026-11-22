@@ -7,6 +7,7 @@ const {
   clipboard,
   Menu,
   safeStorage,
+  nativeImage,
 } = require("electron");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -26,7 +27,7 @@ app.on("second-instance",()=>{if(mainWindow&&!mainWindow.isDestroyed()){mainWind
 const { createDouyinManager } = require("./douyin.cjs");
 const { createPostStore } = require("../lib/post-store.cjs");
 const { createPublisher } = require("../lib/publisher/engine.cjs");
-const { readListeners } = require("../lib/clash-verge.cjs");
+const { readListeners, reloadConfig } = require("../lib/clash-verge.cjs");
 
 let mainWindow;
 let configFile;
@@ -72,7 +73,7 @@ function handle(channel, listener) {
       event.sender !== mainWindow.webContents ||
       event.senderFrame !== mainWindow.webContents.mainFrame
     ) {
-      throw new Error("此窗口无权访问 cs-work 数据");
+      throw new Error("此窗口无权访问 Kaige-work 数据");
     }
     return listener(event, ...args);
   });
@@ -121,6 +122,40 @@ function registerHandlers() {
   });
   handle("posts:read", () => posts.read());
   handle("posts:draft", (_e, d) => posts.draft(d));
+  handle("posts:draft-create", (_e, initial) => posts.createDraft(initial));
+  handle("posts:draft-duplicate", (_e, id) => posts.duplicateDraft(id));
+  handle("posts:draft-select", (_e, id) => posts.selectDraft(id));
+  handle("posts:draft-delete", (_e, id) => posts.deleteDraft(id));
+  handle("posts:media-info", (_e, filePath) => {
+    const raw = String(filePath || "").trim();
+    if (!raw || !path.isAbsolute(raw) || !fs.existsSync(raw)) {
+      return { exists: false, name: "", sizeBytes: 0, ext: "", previewDataUrl: "" };
+    }
+    const stat = fs.statSync(raw);
+    if (!stat.isFile()) {
+      return { exists: false, name: "", sizeBytes: 0, ext: "", previewDataUrl: "" };
+    }
+    const ext = path.extname(raw).toLowerCase();
+    let previewDataUrl = "";
+    if (/\.(png|jpe?g|webp|gif)$/i.test(ext) && stat.size <= 16 * 1024 * 1024) {
+      try {
+        const img = nativeImage.createFromPath(raw);
+        if (!img.isEmpty()) {
+          const size = img.getSize();
+          const resized =
+            size.width > 480 ? img.resize({ width: 480 }) : img;
+          previewDataUrl = resized.toDataURL();
+        }
+      } catch {}
+    }
+    return {
+      exists: true,
+      name: path.basename(raw),
+      sizeBytes: stat.size,
+      ext: ext.replace(/^\./, "").toUpperCase(),
+      previewDataUrl,
+    };
+  });
   handle("posts:start", (_e, d, ids) => publisher.start(d, ids));
   handle("posts:retry", (_e, id) => {
     const r = posts.read().records.find((r) => r.id === id);
@@ -152,6 +187,7 @@ function registerHandlers() {
     return accounts.closeAll();
   });
   handle("clash:read", () => readListeners(config.clashPath));
+  handle("clash:reload", () => reloadConfig(config.clashPath));
   handle("settings:read",()=>({concurrency:config.concurrency||2,clashPath:config.clashPath||""}));
   handle("settings:save",(_e,value)=>{if(!Number.isInteger(value.concurrency)||value.concurrency<1||value.concurrency>4)throw Error("并发需要为 1 至 4");if(value.clashPath&&(!path.isAbsolute(value.clashPath)||!fs.existsSync(value.clashPath)))throw Error("Clash 配置文件不存在");config.concurrency=value.concurrency;config.clashPath=String(value.clashPath||"");saveConfig();return {concurrency:config.concurrency,clashPath:config.clashPath};});
   handle("accounts:list", () => accounts.list());
@@ -168,6 +204,7 @@ function registerHandlers() {
   handle("accounts:open-browser", (_e, id, target) =>
     accounts.openBrowser(id, target || "home"),
   );
+  handle("accounts:close-browser", (_e, id) => accounts.closeBrowser(id));
   handle("accounts:read-data", (_e, id, options) =>
     publisher.busy()
       ? Promise.reject(Error("请等待填表任务结束再读取数据"))

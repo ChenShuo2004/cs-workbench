@@ -35,11 +35,13 @@ export function NetworkIsolation({
   loading,
   onRefresh,
   onNotice,
+  embedded = false,
 }: {
   accounts: PlatformAccount[];
   loading: boolean;
   onRefresh: () => Promise<void>;
   onNotice: (msg: string, error?: boolean) => void;
+  embedded?: boolean;
 }) {
   const [checkingAll, setCheckingAll] = useState(false);
   const [checkingId, setCheckingId] = useState("");
@@ -104,7 +106,7 @@ export function NetworkIsolation({
   }
 
   return (
-    <div className="accounts-page network-page">
+    <div className={embedded ? "network-page" : "accounts-page network-page"}>
       <div className="page-heading compact">
         <div>
           <span className="eyebrow">NETWORK ISOLATION</span>
@@ -161,7 +163,7 @@ export function NetworkIsolation({
         <p>
           <strong>双模式网络隔离：</strong>
           ① <strong>本机 Clash Verge 多端口分流</strong>：在 Clash 配置多个监听端口（如 7890 / 7891 / 7892）分别指向不同节点，这里按账号绑定不同端口即可；
-          ② <strong>独立住宅/静态代理</strong>：直接填 HTTP/HTTPS/SOCKS5 主机、端口与账密，cs-work 自动建立本机加密隧道，默认开启 <strong>Fail-Closed</strong>（代理不通禁止打开 Chrome）与 <strong>WebRTC 防泄露</strong>。
+          ② <strong>独立住宅/静态代理</strong>：直接填 HTTP/HTTPS/SOCKS5 主机、端口与账密，Kaige-work 自动建立本机加密隧道，默认开启 <strong>Fail-Closed</strong>（代理不通禁止打开 Chrome）与 <strong>WebRTC 防泄露</strong>。
         </p>
       </div>
 

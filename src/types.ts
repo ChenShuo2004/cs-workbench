@@ -1,4 +1,4 @@
-export type Section = "publish" | "accounts" | "network" | "settings";
+export type Section = "dashboard" | "publish" | "accounts" | "network" | "settings";
 
 export type AccountPlatform =
   | "douyin"
@@ -92,6 +92,12 @@ export interface PostDraft {
   covers: Record<string, string>;
   overrides: Record<string, Partial<PostDraft>>;
 }
+export interface PostDraftItem {
+  id: string;
+  name: string;
+  updatedAt: string;
+  draft: PostDraft;
+}
 export interface PostRecord {
   id: string;
   accountId: string;
@@ -104,7 +110,22 @@ export interface PostRecord {
 }
 export interface PostState {
   draft: PostDraft;
+  activeDraftId?: string;
+  drafts?: PostDraftItem[];
   records: PostRecord[];
+}
+export interface MediaFileInfo {
+  exists: boolean;
+  name: string;
+  sizeBytes: number;
+  ext: string;
+  previewDataUrl: string;
+}
+export interface ClashReadResult {
+  file: string;
+  error: string;
+  socketAvailable?: boolean;
+  listeners: { name: string; port: number; proxy: string }[];
 }
 export interface AppInfo {
   version: string;
@@ -116,22 +137,27 @@ export interface CSBridge {
   appInfo(): Promise<AppInfo>;
 
   postsImport(): Promise<PostState | null>;
-  pathForFile(file:File):string;
-  settingsRead():Promise<{concurrency:number;clashPath:string}>;
-  settingsSave(value:{concurrency:number;clashPath:string}):Promise<{concurrency:number;clashPath:string}>;
+  pathForFile(file: File): string;
+  settingsRead(): Promise<{ concurrency: number; clashPath: string }>;
+  settingsSave(value: {
+    concurrency: number;
+    clashPath: string;
+  }): Promise<{ concurrency: number; clashPath: string }>;
   postsRead(): Promise<PostState>;
   postsDraft(d: PostDraft): Promise<PostState>;
+  postsDraftCreate(initial?: Partial<PostDraft>): Promise<PostState>;
+  postsDraftDuplicate(id?: string): Promise<PostState>;
+  postsDraftSelect(id: string): Promise<PostState>;
+  postsDraftDelete(id: string): Promise<PostState>;
+  postsMediaInfo(filePath: string): Promise<MediaFileInfo>;
   postsStart(d: PostDraft, ids: string[]): Promise<PostState>;
   postsRetry(id: string): Promise<PostState>;
   postsMark(id: string, url: string): Promise<PostState>;
   postsChoose(kind: string): Promise<string>;
   syncAll(): Promise<unknown>;
   closeAll(): Promise<void>;
-  clashRead(): Promise<{
-    file: string;
-    error: string;
-    listeners: { name: string; port: number; proxy: string }[];
-  }>;
+  clashRead(): Promise<ClashReadResult>;
+  clashReload(): Promise<{ ok: boolean; file: string; error: string }>;
   listAccounts(): Promise<PlatformAccount[]>;
   addAccount(
     name: string,
@@ -147,9 +173,10 @@ export interface CSBridge {
   checkAllAccountNetworks(): Promise<Record<string, NetworkCheckResult>>;
   detectLocalProxyPorts(): Promise<number[]>;
   openAccountBrowser(id: string, target?: BrowserTarget): Promise<void>;
+  closeAccountBrowser(id: string): Promise<void>;
   readAccountData(
     id: string,
-    options?: { navigateToData?: boolean },
+    options?: { navigateToData?: boolean; autoClose?: boolean },
   ): Promise<AccountDataSnapshot>;
   removeAccount(id: string): Promise<boolean>;
   onAccountsChanged(callback: () => void): () => void;

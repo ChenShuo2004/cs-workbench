@@ -203,8 +203,7 @@ export function DouyinAccounts({
 
   return (
     <div className="accounts-page">
-      <button className="button subtle" onClick={()=>void window.cs.syncAll().then(()=>{onNotice('同步完成，需登录的账号请查看提示');void onRefresh();}).catch(e=>onNotice(String(e),true))}>同步全部账号数据</button>
-        <div className="page-heading compact">
+      <div className="page-heading compact">
         <div>
           <span className="eyebrow">MATRIX ACCOUNTS & ANALYTICS</span>
           <h1>账号与数据</h1>

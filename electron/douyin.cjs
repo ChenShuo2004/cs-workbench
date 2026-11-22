@@ -101,8 +101,19 @@ function createDouyinManager(
     async publisherConnection(id) {
       return browser.connection(getStore().get(id));
     },
+    async closeBrowser(id) {
+      const account = getStore().get(id);
+      await browser.close(account);
+      await proxyBridge.closeBridge(id);
+      notify();
+    },
     async closeAll() {
-      for (const a of getStore().list()) await browser.close(a);
+      for (const a of getStore().list()) {
+        try {
+          await browser.close(a);
+        } catch {}
+        await proxyBridge.closeBridge(a.id);
+      }
       notify();
     },
     async syncAll() {
@@ -115,11 +126,13 @@ function createDouyinManager(
             try {
               results[a.id] = await this.readData(a.id, {
                 navigateToData: true,
+                autoClose: true,
               });
             } catch (e) {
               errors.set(a.id, e.message);
               results[a.id] = { error: e.message };
             }
+            notify();
           }
         }),
       );
@@ -229,7 +242,7 @@ function createDouyinManager(
       errors.delete(id);
       notify();
     },
-    async readData(id, { navigateToData = false } = {}) {
+    async readData(id, { navigateToData = false, autoClose = true } = {}) {
       if (removing.has(id)) throw new Error("正在移除账号，请稍后再试");
       const account = getStore().get(id);
       const proxyUrlOverride = await prepareProxyForLaunch(account);
@@ -238,10 +251,15 @@ function createDouyinManager(
         page = await browser.readData(account, {
           proxyUrlOverride,
           navigateToData,
+          autoClose,
         });
       } catch (error) {
         notify();
         throw error;
+      } finally {
+        if (autoClose && !browser.isDataConnected(id)) {
+          await proxyBridge.closeBridge(id);
+        }
       }
       if (
         /login|登录|扫码/.test(page.pageTitle || page.title || "") &&
@@ -267,7 +285,7 @@ function createDouyinManager(
           title: "移除平台账号",
           message: `移除「${account.name}」？`,
           detail:
-            "将关闭此账号的独立 Chrome 窗口，并清除此账号在本机 cs-work 中的登录会话、代理密码与数据快照。线上平台账号和作品不会被删除。",
+            "将关闭此账号的独立 Chrome 窗口，并清除此账号在本机 Kaige-work 中的登录会话、代理密码与数据快照。线上平台账号和作品不会被删除。",
           buttons: ["取消", "移除并清除本地数据"],
           defaultId: 0,
           cancelId: 0,

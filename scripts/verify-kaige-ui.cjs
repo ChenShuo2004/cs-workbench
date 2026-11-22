@@ -9,13 +9,14 @@ const { _electron: electron } = require("playwright"),
   delete env.ELECTRON_RUN_AS_NODE;
   const app = await electron.launch({
     args: process.env.KAIGE_TEST_APP ? [] : [path.resolve(__dirname, "..")],
-    ...(process.env.KAIGE_TEST_APP ? {executablePath:process.env.KAIGE_TEST_APP} : {}),
+    ...(process.env.KAIGE_TEST_APP ? { executablePath: process.env.KAIGE_TEST_APP } : {}),
     env,
   });
   try {
     const p = await app.firstWindow();
     const errors = [];
     p.on("pageerror", (e) => errors.push(e.message));
+    await p.getByRole("heading", { name: "Kaige", exact: true }).waitFor();
     await p.locator("nav").getByRole("button", { name: /发布中心/ }).click();
     await p.getByRole("heading", { name: "一稿多发", exact: true }).waitFor();
     await p.getByLabel(/标题（/).fill("验收草稿");
@@ -38,12 +39,24 @@ const { _electron: electron } = require("playwright"),
       .locator("nav")
       .getByRole("button", { name: /网络隔离/ })
       .click();
-    await p.getByRole("heading", { name: "Clash Verge 运行配置" }).waitFor();
+    await p.getByRole("heading", { name: "网络隔离", exact: true }).waitFor();
     await p.locator("nav").getByRole("button", { name: "设置" }).click();
     assert.equal(await p.getByText("麦田发布服务").count(), 0);
-    const saved=await p.evaluate(()=>window.cs.settingsSave({concurrency:3,clashPath:''}));
-    assert.equal(saved.concurrency,3);
-    assert.equal(await p.evaluate(async()=>{try{await window.cs.settingsSave({concurrency:5,clashPath:''});return false}catch{return true}}),true);
+    const saved = await p.evaluate(() =>
+      window.cs.settingsSave({ concurrency: 3, clashPath: "" }),
+    );
+    assert.equal(saved.concurrency, 3);
+    assert.equal(
+      await p.evaluate(async () => {
+        try {
+          await window.cs.settingsSave({ concurrency: 5, clashPath: "" });
+          return false;
+        } catch {
+          return true;
+        }
+      }),
+      true,
+    );
     await p.setViewportSize({ width: 800, height: 900 });
     await p.getByRole("button", { name: "打开导航" }).click();
     await p
@@ -59,7 +72,7 @@ const { _electron: electron } = require("playwright"),
     await p.screenshot({ path: "out/qa/publish-narrow.png", fullPage: true });
     assert.deepEqual(errors, []);
     console.log(
-      "PASS: Electron isolated UI; four pages, draft persistence, empty account disable, narrow navigation, no horizontal overflow, no page errors",
+      "PASS: Electron isolated UI; Kaige board + 4 T3-style pages, draft persistence, narrow navigation, no overflow, no page errors",
     );
   } finally {
     await app.close();

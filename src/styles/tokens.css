@@ -1,10 +1,20 @@
 /* Application appearance is independent from the video's scene palette. */
 :root {
-  --on-accent: #202b16;
+  color-scheme: dark;
+  --canvas: #111315;
+  --panel: #181b1f;
+  --elevated: #23272c;
+  --line: #2d3238;
+  --ink: #e7ebed;
+  --muted: #98a2aa;
+  --accent: #c1ee86;
+  --danger: #f0a49e;
+  --warning: #e1bd80;
+  --on-accent: #182311;
   --accent-text: #c1ee86;
-  --accent-soft: #293325;
-  --danger-soft: #3a2625;
-  --warning-soft: #3b3326;
+  --accent-soft: #243020;
+  --danger-soft: #3a2423;
+  --warning-soft: #3a3122;
 }
 :root[data-theme="paper"] {
   color-scheme: light;

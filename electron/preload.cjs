@@ -13,6 +13,11 @@ contextBridge.exposeInMainWorld(
     settingsSave:value=>invoke("settings:save",value),
     postsRead: () => invoke("posts:read"),
     postsDraft: (d) => invoke("posts:draft", d),
+    postsDraftCreate: (initial) => invoke("posts:draft-create", initial),
+    postsDraftDuplicate: (id) => invoke("posts:draft-duplicate", id),
+    postsDraftSelect: (id) => invoke("posts:draft-select", id),
+    postsDraftDelete: (id) => invoke("posts:draft-delete", id),
+    postsMediaInfo: (filePath) => invoke("posts:media-info", filePath),
     postsStart: (d, ids) => invoke("posts:start", d, ids),
     postsRetry: (id) => invoke("posts:retry", id),
     postsMark: (id, url) => invoke("posts:mark", id, url),
@@ -20,6 +25,7 @@ contextBridge.exposeInMainWorld(
     syncAll: () => invoke("accounts:sync-all"),
     closeAll: () => invoke("accounts:close-all"),
     clashRead: () => invoke("clash:read"),
+    clashReload: () => invoke("clash:reload"),
     listAccounts: () => invoke("accounts:list"),
     addAccount: (name, platform, network) =>
       invoke("accounts:add", name, platform, network),
@@ -31,6 +37,7 @@ contextBridge.exposeInMainWorld(
     detectLocalProxyPorts: () => invoke("accounts:detect-local-ports"),
     openAccountBrowser: (id, target) =>
       invoke("accounts:open-browser", id, target),
+    closeAccountBrowser: (id) => invoke("accounts:close-browser", id),
     readAccountData: (id, options) => invoke("accounts:read-data", id, options),
     removeAccount: (id) => invoke("accounts:remove", id),
     onAccountsChanged: (callback) => {

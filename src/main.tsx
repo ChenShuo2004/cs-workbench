@@ -4,7 +4,9 @@ import {
   ChevronRight,
   CircleAlert,
   FolderOpen,
+  LayoutDashboard,
   Menu,
+  Power,
   Settings2,
   ShieldCheck,
   UploadCloud,
@@ -18,6 +20,7 @@ import {
   useAppearance,
 } from "./Appearance";
 import { BrandAvatar } from "./Brand";
+import { Dashboard } from "./pages/Dashboard";
 import { Publish } from "./pages/Publish";
 import { Environment } from "./pages/Environment";
 import { AutomationSettings } from "./pages/AutomationSettings";
@@ -31,34 +34,20 @@ import "./styles/app.css";
 const NAV: {
   id: Section;
   label: string;
-  desc: string;
   icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
 }[] = [
-  {
-    id: "publish",
-    label: "发布中心",
-    desc: "一稿多发 · 自动填表 · 人工确认",
-    icon: UploadCloud,
-  },
-  {
-    id: "accounts",
-    label: "账号与数据",
-    desc: "8 平台矩阵与数据快照",
-    icon: Users,
-  },
-  {
-    id: "network",
-    label: "网络隔离",
-    desc: "独立代理 · Clash 端口 · 出口 IP",
-    icon: ShieldCheck,
-  },
-  { id: "settings", label: "设置", desc: "外观 · 本机数据", icon: Settings2 },
+  { id: "dashboard", label: "总仪表盘", icon: LayoutDashboard },
+  { id: "publish", label: "发布中心", icon: UploadCloud },
+  { id: "accounts", label: "账号与数据", icon: Users },
+  { id: "network", label: "网络隔离", icon: ShieldCheck },
+  { id: "settings", label: "设置", icon: Settings2 },
 ];
 
 function App() {
   const appearance = useAppearance();
-  const [section, setSection] = useState<Section>("accounts");
+  const [section, setSection] = useState<Section>("dashboard");
   const [accounts, setAccounts] = useState<PlatformAccount[]>([]);
+  const [pendingConfirm, setPendingConfirm] = useState(0);
   const [loadingAccounts, setLoadingAccounts] = useState(true);
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
   const [navigationOpen, setNavigationOpen] = useState(false);
@@ -88,8 +77,8 @@ function App() {
     contentScroll.current?.scrollTo({ top: 0 });
     if (prefersReducedMotion()) return;
     const animation = contentScroll.current?.animate(
-      [{ opacity: 0.7 }, { opacity: 1 }],
-      { duration: 150, easing: "ease-out" },
+      [{ opacity: 0.78 }, { opacity: 1 }],
+      { duration: 130, easing: "ease-out" },
     );
     return () => animation?.cancel();
   }, [section]);
@@ -99,12 +88,20 @@ function App() {
   const notice = (message: string, error = false) => {
     clearTimeout(noticeTimer.current);
     setToast({ message, error });
-    noticeTimer.current = setTimeout(() => setToast(null), error ? 7500 : 4200);
+    noticeTimer.current = setTimeout(() => setToast(null), error ? 6500 : 3800);
   };
 
   const refreshAccounts = async () => {
-    const list = await window.cs.listAccounts();
+    const [list, postsState] = await Promise.all([
+      window.cs.listAccounts(),
+      window.cs.postsRead().catch(() => null),
+    ]);
     setAccounts(list);
+    if (postsState) {
+      setPendingConfirm(
+        postsState.records.filter((r) => r.status === "待你确认").length,
+      );
+    }
   };
 
   useEffect(() => {
@@ -113,6 +110,15 @@ function App() {
       window.cs.listAccounts().then((list) => {
         if (live) setAccounts(list);
       }),
+      window.cs
+        .postsRead()
+        .then((s) => {
+          if (live)
+            setPendingConfirm(
+              s.records.filter((r) => r.status === "待你确认").length,
+            );
+        })
+        .catch(() => {}),
       window.cs.appInfo().then((info) => {
         if (live) setAppInfo(info);
       }),
@@ -133,77 +139,67 @@ function App() {
     };
   }, []);
 
-  const conflictCount = accounts.filter(
-    (a) => a.networkWarnings.length > 0,
-  ).length;
+  const onlineCount = accounts.filter((a) => a.dataConnected).length;
 
   const sidebar = (
-    <aside className="sidebar cs-work-sidebar" aria-label="主导航">
+    <aside className="t3-sidebar" aria-label="主导航">
       {narrow && (
         <button
-          className="icon-button navigation-close"
+          className="t3-icon-btn nav-close-btn"
           aria-label="关闭导航"
           onClick={() => setNavigationOpen(false)}
         >
-          <X size={18} />
+          <X size={16} />
         </button>
       )}
-      <div className="sidebar-top">
-        <div className="brand-mark">
+      <div className="t3-brand">
+        <div className="t3-brand-avatar">
           <BrandAvatar />
         </div>
-        <div>
-          <div className="brand-title">Kaige-work</div>
-          <div className="brand-sub">PUBLISH · DATA · ISOLATION</div>
+        <div className="t3-brand-text">
+          <strong>Kaige-work</strong>
+          <span>Matrix Workspace</span>
         </div>
       </div>
 
-      <nav aria-label="工作台导航">
-        <div className="sidebar-label">核心工作台</div>
+      <nav className="t3-nav" aria-label="工作台导航">
         {NAV.map((item) => {
           const Icon = item.icon;
           const active = section === item.id;
           return (
             <button
               key={item.id}
-              className={`nav-item ${active ? "active" : ""}`}
+              className={`t3-nav-item ${active ? "active" : ""}`}
               aria-current={active ? "page" : undefined}
               onClick={() => {
                 setSection(item.id);
                 setNavigationOpen(false);
               }}
             >
-              <Icon size={17} strokeWidth={1.85} />
+              <Icon size={15} strokeWidth={1.8} />
               <span>{item.label}</span>
-              {item.id === "accounts" && accounts.length > 0 && (
-                <span className="nav-badge">{accounts.length}</span>
+              {item.id === "publish" && pendingConfirm > 0 && (
+                <em className="t3-nav-num warn">{pendingConfirm}</em>
               )}
-              {item.id === "network" && conflictCount > 0 && (
-                <span className="nav-badge warn">{conflictCount}</span>
+              {item.id === "accounts" && accounts.length > 0 && (
+                <em className="t3-nav-num">{accounts.length}</em>
               )}
             </button>
           );
         })}
       </nav>
 
-      <div className="sidebar-bottom">
-        <div className="local-badge">
-          <span />
-          <div>
-            <strong>本机独立会话</strong>
-            <small>
-              {accounts.length} 个账号 ·{" "}
-              {accounts.filter((a) => a.network.mode !== "direct").length}{" "}
-              个已配代理
-            </small>
-          </div>
-        </div>
+      <div className="t3-sidebar-foot">
+        <span className="t3-foot-dot" />
+        <span>
+          {accounts.length} 账号 · {onlineCount > 0 ? `${onlineCount} 窗口运行` : "空闲"}
+        </span>
       </div>
     </aside>
   );
 
   return (
-    <div className="app-shell studio-shell">
+    <div className="t3-shell">
       {narrow
         ? navigationOpen && (
             <div
@@ -217,24 +213,38 @@ function App() {
           )
         : sidebar}
 
-      <div className="workspace">
-        <header className="topbar">
+      <div className="t3-main">
+        <header className="t3-topbar">
           {narrow && (
             <button
-              className="icon-button navigation-toggle"
+              className="t3-icon-btn"
               aria-label="打开导航"
               aria-expanded={navigationOpen}
               onClick={() => setNavigationOpen(true)}
             >
-              <Menu size={19} />
+              <Menu size={17} />
             </button>
           )}
-          <div className="crumb">
+          <div className="t3-crumb">
             <span>Kaige-work</span>
-            <ChevronRight size={14} />
+            <ChevronRight size={13} />
             <strong>{NAV.find((n) => n.id === section)?.label}</strong>
           </div>
-          <div className="topbar-right">
+          <div className="t3-topbar-right">
+            {onlineCount > 0 && (
+              <button
+                className="t3-btn ghost xs"
+                onClick={() =>
+                  void window.cs
+                    .closeAll()
+                    .then(refreshAccounts)
+                    .then(() => notice("已关闭全部账号窗口"))
+                    .catch((e) => notice(uiErrorMessage(e), true))
+                }
+              >
+                <Power size={12} /> 关窗 ({onlineCount})
+              </button>
+            )}
             <AppearancePicker
               compact
               theme={appearance.theme}
@@ -243,7 +253,20 @@ function App() {
           </div>
         </header>
 
-        <main className="content" ref={contentScroll}>
+        <main
+          className={`t3-content ${section === "dashboard" ? "is-board" : ""}`}
+          ref={contentScroll}
+        >
+          {section === "dashboard" && (
+            <Dashboard
+              accounts={accounts}
+              loading={loadingAccounts}
+              onRefresh={refreshAccounts}
+              onNavigate={setSection}
+              onNotice={notice}
+            />
+          )}
+
           {section === "publish" && (
             <Publish
               accounts={accounts}
@@ -272,55 +295,45 @@ function App() {
           )}
 
           {section === "settings" && (
-            <div className="accounts-page settings-page">
-              <div className="page-heading compact">
-                <div>
-                  <span className="eyebrow">SETTINGS</span>
-                  <h1>工作台设置</h1>
-                  <p>
-                    配置外观主题与本机隔离数据目录。工作台配色仅影响壳层界面，不改动内嵌看板与外部平台页面颜色。
-                  </p>
+            <div className="t3-page t3-settings-page">
+              <div className="t3-page-head">
+                <div className="t3-head-title">
+                  <h1>设置</h1>
                 </div>
               </div>
-
-              <div className="settings-stack"><AutomationSettings onNotice={notice}/>
-                <section className="settings-card">
-                  <h2>外观与阅读</h2>
-                  <p className="muted">
-                    选择适合当前光线的语义配色方案，自动持久保存。
-                  </p>
+              <div className="t3-settings-stack">
+                <AutomationSettings onNotice={notice} />
+                <section className="t3-card">
+                  <div className="t3-card-head">
+                    <span>外观与阅读</span>
+                  </div>
                   <AppearancePicker
                     theme={appearance.theme}
                     onChange={appearance.changeTheme}
                   />
-                  <div className="settings-divider" />
+                  <div className="t3-divider" />
                   <ExperienceSettings appearance={appearance} />
                 </section>
 
-                <section className="settings-card">
-                  <h2>本机数据与安全</h2>
-                  <p className="muted">
-                    应用版本：
-                    <code>Kaige-work v{appInfo?.version || "1.0.0"}</code> ·
-                    系统钥匙串加密：
-                    <strong>
-                      {appInfo?.encryptionAvailable ? "已启用" : "不可用"}
-                    </strong>
-                  </p>
-                  <p className="muted">
-                    本机数据目录（含账号列表、独立 Chrome Profile 与数据快照）：
+                <section className="t3-card">
+                  <div className="t3-card-head">
+                    <span>本机数据与安全</span>
+                    <small>Kaige-work v{appInfo?.version || "1.0.0"}</small>
+                  </div>
+                  <p className="t3-muted-line">
+                    钥匙串加密：{appInfo?.encryptionAvailable ? "已启用" : "不可用"} · 数据目录：
                     <code>{appInfo?.userDataPath || "--"}</code>
                   </p>
-                  <div className="settings-actions">
+                  <div>
                     <button
-                      className="button subtle"
+                      className="t3-btn"
                       onClick={() =>
                         void window.cs
                           .openUserData()
                           .catch((e) => notice(uiErrorMessage(e), true))
                       }
                     >
-                      <FolderOpen size={15} /> 在 Finder 中打开数据目录
+                      <FolderOpen size={13} /> 在 Finder 中打开数据目录
                     </button>
                   </div>
                 </section>
@@ -332,10 +345,10 @@ function App() {
 
       {toast && (
         <div
-          className={`toast ${toast.error ? "error" : ""}`}
+          className={`t3-toast ${toast.error ? "error" : ""}`}
           role={toast.error ? "alert" : "status"}
         >
-          {toast.error && <CircleAlert size={16} />}
+          {toast.error && <CircleAlert size={14} />}
           <span>{toast.message}</span>
         </div>
       )}
